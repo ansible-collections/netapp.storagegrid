@@ -23,7 +23,7 @@ short_description: Manage buckets on StorageGRID.
 extends_documentation_fragment:
     - netapp.storagegrid.netapp.sg
 version_added: '20.6.0'
-author: NetApp Ansible Team (@edmonds) <ng-ansibleteam@netapp.com>
+author: NetApp Ansible Team (@joshedmonds) <ng-ansibleteam@netapp.com>
 description:
 - Create S3 buckets on NetApp StorageGRID.
 options:
@@ -78,9 +78,7 @@ import json
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
@@ -116,11 +114,7 @@ class SgOrgContainer(object):
             "legal_hold": "legalHold",
             "retention_period_minutes": "retentionPeriodMinutes",
         }
-        self.module = AnsibleModule(
-            argument_spec=self.argument_spec,
-            # required_if=[("state", "present", ["state", "name", "protocol"])],
-            supports_check_mode=True,
-        )
+        self.module = AnsibleModule(argument_spec=self.argument_spec, supports_check_mode=True,)
 
         self.na_helper = NetAppModule()
 
@@ -133,15 +127,8 @@ class SgOrgContainer(object):
         self.data["name"] = self.parameters["name"]
         self.data["region"] = self.parameters.get("region")
         if self.parameters.get("compliance"):
-            # self.data["compliance"] = {
-            #     parameter_map[k]: v
-            #     for (k, v) in self.parameters["compliance"].items()
-            #     if v
-            # }
             self.data["compliance"] = dict(
-                (parameter_map[k], v)
-                for (k, v) in self.parameters["compliance"].items()
-                if v
+                (parameter_map[k], v) for (k, v) in self.parameters["compliance"].items() if v is not None
             )
 
     def get_org_container(self):
@@ -191,14 +178,10 @@ class SgOrgContainer(object):
             # let's see if we need to update parameters
             update_compliance = False
 
-            if (
-                self.parameters.get("compliance")
-                and org_container.get("compliance") != self.data["compliance"]
-            ):
+            if self.parameters.get("compliance") and org_container.get("compliance") != self.data["compliance"]:
                 update_compliance = True
                 self.na_helper.changed = True
 
-        # ### DEBUG self.module.fail_json(msg=tenant_account, action=cd_action)
         result_message = ""
         resp_data = org_container
         if self.na_helper.changed:
@@ -213,9 +196,7 @@ class SgOrgContainer(object):
                     resp_data = self.update_org_container_compliance()
                     result_message = "Org Container updated"
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():
