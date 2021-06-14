@@ -28,7 +28,7 @@ SRR = {
     "not_found": ({"status": "error", "code": 404, "data": {}}, {"key": "error.404"},),
     "end_of_sequence": (None, "Unexpected call to send_request"),
     "generic_error": (None, "Expected error"),
-    "delete_good": ({"code": 204}, None),
+    "delete_good": (None, None),
     "org_containers": (
         {"data": [{"name": "testbucket", "creationTime": "2020-02-04T12:43:50.777Z", "region": "us-east-1"}]},
         None,
@@ -185,4 +185,18 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_delete_na_sg_org_container_pass(self, mock_request):
+        set_module_args(self.set_args_delete_na_sg_org_container())
+        my_obj = org_container_module()
+        mock_request.side_effect = [
+            SRR["org_containers"],  # get
+            SRR["delete_good"],  # delete
+            SRR["end_of_sequence"],
+        ]
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_delete_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]

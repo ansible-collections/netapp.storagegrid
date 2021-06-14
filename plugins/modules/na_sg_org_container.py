@@ -31,7 +31,7 @@ options:
     description:
     - Whether the specified bucket should exist or not.
     type: str
-    choices: ['present']
+    choices: ['present', 'absent']
     default: present
   name:
     description:
@@ -95,7 +95,7 @@ class SgOrgContainer(object):
         self.argument_spec = netapp_utils.na_storagegrid_host_argument_spec()
         self.argument_spec.update(
             dict(
-                state=dict(required=False, type="str", choices=["present"], default="present"),
+                state=dict(required=False, type="str", choices=["present", "absent"], default="present"),
                 name=dict(required=True, type="str"),
                 region=dict(required=False, type="str"),
                 compliance=dict(
@@ -166,6 +166,13 @@ class SgOrgContainer(object):
 
         return response["data"]
 
+    def delete_org_container(self):
+        api = "api/v3/org/containers/%s" % self.parameters["name"]
+
+        response, error = self.rest_api.delete(api, None)
+        if error:
+            self.module.fail_json(msg=error["text"])
+
     def apply(self):
         """
         Perform pre-checks, call functions and exit
@@ -188,7 +195,12 @@ class SgOrgContainer(object):
             if self.module.check_mode:
                 pass
             else:
-                if cd_action == "create":
+                if cd_action == "delete":
+                    self.delete_org_container()
+                    resp_data = None
+                    result_message = "Org Container deleted"
+
+                elif cd_action == "create":
                     resp_data = self.create_org_container()
                     result_message = "Org Container created"
 
