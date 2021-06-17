@@ -5,8 +5,10 @@ readme: README.md
 authors:
     - "NetApp Ansible Team <ng-ansibleteam@netapp.com>"
 description: "NetApp StorageGRID Collection"
-license: "GPL-2.0-or-later"
+license_file: COPYING
+repository: https://github.com/ansible-collections/netapp.storagegrid
+homepage: https://netapp.io/configuration-management-and-automation/
 tags:
     - storage
     - netapp
-homepage: https://netapp.io/configuration-management-and-automation/
+    - storagegrid
