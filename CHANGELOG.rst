@@ -5,6 +5,26 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.6.0
+=======
+
+Minor Changes
+-------------
+
+- na_sg_org_container - supports deletion of buckets when ``state`` is set to ``absent``.
+
+Bugfixes
+--------
+
+- na_sg_org_container - fix issue with applying compliance settings on buckets.
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_certificate - Manage the Storage API and Grid Management certificates on StorageGRID.
+- netapp.storagegrid.na_sg_grid_identity_federation - NetApp StorageGRID manage Grid identity federation.
+- netapp.storagegrid.na_sg_org_identity_federation - NetApp StorageGRID manage Tenant identity federation.
+
 v20.11.0
 ========
 

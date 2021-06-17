@@ -57,12 +57,8 @@ RETURN = """
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import (
-    SGRestAPI,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
 class SgGridDns(object):
@@ -125,25 +121,18 @@ class SgGridDns(object):
         """
         grid_dns = self.get_grid_dns()
 
-        cd_action = self.na_helper.get_cd_action(
-            grid_dns, self.parameters["dns_servers"]
-        )
+        cd_action = self.na_helper.get_cd_action(grid_dns, self.parameters["dns_servers"])
 
         if cd_action is None and self.parameters["state"] == "present":
             # let's see if we need to update parameters
             update = False
 
-            dns_diff = [
-                i
-                for i in self.data + grid_dns
-                if i not in self.data or i not in grid_dns
-            ]
+            dns_diff = [i for i in self.data + grid_dns if i not in self.data or i not in grid_dns]
             if dns_diff:
                 update = True
 
             if update:
                 self.na_helper.changed = True
-        # ### DEBUG self.module.fail_json(msg=tenant_account, action=cd_action)
         result_message = ""
         resp_data = grid_dns
         if self.na_helper.changed:
@@ -153,9 +142,7 @@ class SgGridDns(object):
                 resp_data = self.update_grid_dns()
                 result_message = "Grid DNS updated"
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

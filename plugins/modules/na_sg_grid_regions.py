@@ -56,12 +56,8 @@ RETURN = """
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import (
-    SGRestAPI,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
 class SgGridRegions(object):
@@ -124,25 +120,19 @@ class SgGridRegions(object):
         """
         grid_regions = self.get_grid_regions()
 
-        cd_action = self.na_helper.get_cd_action(
-            grid_regions, self.parameters["regions"]
-        )
+        cd_action = self.na_helper.get_cd_action(grid_regions, self.parameters["regions"])
 
         if cd_action is None and self.parameters["state"] == "present":
             # let's see if we need to update parameters
             update = False
 
-            regions_diff = [
-                i
-                for i in self.data + grid_regions
-                if i not in self.data or i not in grid_regions
-            ]
+            regions_diff = [i for i in self.data + grid_regions if i not in self.data or i not in grid_regions]
             if regions_diff:
                 update = True
 
             if update:
                 self.na_helper.changed = True
-        # ### DEBUG self.module.fail_json(msg=tenant_account, action=cd_action)
+
         result_message = ""
         resp_data = grid_regions
         if self.na_helper.changed:
@@ -152,9 +142,7 @@ class SgGridRegions(object):
                 resp_data = self.update_grid_regions()
                 result_message = "Grid Regions updated"
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

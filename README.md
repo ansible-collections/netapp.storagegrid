@@ -66,16 +66,30 @@ Join our Slack Channel at [Netapp.io](http://netapp.io/slack)
 
 # Release Notes
 
+## 21.6.0
+
+### New Modules
+
+- na_sg_grid_certificate: Manage the Storage API and Grid Management certificates on StorageGRID.
+- na_sg_grid_identity_federation: Manage Grid identity federation.
+- na_sg_org_identity_federation: Manage Tenant identity federation.
+
+### Minor Changes
+- na_sg_org_container - supports deletion of buckets when `state` is set to `absent`.
+
+### Bug Fixes
+- na_sg_org_container - fix issue with applying compliance settings on buckets.
+
 ## 20.11.0
 
 ### New Modules
 
-- na\_sg\_grid\_info: Gather StorageGRID Grig subset information
-- na\_sg\_org\_info: Gather StorageGRID Org subset information
+- na_sg_grid_info: Gather StorageGRID Grig subset information
+- na_sg_org_info: Gather StorageGRID Org subset information
 
 ### Minor Changes
 
-- na\_sg\_grid\_account: new option `root_access_account` for granting initial root access permissions for the tenant to an existing federated group
+- na_sg_grid_account: new option `root_access_account` for granting initial root access permissions for the tenant to an existing federated group
 
 ## 20.10.0
 
@@ -85,16 +99,16 @@ This version introduces a breaking change. All modules have been renamed from `n
 
 ### Bug Fixes
 
-- na\_sg\_grid\_account: fixed documentation issue.
-- na\_sg\_grid\_account: added `no_log` flag to password fields
-- na\_sg\_grid\_group: fixed group name parsing
-- na\_sg\_org\_group: fixed group name parsing
+- na_sg_grid_account: fixed documentation issue.
+- na_sg_grid_account: added `no_log` flag to password fields
+- na_sg_grid_group: fixed group name parsing
+- na_sg_org_group: fixed group name parsing
 
 ### New Options
 
-- na\_sg\_grid\_account: new option `update_password` for managing Tenant Account root password changes
-- na\_sg\_org\_user: new option `password` and `update_password` for setting or updating Tenant User passwords
-- na\_sg\_grid\_user: new option `password` and `update_password` for setting or updating Grid Admin User passwords
+- na_sg_grid_account: new option `update_password` for managing Tenant Account root password changes
+- na_sg_org_user: new option `password` and `update_password` for setting or updating Tenant User passwords
+- na_sg_grid_user: new option `password` and `update_password` for setting or updating Grid Admin User passwords
 
 ## 20.6.1
 
@@ -102,7 +116,7 @@ This version introduces a breaking change. All modules have been renamed from `n
 - Fixed documentation issue in README.md
 
 ### Bug Fixes
-- nac\_sg\_org\_container: fixed documentation issue.
+- nac_sg_org_container: fixed documentation issue.
 
 ## 20.6.0
 
@@ -110,14 +124,14 @@ Initial release of NetApp StorageGRID Ansible modules
 
 ### New Modules
 
-- nac\_sg\_grid\_account: create/modify/delete Tenant account
-- nac\_sg\_grid\_dns: set Grid DNS servers
-- nac\_sg\_grid\_group: create/modify/delete Grid admin group
-- nac\_sg\_grid\_ntp: set Grid NTP servers
-- nac\_sg\_grid\_regions: set Grid Regions
-- nac\_sg\_grid\_user: create/modify/delete Grid admin user
-- nac\_sg\_org\_container: create S3 bucket
-- nac\_sg\_org\_group: create/modify/delete Tenant group
-- nac\_sg\_org\_user: create/modify/delete Tenant user
-- nac\_sg\_org\_user\_s3\_key: create/delete S3 key
+- nac_sg_grid_account: create/modify/delete Tenant account
+- nac_sg_grid_dns: set Grid DNS servers
+- nac_sg_grid_group: create/modify/delete Grid admin group
+- nac_sg_grid_ntp: set Grid NTP servers
+- nac_sg_grid_regions: set Grid Regions
+- nac_sg_grid_user: create/modify/delete Grid admin user
+- nac_sg_org_container: create S3 bucket
+- nac_sg_org_group: create/modify/delete Tenant group
+- nac_sg_org_user: create/modify/delete Tenant user
+- nac_sg_org_user_s3_key: create/delete S3 key
 

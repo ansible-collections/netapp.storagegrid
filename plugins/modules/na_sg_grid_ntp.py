@@ -62,12 +62,8 @@ RETURN = """
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import (
-    SGRestAPI,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
 class SgGridNtp(object):
@@ -134,25 +130,18 @@ class SgGridNtp(object):
         """
         grid_ntp = self.get_grid_ntp()
 
-        cd_action = self.na_helper.get_cd_action(
-            grid_ntp, self.parameters["ntp_servers"]
-        )
+        cd_action = self.na_helper.get_cd_action(grid_ntp, self.parameters["ntp_servers"])
 
         if cd_action is None and self.parameters["state"] == "present":
             # let's see if we need to update parameters
             update = False
 
-            ntp_diff = [
-                i
-                for i in self.data + grid_ntp
-                if i not in self.data or i not in grid_ntp
-            ]
+            ntp_diff = [i for i in self.data + grid_ntp if i not in self.data or i not in grid_ntp]
             if ntp_diff:
                 update = True
 
             if update:
                 self.na_helper.changed = True
-        # ### DEBUG self.module.fail_json(msg=self.ntp_input, action=cd_action)
 
         result_message = ""
         resp_data = grid_ntp
@@ -163,9 +152,7 @@ class SgGridNtp(object):
                 resp_data = self.update_grid_ntp()
                 result_message = "Grid NTP updated"
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

@@ -66,12 +66,8 @@ import json
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import (
-    SGRestAPI,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
 class SgOrgUserS3Key(object):
@@ -127,10 +123,7 @@ class SgOrgUserS3Key(object):
         api = "api/v3/org/users/current-user/s3-access-keys/%s" % access_key
 
         if user_id:
-            api = "api/v3/org/users/%s/s3-access-keys/%s" % (
-                user_id,
-                access_key,
-            )
+            api = "api/v3/org/users/%s/s3-access-keys/%s" % (user_id, access_key,)
 
         response, error = self.rest_api.get(api)
 
@@ -157,10 +150,7 @@ class SgOrgUserS3Key(object):
         api = "api/v3/org/users/current-user/s3-access-keys"
 
         if user_id:
-            api = "api/v3/org/users/%s/s3-access-keys/%s" % (
-                user_id,
-                access_key,
-            )
+            api = "api/v3/org/users/%s/s3-access-keys/%s" % (user_id, access_key,)
 
         self.data = None
         response, error = self.rest_api.delete(api, self.data)
@@ -181,24 +171,19 @@ class SgOrgUserS3Key(object):
         if self.parameters["state"] == "present":
             org_user_s3_key = None
             if self.parameters.get("access_key"):
-                org_user_s3_key = self.get_org_user_s3_key(
-                    user_id, self.parameters["access_key"]
-                )
+                org_user_s3_key = self.get_org_user_s3_key(user_id, self.parameters["access_key"])
                 resp_data = org_user_s3_key
 
             if not org_user_s3_key:  # create
                 resp_data = self.create_org_user_s3_key(user_id)
                 self.na_helper.changed = True
-        # ### DEBUG self.module.fail_json(msg=tenant_account, action=cd_action)
 
         if self.parameters["state"] == "absent":
             self.delete_org_user_s3_key(user_id, self.parameters["access_key"])
             self.na_helper.changed = True
             result_message = "Org User S3 key deleted"
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

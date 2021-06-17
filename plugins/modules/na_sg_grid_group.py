@@ -129,9 +129,7 @@ import re
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
@@ -157,9 +155,7 @@ class SgGridGroup(object):
                     options=dict(
                         alarm_acknowledgement=dict(required=False, type="bool"),
                         other_grid_configuration=dict(required=False, type="bool"),
-                        grid_topology_page_configuration=dict(
-                            required=False, type="bool"
-                        ),
+                        grid_topology_page_configuration=dict(required=False, type="bool"),
                         tenant_accounts=dict(required=False, type="bool"),
                         change_tenant_root_password=dict(required=False, type="bool"),
                         maintenance=dict(required=False, type="bool"),
@@ -185,9 +181,7 @@ class SgGridGroup(object):
             "object_metadata": "objectMetadata",
             "root_access": "rootAccess",
         }
-        self.module = AnsibleModule(
-            argument_spec=self.argument_spec, supports_check_mode=True,
-        )
+        self.module = AnsibleModule(argument_spec=self.argument_spec, supports_check_mode=True,)
 
         self.na_helper = NetAppModule()
 
@@ -201,18 +195,11 @@ class SgGridGroup(object):
         self.data["uniqueName"] = self.parameters["unique_name"]
         # Only add the parameter if value is True, as JSON response does not include non-true objects
         self.data["policies"] = {}
+
         if self.parameters.get("management_policy"):
-            # self.data["policies"] = {
-            #     "management": {
-            #         parameter_map[k]: v
-            #         for (k, v) in self.parameters["management_policy"].items()
-            #         if v
-            #     }
             self.data["policies"] = {
                 "management": dict(
-                    (parameter_map[k], v)
-                    for (k, v) in self.parameters["management_policy"].items()
-                    if v
+                    (parameter_map[k], v) for (k, v) in self.parameters["management_policy"].items() if v
                 )
             }
         if not self.data["policies"].get("management"):
@@ -225,9 +212,7 @@ class SgGridGroup(object):
             self.re_local_group.match(self.parameters["unique_name"]) is None
             and self.re_fed_group.match(self.parameters["unique_name"]) is None
         ):
-            self.module.fail_json(
-                msg="unique_name must begin with 'group/' or 'federated-group/'"
-            )
+            self.module.fail_json(msg="unique_name must begin with 'group/' or 'federated-group/'")
 
     def get_grid_group(self, unique_name):
         # Use the unique name to check if the group exists
@@ -281,7 +266,10 @@ class SgGridGroup(object):
             update = False
 
             if self.parameters.get("management_policy"):
-                if grid_group.get("policies") is None or grid_group.get("policies", {}).get("management") != self.data["policies"]["management"]:
+                if (
+                    grid_group.get("policies") is None
+                    or grid_group.get("policies", {}).get("management") != self.data["policies"]["management"]
+                ):
                     update = True
 
             if update:
@@ -309,9 +297,7 @@ class SgGridGroup(object):
                     resp_data = self.update_grid_group(grid_group["id"])
                     result_message = "Grid Group updated"
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

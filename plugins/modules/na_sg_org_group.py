@@ -99,9 +99,7 @@ import re
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
@@ -158,19 +156,11 @@ class SgOrgGroup(object):
         self.data["uniqueName"] = self.parameters["unique_name"]
         # Only add the parameter if value is True, as JSON response does not include non-true objects
         self.data["policies"] = {}
+
         if self.parameters.get("management_policy"):
-            # self.data["policies"] = {
-            #     "management": {
-            #         parameter_map[k]: v
-            #         for (k, v) in self.parameters["management_policy"].items()
-            #         if v
-            #     }
-            # }
             self.data["policies"] = {
                 "management": dict(
-                    (parameter_map[k], v)
-                    for (k, v) in self.parameters["management_policy"].items()
-                    if v
+                    (parameter_map[k], v) for (k, v) in self.parameters["management_policy"].items() if v
                 )
             }
         if not self.data["policies"].get("management"):
@@ -189,9 +179,7 @@ class SgOrgGroup(object):
             self.re_local_group.match(self.parameters["unique_name"]) is None
             and self.re_fed_group.match(self.parameters["unique_name"]) is None
         ):
-            self.module.fail_json(
-                msg="unique_name must begin with 'group/' or 'federated-group/'"
-            )
+            self.module.fail_json(msg="unique_name must begin with 'group/' or 'federated-group/'")
 
     def get_org_group(self, unique_name):
         # Use the unique name to check if the group exists
@@ -246,11 +234,6 @@ class SgOrgGroup(object):
 
             if self.parameters.get("management_policy"):
                 if org_group.get("policies") is None or org_group.get("policies", {}).get("management") != self.data["policies"]["management"]:
-                    # manageEndpointsself.module.fail_json(
-                    #     msg="nochange",
-                    #     c=org_group.get("policies", {}).get("management"),
-                    #     d=self.data["policies"]["management"],
-                    # )
                     update = True
             elif self.parameters.get("s3_policy"):
                 if org_group.get("policies") is None or org_group.get("policies", {}).get("s3") != self.data["policies"]["s3"]:
@@ -281,9 +264,7 @@ class SgOrgGroup(object):
                     resp_data = self.update_org_group(org_group["id"])
                     result_message = "Org Group updated"
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

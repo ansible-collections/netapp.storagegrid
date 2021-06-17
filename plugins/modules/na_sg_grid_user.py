@@ -94,9 +94,7 @@ import re
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import (
-    NetAppModule,
-)
+from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import SGRestAPI
 
 
@@ -119,9 +117,7 @@ class SgGridUser(object):
                 member_of=dict(required=False, type="list", elements="str"),
                 disable=dict(required=False, type="bool"),
                 password=dict(required=False, type="str", no_log=True),
-                update_password=dict(
-                    default="on_create", choices=["on_create", "always"]
-                ),
+                update_password=dict(default="on_create", choices=["on_create", "always"]),
             )
         )
 
@@ -151,19 +147,11 @@ class SgGridUser(object):
         re_local_user = re.compile("^user/")
         re_fed_user = re.compile("^federated-user/")
 
-        # if not re_local_user.match(
-        #    self.parameters["unique_name"]
-        # ) or not re_fed_user.match(self.parameters["unique_name"]):
-        #    self.module.fail_json(
-        #        msg="unique_name must begin with 'user/' or 'federated-user/'"
-        #    )
         if (
             re_local_user.match(self.parameters["unique_name"]) is None
             and re_fed_user.match(self.parameters["unique_name"]) is None
         ):
-            self.module.fail_json(
-                msg="unique_name must begin with 'user/' or 'federated-user/'"
-            )
+            self.module.fail_json(msg="unique_name must begin with 'user/' or 'federated-user/'")
 
         self.pw_change = {}
         if self.parameters.get("password") is not None:
@@ -182,12 +170,7 @@ class SgGridUser(object):
             self.module.fail_json(msg=error)
 
         if response["data"]:
-            name_to_id_map = dict(
-                zip(
-                    [i["uniqueName"] for i in response["data"]],
-                    [j["id"] for j in response["data"]],
-                )
-            )
+            name_to_id_map = dict(zip([i["uniqueName"] for i in response["data"]], [j["id"] for j in response["data"]]))
             return name_to_id_map
 
         return None
@@ -247,13 +230,9 @@ class SgGridUser(object):
         if self.parameters.get("member_of"):
             grid_groups = self.get_grid_groups()
             try:
-                self.data["memberOf"] = [
-                    grid_groups[x] for x in self.parameters["member_of"]
-                ]
+                self.data["memberOf"] = [grid_groups[x] for x in self.parameters["member_of"]]
             except KeyError as e:
-                self.module.fail_json(
-                    msg="Invalid unique_group supplied: '%s' not found" % e.args[0]
-                )
+                self.module.fail_json(msg="Invalid unique_group supplied: '%s' not found" % e.args[0])
 
         cd_action = self.na_helper.get_cd_action(grid_user, self.parameters)
 
@@ -272,9 +251,7 @@ class SgGridUser(object):
             if member_of_diff:
                 update = True
 
-            if self.parameters.get("disable") is not None and self.parameters[
-                "disable"
-            ] != grid_user.get("disable"):
+            if self.parameters.get("disable") is not None and self.parameters["disable"] != grid_user.get("disable"):
                 update = True
 
             if update:
@@ -310,9 +287,7 @@ class SgGridUser(object):
                     results = [result_message, "Grid User password updated"]
                     result_message = "; ".join(filter(None, results))
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():
