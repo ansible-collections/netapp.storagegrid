@@ -86,6 +86,20 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID tenant user.
+    returned: always
+    type: dict
+    sample: {
+        "fullName": "Example User",
+        "memberOf": ["00000000-0000-0000-0000-000000000000"],
+        "disable": false,
+        "uniqueName": "user/Example",
+        "accountId": "0",
+        "id": "00000000-0000-0000-0000-000000000000",
+        "federated": false,
+        "userURN": "urn:sgws:identity::0:user/Example"
+    }
 """
 
 import json

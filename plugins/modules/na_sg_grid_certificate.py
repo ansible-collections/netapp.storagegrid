@@ -37,7 +37,7 @@ options:
     type: str
   ca_bundle:
     description:
-    - Intermedia CA certificate bundle in concatenated PEM-encoding
+    - Intermediate CA certificate bundle in concatenated PEM-encoding
     - Omit if there is no intermediate CA
     type: str
   private_key:
@@ -79,6 +79,14 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID server certificates.
+    returned: success
+    type: dict
+    sample: {
+        "serverCertificateEncoded": "-----BEGIN CERTIFICATE-----MIIC6DCCAdACCQC7l4WukhKD0zANBgkqhkiG9w0BAQsFADA2MQswCQYDVQQGE...-----END CERTIFICATE-----",
+        "caBundleEncoded": "-----BEGIN CERTIFICATE-----MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELM...-----END CERTIFICATE-----"
+    }
 """
 
 import json

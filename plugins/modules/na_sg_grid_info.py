@@ -115,6 +115,50 @@ EXAMPLES = """
   register: sg_grid_info
 """
 
+RETURN = """
+sg_info:
+    description: Returns various information about the StorageGRID Grid configuration.
+    returned: always
+    type: dict
+    sample: {
+        "grid/accounts": {...},
+        "grid/alarms": {...},
+        "grid/audit": {...},
+        "grid/compliance-global": {...},
+        "grid/config": {...},
+        "grid/config/management": {...},
+        "grid/config/product-version": {...},
+        "grid/deactivated-features": {...},
+        "grid/dns-servers": {...},
+        "grid/domain-names": {...},
+        "grid/ec-profiles": {...},
+        "grid/expansion": {...},
+        "grid/expansion/nodes": {...},
+        "grid/expansion/sites": {...},
+        "grid/networks": {...},
+        "grid/groups": {...},
+        "grid/health": {...},
+        "grid/health/topology": {...},
+        "grid/identity-source": {...},
+        "grid/ilm-criteria": {...},
+        "grid/ilm-policies": {...},
+        "grid/ilm-rules": {...},
+        "grid/license": {...},
+        "grid/management-certificate": {...},
+        "grid/ntp-servers": {...},
+        "grid/recovery/available-nodes": {...},
+        "grid/recovery": {...},
+        "grid/regions": {...},
+        "grid/schemes": {...},
+        "grid/snmp": {...},
+        "grid/storage-api-certificate": {...},
+        "grid/untrusted-client-network": {...},
+        "grid/users": {...},
+        "grid/users/root": {...},
+        "grid/versions": {...}
+    }
+"""
+
 from ansible.module_utils.basic import AnsibleModule
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule

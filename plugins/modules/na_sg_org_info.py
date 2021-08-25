@@ -94,6 +94,29 @@ EXAMPLES = """
   register: sg_org_info
 """
 
+RETURN = """
+sg_info:
+    description: Returns various information about the StorageGRID Grid configuration.
+    returned: always
+    type: dict
+    sample: {
+        "org/compliance-global": {...},
+        "org/config": {...},
+        "org/config/product-version": {...},
+        "org/containers": {...},
+        "org/deactivated-features": {...},
+        "org/endpoints": {...},
+        "org/groups": {...},
+        "org/identity-source": {...},
+        "org/regions": {...},
+        "org/users/current-user/s3-access-keys": {...},
+        "org/usage": {...},
+        "org/users": {...},
+        "org/users/root": {...},
+        "org/versions": {...}
+    }
+"""
+
 from ansible.module_utils.basic import AnsibleModule
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule

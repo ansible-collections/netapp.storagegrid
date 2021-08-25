@@ -72,6 +72,23 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID bucket.
+    returned: always
+    type: dict
+    sample: {
+        "name": "example-bucket",
+        "creationTime": "2021-01-01T00:00:00.000Z",
+        "region": "us-east-1",
+        "compliance": {
+            "autoDelete": false,
+            "legalHold": false,
+            "retentionPeriodMinutes": 2629800
+        },
+        "s3ObjectLock": {
+            "enabled": false
+        }
+    }
 """
 
 import json

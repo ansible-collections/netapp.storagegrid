@@ -92,6 +92,28 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID tenant group attributes.
+    returned: success
+    type: dict
+    sample: {
+        "displayName": "Example Group",
+        "policies": {
+            "management": {
+                "manageAllContainers": true,
+                "manageEndpoints": true,
+                "manageOwnS3Credentials": true,
+                "rootAccess": true
+            },
+            "s3": {...},
+            "swift": {...}
+        },
+        "uniqueName": "group/examplegroup",
+        "accountId": "12345678901234567890",
+        "id": "00000000-0000-0000-0000-000000000000",
+        "federated": false,
+        "groupURN": "urn:sgws:identity::12345678901234567890:group/examplegroup"
+    }
 """
 
 import json

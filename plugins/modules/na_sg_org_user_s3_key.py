@@ -60,6 +60,18 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about an S3 access key for the user.
+    returned: always
+    type: dict
+    sample: {
+        "id": "abcABC_01234-0123456789abcABCabc0123456789==",
+        "accountId": 12345678901234567000,
+        "displayName": "****************AB12",
+        "userURN": "urn:sgws:identity::12345678901234567000:root",
+        "userUUID": "00000000-0000-0000-0000-000000000000",
+        "expires": "2020-09-04T00:00:00.000Z"
+    }
 """
 
 import json

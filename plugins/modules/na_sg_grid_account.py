@@ -115,6 +115,20 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID tenant account.
+    returned: success
+    type: dict
+    sample: {
+        "name": "Example Account",
+        "capabilities": ["management", "s3"],
+        "policy": {
+            "useAccountIdentitySource": true,
+            "allowPlatformServices": false,
+            "quotaObjectBytes": 100000000000
+        },
+        "id": "12345678901234567890"
+    }
 """
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils

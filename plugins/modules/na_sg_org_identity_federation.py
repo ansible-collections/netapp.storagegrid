@@ -143,6 +143,25 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID tenant account identity source configuration.
+    returned: success
+    type: dict
+    sample: {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "disable": false,
+        "hostname": "10.1.2.3",
+        "port": 389,
+        "username": "MYDOMAIN\\\\Administrator",
+        "password": "********",
+        "baseGroupDn": "DC=example,DC=com",
+        "baseUserDn": "DC=example,DC=com",
+        "ldapServiceType": "Active Directory",
+        "type": "ldap",
+        "disableTLS": false,
+        "enableLDAPS": false,
+        "caCert": "-----BEGIN CERTIFICATE----- abcdefghijkl123456780ABCDEFGHIJKL 123456/7890ABCDEFabcdefghijklABCD -----END CERTIFICATE-----\n"
+    }
 """
 
 import json
