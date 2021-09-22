@@ -1,3 +1,7 @@
+![example workflow](https://github.com/ansible-collections/netapp.storagegrid/actions/workflows/main.yml/badge.svg)
+[![codecov](https://codecov.io/gh/ansible-collections/netapp.storagegrid/branch/main/graph/badge.svg?token=weBYkksxSi)](https://codecov.io/gh/ansible-collections/netapp.storagegrid)
+
+
 =============================================================
 
  netapp.storagegrid
