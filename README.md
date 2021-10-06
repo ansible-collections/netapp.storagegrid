@@ -78,6 +78,15 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.7.0
+
+### New Modules
+
+- na_sg_grid_gateway: Manage Load balancer (gateway) endpoints
+
+### Minor Changes
+- Updated documentation - added RETURN block for each module
+
 ## 21.6.0
 
 ### New Modules

@@ -117,6 +117,13 @@ class NetAppModule(object):
 
         return updated_values, is_changed
 
+    @staticmethod
+    def check_keys(current, desired):
+        ''' TODO: raise an error if keys do not match
+            with the exception of:
+            new_name, state in desired
+        '''
+
     def is_rename_action(self, source, target):
         """ takes a source and target object, and returns True
             if a rename is required
@@ -143,3 +150,48 @@ class NetAppModule(object):
         # rename is in order
         self.changed = True
         return True
+
+    def get_modified_attributes(self, current, desired, get_list_diff=False):
+        ''' takes two dicts of attributes and return a dict of attributes that are
+            not in the current state
+            It is expected that all attributes of interest are listed in current and
+            desired.
+            :param: current: current attributes on StorageGRID
+            :param: desired: attributes from playbook
+            :param: get_list_diff: specifies whether to have a diff of desired list w.r.t current list for an attribute
+            :return: dict of attributes to be modified
+            :rtype: dict
+            NOTE: depending on the attribute, the caller may need to do a modify or a
+            different operation (eg move volume if the modified attribute is an
+            aggregate name)
+        '''
+        # if the object does not exist,  we can't modify it
+        modified = {}
+        if current is None:
+            return modified
+
+        # error out if keys do not match
+        self.check_keys(current, desired)
+
+        # collect changed attributes
+        for key, value in current.items():
+            if key in desired and desired[key] is not None:
+                if isinstance(value, list):
+                    modified_list = self.compare_lists(value, desired[key], get_list_diff)  # get modified list from current and desired
+                    if modified_list is not None:
+                        modified[key] = modified_list
+                elif isinstance(value, dict):
+                    modified_dict = self.get_modified_attributes(value, desired[key])
+                    if modified_dict:
+                        modified[key] = modified_dict
+                else:
+                    try:
+                        result = cmp(value, desired[key])
+                    except TypeError as exc:
+                        raise TypeError("%s, key: %s, value: %s, desired: %s" % (repr(exc), key, repr(value), repr(desired[key])))
+                    else:
+                        if result != 0:
+                            modified[key] = desired[key]
+        if modified:
+            self.changed = True
+        return modified

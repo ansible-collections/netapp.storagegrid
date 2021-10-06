@@ -5,6 +5,19 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.7.0
+=======
+
+Minor Changes
+-------------
+
+- Updated documentation - added RETURN block for each module
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_gateway - Manage Load balancer (gateway) endpoints on StorageGRID.
+
 v21.6.0
 =======
 
