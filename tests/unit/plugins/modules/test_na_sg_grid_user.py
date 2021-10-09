@@ -8,6 +8,13 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 import json
 import pytest
+import sys
+try:
+    from requests import Response
+except ImportError:
+    if sys.version_info < (2, 7):
+        pytestmark = pytest.mark.skip('Skipping Unit Tests on 2.6 as requests is not available')
+    raise
 
 from ansible_collections.netapp.storagegrid.tests.unit.compat import unittest
 from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
