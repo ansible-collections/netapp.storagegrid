@@ -14,7 +14,8 @@ try:
 except ImportError:
     if sys.version_info < (2, 7):
         pytestmark = pytest.mark.skip('Skipping Unit Tests on 2.6 as requests is not be available')
-    raise
+    else:
+        raise
 
 from ansible_collections.netapp.storagegrid.tests.unit.compat import unittest
 from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
