@@ -24,7 +24,6 @@ from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
 )
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-from requests import Response
 from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_grid_user import (
     SgGridUser as grid_user_module,
 )

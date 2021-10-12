@@ -24,7 +24,6 @@ from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
 )
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
-from requests import Response
 from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_org_identity_federation import (
     SgOrgIdentityFederation as org_identity_federation_module,
 )
