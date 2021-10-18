@@ -30,7 +30,7 @@ options:
   state:
     description:
     - Whether the specified DNS address should exist or not.
-    - Required for all operations
+    - Required for all operations.
     type: str
     choices: ['present']
     default: present

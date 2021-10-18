@@ -35,7 +35,7 @@ options:
     default: present
   ntp_servers:
     description:
-    - List of comma separated NTP server address
+    - List of comma separated NTP server address.
     type: list
     elements: str
     required: true

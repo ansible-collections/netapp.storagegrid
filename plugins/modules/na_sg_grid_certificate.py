@@ -27,23 +27,23 @@ options:
     default: present
   type:
     description:
-    - Which certificate to update
+    - Which certificate to update.
     type: str
     choices: ['storage-api', 'management']
     required: true
   server_certificate:
     description:
-    - X.509 server certificate in PEM-encoding
+    - X.509 server certificate in PEM-encoding.
     type: str
   ca_bundle:
     description:
-    - Intermediate CA certificate bundle in concatenated PEM-encoding
-    - Omit if there is no intermediate CA
+    - Intermediate CA certificate bundle in concatenated PEM-encoding.
+    - Omit if there is no intermediate CA.
     type: str
   private_key:
     description:
-    - Certificate private key in PEM-encoding
-    - Required if C(server_certificate) is specified
+    - Certificate private key in PEM-encoding.
+    - Required if I(server_certificate) is specified.
     type: str
 """
 

@@ -40,26 +40,26 @@ options:
     type: str
   unique_name:
     description:
-    - Unique Name for the user. Must begin with "user/" or "federated-user/"
-    - Required for create, modify or delete operation
+    - Unique Name for the user. Must begin with C(user/) or C(federated-user/).
+    - Required for create, modify or delete operation.
     type: str
     required: true
   member_of:
     description:
-    - List of unique_groups that the user is a member of
+    - List of unique_groups that the user is a member of.
     type: list
     elements: str
   password:
     description:
     - Set a password for a local user. Does not apply to federated users.
-    - Requires root privilege
+    - Requires root privilege.
     required: false
     type: str
   update_password:
     description:
     - Choose when to update the password.
     - When set to C(always), the password will always be updated.
-    - When set to C(on_create) the password will only be set upon a new user creation.
+    - When set to C(on_create), the password will only be set upon a new user creation.
     default: on_create
     choices:
     - on_create

@@ -19,8 +19,8 @@ version_added: '21.6.0'
 author: NetApp Ansible Team (@joshedmonds) <ng-ansibleteam@netapp.com>
 description:
 - Configure Grid Identity Federation within NetApp StorageGRID.
-- If module is run with C(check_mode), a connectivity test will be performed using the supplied values without changing the configuration
-- This module is idempotent if C(password) is not specified
+- If module is run with I(check_mode), a connectivity test will be performed using the supplied values without changing the configuration.
+- This module is idempotent if I(password) is not specified.
 options:
   state:
     description:
@@ -60,32 +60,32 @@ options:
   type:
     description:
     - The type of identity source.
-    - Default is 'ldap'.
+    - Default is C(ldap).
     type: str
     default: ldap
   ldap_user_id_attribute:
     description:
     - The LDAP attribute which contains the unique user name of a user.
-    - Should be configured if C(ldap_service_type) is 'Other'.
+    - Should be configured if I(ldap_service_type=Other).
     type: str
   ldap_user_uuid_attribute:
     description:
     - The LDAP attribute which contains the permanent unique identity of a user.
-    - Should be configured if C(ldap_service_type) is 'Other'.
+    - Should be configured if I(ldap_service_type=Other).
     type: str
   ldap_group_id_attribute:
     description:
     - The LDAP attribute which contains the group for a user.
-    - Should be configured if C(ldap_service_type) is 'Other'.
+    - Should be configured if I(ldap_service_type=Other).
     type: str
   ldap_group_uuid_attribute:
     description:
     - The LDAP attribute which contains the group's permanent unique identity.
-    - Should be configured if C(ldap_service_type) is 'Other'.
+    - Should be configured if I(ldap_service_type=Other).
     type: str
   tls:
     description:
-    - Whether Transport Layer Security is used to connect to the LDAP server
+    - Whether Transport Layer Security is used to connect to the LDAP server.
     choices: ['STARTTLS', 'LDAPS', 'Disabled']
     type: str
     default: STARTTLS

@@ -40,8 +40,8 @@ options:
     type: str
   unique_name:
     description:
-    - Unique Name for the group. Must begin with "group/" or "federated-group/"
-    - Required for create, modify or delete operation
+    - Unique Name for the group. Must begin with C(group/) or C(federated-group/)
+    - Required for create, modify or delete operation.
     type: str
     required: true
   management_policy:

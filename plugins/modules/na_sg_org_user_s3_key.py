@@ -35,17 +35,17 @@ options:
     default: present
   unique_user_name:
     description:
-    - Unique user name owning the S3 Key
+    - Unique user name owning the S3 Key.
     required: true
     type: str
   expires:
     description:
-    - Date-Time string for the key to expire
+    - Date-Time string for the key to expire.
     type: str
   access_key:
     description:
-    - Access Key or S3 credential pair identifier
-    - Required for delete operation
+    - Access Key or S3 credential pair identifier.
+    - Required for delete operation.
     type: str
 """
 

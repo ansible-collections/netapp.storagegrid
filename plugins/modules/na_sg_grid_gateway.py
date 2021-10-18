@@ -18,63 +18,63 @@ version_added: '21.7.0'
 author: NetApp Ansible Team (@jkandati) <ng-sg-ansibleteam@netapp.com>
 description:
 - Create or Update Load Balancer Endpoints on StorageGRID.
-- This module is idempotent if C(private_key) is not specified
+- This module is idempotent if I(private_key) is not specified.
 options:
   state:
     description:
-    - Whether the specified load balancer endpoint should be configured
+    - Whether the specified load balancer endpoint should be configured.
     type: str
     choices: ['present', 'absent']
     default: present
   display_name:
     description:
-    - A display name for the configuration
-    - This parameter cannot be modified after the load balancer endpoint has been created
+    - A display name for the configuration.
+    - This parameter cannot be modified after the load balancer endpoint has been created.
     type: str
   port:
     description:
-    - The TCP port to serve traffic on
-    - This parameter cannot be modified after the load balancer endpoint has been created
+    - The TCP port to serve traffic on.
+    - This parameter cannot be modified after the load balancer endpoint has been created.
     type: int
     required: true
   secure:
     description:
-    - Whether the load balancer endpoint serves HTTP or HTTPS traffic
-    - This parameter cannot be modified after the load balancer endpoint has been created
+    - Whether the load balancer endpoint serves HTTP or HTTPS traffic.
+    - This parameter cannot be modified after the load balancer endpoint has been created.
     type: bool
     default: true
   enable_ipv4:
     description:
-    - Indicates whether to listen for connections on IPv4
+    - Indicates whether to listen for connections on IPv4.
     type: bool
     default: true
   enable_ipv6:
     description:
-    - Indicates whether to listen for connections on IPv6
+    - Indicates whether to listen for connections on IPv6.
     type: bool
     default: true
   default_service_type:
     description:
-    - The type of service to proxy through the load balancer
+    - The type of service to proxy through the load balancer.
     type: str
     choices: ["s3","swift"]
     default: "s3"
   server_certificate:
     description:
-    - X.509 server certificate in PEM-encoding
-    - Omit if using default certificates
+    - X.509 server certificate in PEM-encoding.
+    - Omit if using default certificates.
     type: str
     required: false
   private_key:
     description:
-    - Certficate private key in PEM-encoding
-    - Required if serverCertificateEncoded is not empty
+    - Certficate private key in PEM-encoding.
+    - Required if I(server_certificate) is not empty.
     type: str
     required: false
   ca_bundle:
     description:
-    - Intermediate CA certificate bundle in concatenated PEM-encoding
-    - Omit when there is no intermediate CA
+    - Intermediate CA certificate bundle in concatenated PEM-encoding.
+    - Omit when there is no intermediate CA.
     type: str
     required: false
 

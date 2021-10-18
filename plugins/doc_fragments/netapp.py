@@ -37,5 +37,5 @@ options:
     - Should https certificates be validated?
     type: bool
 notes:
-  - The modules prefixed with na\\_sg are built to manage NetApp StorageGRID.
+  - The modules prefixed with C(na_sg) are built to manage NetApp StorageGRID.
 """

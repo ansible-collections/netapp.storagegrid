@@ -19,9 +19,9 @@ module: na_sg_grid_info
 author: NetApp Ansible Team (@jasonl4) <ng-ansibleteam@netapp.com>
 extends_documentation_fragment:
     - netapp.storagegrid.netapp.sg
-short_description: NetApp StorageGRID Grid information gatherer
+short_description: NetApp StorageGRID Grid information gatherer.
 description:
-    - This module allows you to gather various information about StorageGRID Grid configuration
+    - This module allows you to gather various information about StorageGRID Grid configuration.
 version_added: 20.11.0
 
 options:
@@ -29,62 +29,62 @@ options:
         type: list
         elements: str
         description:
-            - When supplied, this argument will restrict the information collected
-                to a given subset. Either the info name or the Rest API can be given.
-                Possible values for this argument include
-                'grid_accounts_info' or 'grid/accounts',
-                'grid_alarms_info' or 'grid/alarms',
-                'grid_audit_info' or 'grid/audit',
-                'grid_compliance_global_info' or 'grid/compliance-global',
-                'grid_config_info' or 'grid/config',
-                'grid_config_management_info' or 'grid/config/management',
-                'grid_config_product_version_info' or 'grid/config/product-version',
-                'grid_deactivated_features_info' or 'grid/deactivated-features',
-                'grid_dns_servers_info' or 'grid/dns-servers',
-                'grid_domain_names_info' or 'grid/domain-names',
-                'grid_ec_profiles_info' or 'grid/ec-profiles',
-                'grid_expansion_info' or 'grid/expansion',
-                'grid_expansion_nodes_info' or 'grid/expansion/nodes',
-                'grid_expansion_sites_info' or 'grid/expansion/sites',
-                'grid_grid_networks_info' or 'grid/grid-networks',
-                'grid_groups_info' or 'grid/groups',
-                'grid_health_info' or 'grid/health',
-                'grid_health_topology_info' or 'grid/health/topology',
-                'grid_identity_source_info' or 'grid/identity-source',
-                'grid_ilm_criteria_info' or 'grid/ilm-criteria',
-                'grid_ilm_policies_info' or 'grid/ilm-policies',
-                'grid_ilm_rules_info' or 'grid/ilm-rules',
-                'grid_license_info' or 'grid/license',
-                'grid_management_certificate_info' or 'grid/management-certificate',
-                'grid_ntp_servers_info' or 'grid/ntp-servers',
-                'grid_recovery_available_nodes_info' or 'grid/recovery/available-nodes',
-                'grid_recovery_info' or 'grid/recovery',
-                'grid_regions_info' or 'grid/regions',
-                'grid_schemes_info' or 'grid/schemes',
-                'grid_snmp_info' or 'grid/snmp',
-                'grid_storage_api_certificate_info' or 'grid/storage-api-certificate',
-                'grid_untrusted_client_network_info' or 'grid/untrusted-client-network',
-                'grid_users_info' or 'grid/users',
-                'grid_users_root_info' or 'grid/users/root',
-                'versions_info' or 'versions'
-                Can specify a list of values to include a larger subset.
+            - When supplied, this argument will restrict the information collected to a given subset.
+            - Either the info name or the REST API can be given.
+            - Possible values for this argument include
+            - C(grid_accounts_info) or C(grid/accounts)
+            - C(grid_alarms_info) or C(grid/alarms)
+            - C(grid_audit_info) or C(grid/audit)
+            - C(grid_compliance_global_info) or C(grid/compliance-global)
+            - C(grid_config_info) or C(grid/config)
+            - C(grid_config_management_info) or C(grid/config/management)
+            - C(grid_config_product_version_info) or C(grid/config/product-version)
+            - C(grid_deactivated_features_info) or C(grid/deactivated-features)
+            - C(grid_dns_servers_info) or C(grid/dns-servers)
+            - C(grid_domain_names_info) or C(grid/domain-names)
+            - C(grid_ec_profiles_info) or C(grid/ec-profiles)
+            - C(grid_expansion_info) or C(grid/expansion)
+            - C(grid_expansion_nodes_info) or C(grid/expansion/nodes)
+            - C(grid_expansion_sites_info) or C(grid/expansion/sites)
+            - C(grid_grid_networks_info) or C(grid/grid-networks)
+            - C(grid_groups_info) or C(grid/groups)
+            - C(grid_health_info) or C(grid/health)
+            - C(grid_health_topology_info) or C(grid/health/topology)
+            - C(grid_identity_source_info) or C(grid/identity-source)
+            - C(grid_ilm_criteria_info) or C(grid/ilm-criteria)
+            - C(grid_ilm_policies_info) or C(grid/ilm-policies)
+            - C(grid_ilm_rules_info) or C(grid/ilm-rules)
+            - C(grid_license_info) or C(grid/license)
+            - C(grid_management_certificate_info) or C(grid/management-certificate)
+            - C(grid_ntp_servers_info) or C(grid/ntp-servers)
+            - C(grid_recovery_available_nodes_info) or C(grid/recovery/available-nodes)
+            - C(grid_recovery_info) or C(grid/recovery)
+            - C(grid_regions_info) or C(grid/regions)
+            - C(grid_schemes_info) or C(grid/schemes)
+            - C(grid_snmp_info) or C(grid/snmp)
+            - C(grid_storage_api_certificate_info) or C(grid/storage-api-certificate)
+            - C(grid_untrusted_client_network_info) or C(grid/untrusted-client-network)
+            - C(grid_users_info) or C(grid/users)
+            - C(grid_users_root_info) or C(grid/users/root)
+            - C(versions_info) or C(versions)
+            - Can specify a list of values to include a larger subset.
         default: all
     parameters:
         description:
-        - Allows for any rest option to be passed in
+        - Allows for any rest option to be passed in.
         type: dict
 """
 
 EXAMPLES = """
 - name: Gather StorageGRID Grid info
-  na_sg_grid_info:
+  netapp.storagegrid.na_sg_grid_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
   register: sg_grid_info
 
 - name: Gather StorageGRID Grid info for grid/accounts and grid/config subsets
-  na_sg_grid_info:
+  netapp.storagegrid.na_sg_grid_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
@@ -94,7 +94,7 @@ EXAMPLES = """
   register: sg_grid_info
 
 - name: Gather StorageGRID Grid info for all subsets
-  na_sg_grid_info:
+  netapp.storagegrid.na_sg_grid_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
@@ -103,7 +103,7 @@ EXAMPLES = """
   register: sg_grid_info
 
 - name: Gather StorageGRID Grid info for grid/accounts and grid/users subsets, limit to 5 results for each subset
-  na_sg_grid_info:
+  netapp.storagegrid.na_sg_grid_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
