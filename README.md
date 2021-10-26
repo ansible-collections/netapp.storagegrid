@@ -1,3 +1,7 @@
+![example workflow](https://github.com/ansible-collections/netapp.storagegrid/actions/workflows/main.yml/badge.svg)
+[![codecov](https://codecov.io/gh/ansible-collections/netapp.storagegrid/branch/main/graph/badge.svg?token=weBYkksxSi)](https://codecov.io/gh/ansible-collections/netapp.storagegrid)
+
+
 =============================================================
 
  netapp.storagegrid
@@ -46,7 +50,7 @@ Subsequent tasks can leverage the registered auth token.
 
 ```yaml
 - name: Create a StorageGRID Tenant Account
-  nac_sg_grid_account:
+  netapp.storagegrid.na_sg_grid_account:
     api_url: "https://sgadmin.example.com"
     auth_token: "{{ auth.json.data }}"
     validate_certs: false
@@ -60,11 +64,28 @@ Subsequent tasks can leverage the registered auth token.
     quota_size: 10
 ```
 
+# Versioning
+
+[Releasing, Versioning and Deprecation](https://github.com/ansible-collections/netapp/issues/93)
+
 # Need help
 
 Join our Slack Channel at [Netapp.io](http://netapp.io/slack)
 
+# Code of Conduct
+
+This collection follows the [Ansible project's Code of Conduct](https://docs.ansible.com/ansible/devel/community/code_of_conduct.html).
+
 # Release Notes
+
+## 21.7.0
+
+### New Modules
+
+- na_sg_grid_gateway: Manage Load balancer (gateway) endpoints
+
+### Minor Changes
+- Updated documentation - added RETURN block for each module
 
 ## 21.6.0
 

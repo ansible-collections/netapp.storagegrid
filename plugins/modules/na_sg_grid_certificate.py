@@ -27,23 +27,23 @@ options:
     default: present
   type:
     description:
-    - Which certificate to update
+    - Which certificate to update.
     type: str
     choices: ['storage-api', 'management']
     required: true
   server_certificate:
     description:
-    - X.509 server certificate in PEM-encoding
+    - X.509 server certificate in PEM-encoding.
     type: str
   ca_bundle:
     description:
-    - Intermedia CA certificate bundle in concatenated PEM-encoding
-    - Omit if there is no intermediate CA
+    - Intermediate CA certificate bundle in concatenated PEM-encoding.
+    - Omit if there is no intermediate CA.
     type: str
   private_key:
     description:
-    - Certificate private key in PEM-encoding
-    - Required if C(server_certificate) is specified
+    - Certificate private key in PEM-encoding.
+    - Required if I(server_certificate) is specified.
     type: str
 """
 
@@ -79,6 +79,14 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID server certificates.
+    returned: success
+    type: dict
+    sample: {
+        "serverCertificateEncoded": "-----BEGIN CERTIFICATE-----MIIC6DCCAdACCQC7l4WukhKD0zANBgkqhkiG9w0BAQsFADA2MQswCQYDVQQGE...-----END CERTIFICATE-----",
+        "caBundleEncoded": "-----BEGIN CERTIFICATE-----MIIDdTCCAl2gAwIBAgILBAAAAAABFUtaw5QwDQYJKoZIhvcNAQEFBQAwVzELM...-----END CERTIFICATE-----"
+    }
 """
 
 import json

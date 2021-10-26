@@ -19,9 +19,9 @@ module: na_sg_org_info
 author: NetApp Ansible Team (@jasonl4) <ng-ansibleteam@netapp.com>
 extends_documentation_fragment:
     - netapp.storagegrid.netapp.sg
-short_description: NetApp StorageGRID Org information gatherer
+short_description: NetApp StorageGRID Org information gatherer.
 description:
-    - This module allows you to gather various information about StorageGRID Org configuration
+    - This module allows you to gather various information about StorageGRID Org configuration.
 version_added: 20.11.0
 
 options:
@@ -29,41 +29,41 @@ options:
         type: list
         elements: str
         description:
-            - When supplied, this argument will restrict the information collected
-                to a given subset. Either the info name or the Rest API can be given.
-                Possible values for this argument include
-                'org_compliance_global_info' or 'org/compliance-global',
-                'org_config_info' or 'org/config',
-                'org_config_product_version_info' or 'org/config/product-version',
-                'org_containers_info' or 'org/containers',
-                'org_deactivated_features_info' or 'org/deactivated-features',
-                'org_endpoints_info' or 'org/endpoints',
-                'org_groups_info' or 'org/groups',
-                'org_identity_source_info' or 'org/identity-source',
-                'org_regions_info' or 'org/regions',
-                'org_users_current_user_s3_access_keys_info' or 'org/users/current-user/s3-access-keys',
-                'org_usage_info' or 'org/usage',
-                'org_users_info' or 'org/users',
-                'org_users_root_info' or 'org/users/root',
-                'versions_info' or 'versions'
-                Can specify a list of values to include a larger subset.
+            - When supplied, this argument will restrict the information collected to a given subset.
+            - Either the info name or the Rest API can be given.
+            - Possible values for this argument include
+            - C(org_compliance_global_info) or C(org/compliance-global)
+            - C(org_config_info) or C(org/config)
+            - C(org_config_product_version_info) or C(org/config/product-version)
+            - C(org_containers_info) or C(org/containers)
+            - C(org_deactivated_features_info) or C(org/deactivated-features)
+            - C(org_endpoints_info) or C(org/endpoints)
+            - C(org_groups_info) or C(org/groups)
+            - C(org_identity_source_info) or C(org/identity-source)
+            - C(org_regions_info) or C(org/regions)
+            - C(org_users_current_user_s3_access_keys_info) or C(org/users/current-user/s3-access-keys)
+            - C(org_usage_info) or C(org/usage)
+            - C(org_users_info) or C(org/users)
+            - C(org_users_root_info) or C(org/users/root)
+            - C(versions_info) or C(versions)
+            - Can specify a list of values to include a larger subset.
         default: "all"
     parameters:
         description:
-        - Allows for any rest option to be passed in
+        - Allows for any rest option to be passed in.
         type: dict
 """
 
 EXAMPLES = """
 - name: Gather StorageGRID Org info
-  na_sg_org_info:
+  netapp.storagegrid.na_sg_org_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
   register: sg_org_info
 
 - name: Gather StorageGRID Org info for org/containers and org/config subsets
-  na_sg_org_info:
+  netapp.storagegrid.na_sg_org_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
@@ -73,7 +73,7 @@ EXAMPLES = """
   register: sg_org_info
 
 - name: Gather StorageGRID Org info for all subsets
-  na_sg_org_info:
+  netapp.storagegrid.na_sg_org_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
@@ -82,7 +82,7 @@ EXAMPLES = """
   register: sg_org_info
 
 - name: Gather StorageGRID Org info for org/containers and org/users subsets, limit to 5 results for each subset
-  na_sg_org_info:
+  netapp.storagegrid.na_sg_org_info:
     api_url: "https://1.2.3.4/"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
@@ -92,6 +92,29 @@ EXAMPLES = """
     parameters:
       limit: 5
   register: sg_org_info
+"""
+
+RETURN = """
+sg_info:
+    description: Returns various information about the StorageGRID Grid configuration.
+    returned: always
+    type: dict
+    sample: {
+        "org/compliance-global": {...},
+        "org/config": {...},
+        "org/config/product-version": {...},
+        "org/containers": {...},
+        "org/deactivated-features": {...},
+        "org/endpoints": {...},
+        "org/groups": {...},
+        "org/identity-source": {...},
+        "org/regions": {...},
+        "org/users/current-user/s3-access-keys": {...},
+        "org/usage": {...},
+        "org/users": {...},
+        "org/users/root": {...},
+        "org/versions": {...}
+    }
 """
 
 from ansible.module_utils.basic import AnsibleModule

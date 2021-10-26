@@ -40,8 +40,8 @@ options:
     type: str
   unique_name:
     description:
-    - Unique Name for the group. Must begin with "group/" or "federated-group/"
-    - Required for create, modify or delete operation
+    - Unique Name for the group. Must begin with C(group/) or C(federated-group/)
+    - Required for create, modify or delete operation.
     type: str
     required: true
   management_policy:
@@ -122,6 +122,35 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID group attributes.
+    returned: success
+    type: dict
+    sample: {
+        "displayName": "Example Group",
+        "policies": {
+            "management": {
+                "alarmAcknowledgment": true,
+                "manageAlerts": true,
+                "otherGridConfiguration": true,
+                "gridTopologyPageConfiguration": true,
+                "tenantAccounts": true,
+                "changeTenantRootPassword": true,
+                "maintenance": true,
+                "metricsQuery": true,
+                "activateFeatures": false,
+                "ilm": true,
+                "objectMetadata": true,
+                "storageAdmin": true,
+                "rootAccess": true
+            }
+        },
+        "uniqueName": "group/examplegroup",
+        "accountId": "12345678901234567890",
+        "id": "00000000-0000-0000-0000-000000000000",
+        "federated": false,
+        "groupURN": "urn:sgws:identity::12345678901234567890:group/examplegroup"
+    }
 """
 
 import json

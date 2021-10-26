@@ -40,16 +40,16 @@ options:
     type: str
   region:
     description:
-    - Required for specifing a bucket region
+    - Required for specifing a bucket region.
     type: str
   compliance:
     description:
-    - Required if specifing bucket compliance
+    - Required if specifing bucket compliance.
     type: dict
     suboptions:
       auto_delete:
         description:
-        - If enabled, objects will be deleted automatically when its retention period expires, unless the bucket is under a legal hold
+        - If enabled, objects will be deleted automatically when its retention period expires, unless the bucket is under a legal hold.
         type: bool
       legal_hold:
         description:
@@ -72,6 +72,23 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID bucket.
+    returned: always
+    type: dict
+    sample: {
+        "name": "example-bucket",
+        "creationTime": "2021-01-01T00:00:00.000Z",
+        "region": "us-east-1",
+        "compliance": {
+            "autoDelete": false,
+            "legalHold": false,
+            "retentionPeriodMinutes": 2629800
+        },
+        "s3ObjectLock": {
+            "enabled": false
+        }
+    }
 """
 
 import json

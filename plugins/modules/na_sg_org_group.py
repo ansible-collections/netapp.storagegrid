@@ -35,14 +35,14 @@ options:
     default: present
   unique_name:
     description:
-    - Unique Name for the group. Must begin with "group/" or "federated-group/"
-    - Required for create, modify or delete operation
+    - Unique Name for the group. Must begin with C(group/) or C(federated-group/).
+    - Required for create, modify or delete operation.
     type: str
     required: true
   display_name:
     description:
     - Name of the group.
-    - Required for create operation
+    - Required for create operation.
     type: str
   management_policy:
     description:
@@ -92,6 +92,28 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID tenant group attributes.
+    returned: success
+    type: dict
+    sample: {
+        "displayName": "Example Group",
+        "policies": {
+            "management": {
+                "manageAllContainers": true,
+                "manageEndpoints": true,
+                "manageOwnS3Credentials": true,
+                "rootAccess": true
+            },
+            "s3": {...},
+            "swift": {...}
+        },
+        "uniqueName": "group/examplegroup",
+        "accountId": "12345678901234567890",
+        "id": "00000000-0000-0000-0000-000000000000",
+        "federated": false,
+        "groupURN": "urn:sgws:identity::12345678901234567890:group/examplegroup"
+    }
 """
 
 import json

@@ -43,7 +43,7 @@ from ansible.module_utils.urls import open_url
 from ansible.module_utils.api import basic_auth_argument_spec
 from ansible.module_utils._text import to_native
 
-COLLECTION_VERSION = "21.6.0"
+COLLECTION_VERSION = "21.7.0"
 
 try:
     import requests

@@ -11,11 +11,13 @@ jobs:
     name: Sanity (${{ matrix.ansible }} on storagegrid
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         ansible:
           - stable-2.9
           - stable-2.10
           - stable-2.11
+          - stable-2.12
           - devel
 
     steps:

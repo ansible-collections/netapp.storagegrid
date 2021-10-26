@@ -100,3 +100,14 @@ releases:
       name: na_sg_org_identity_federation
       namespace: ''
     release_date: '2021-06-16'
+  21.7.0:
+    changes:
+      minor_changes:
+      - Updated documentation - added RETURN block for each module
+    fragments:
+    - 20.7.0.yaml
+    modules:
+    - description: Manage Load balancer (gateway) endpoints on StorageGRID.
+      name: na_sg_grid_gateway
+      namespace: ''
+    release_date: '2021-10-05'

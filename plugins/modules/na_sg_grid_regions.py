@@ -52,6 +52,12 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the configured regions.
+    returned: success
+    type: list
+    elements: str
+    sample: ["us-east-1", "us-central-1"]
 """
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils

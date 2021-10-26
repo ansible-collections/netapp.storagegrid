@@ -30,24 +30,24 @@ options:
   state:
     description:
     - Whether the specified account should exist or not.
-    - Required for all operations
+    - Required for all operations.
     type: str
     choices: ['present', 'absent']
     default: present
   name:
     description:
     - Name of the tenant.
-    - Required for create or modify operation
+    - Required for create or modify operation.
     type: str
   account_id:
     description:
     - Account Id of the tenant.
-    - May be used for modify or delete operation
+    - May be used for modify or delete operation.
     type: str
   protocol:
     description:
     - Object Storage protocol used by the tenancy.
-    - Required for create operation
+    - Required for create operation.
     type: str
     choices: ['s3', 'swift']
   management:
@@ -66,13 +66,13 @@ options:
   root_access_group:
     description:
     - Existing federated group to have initial Root Access permissions for the tenant.
-    - Must begin with "federated-group/"
+    - Must begin with C(federated-group/)
     type: str
     version_added: 20.11.0
   quota_size:
     description:
-    - Quota to apply to the tenant specified in (quota_size_unit).
-    - If you intend to have no limits, assign 0.
+    - Quota to apply to the tenant specified in I(quota_size_unit).
+    - If you intend to have no limits, assign C(0).
     type: int
     default: 0
   quota_size_unit:
@@ -84,7 +84,7 @@ options:
   password:
     description:
     - Root password for tenant account.
-    - Requires root privilege
+    - Requires root privilege.
     type: str
   update_password:
     description:
@@ -115,6 +115,20 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the StorageGRID tenant account.
+    returned: success
+    type: dict
+    sample: {
+        "name": "Example Account",
+        "capabilities": ["management", "s3"],
+        "policy": {
+            "useAccountIdentitySource": true,
+            "allowPlatformServices": false,
+            "quotaObjectBytes": 100000000000
+        },
+        "id": "12345678901234567890"
+    }
 """
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils

@@ -30,7 +30,7 @@ options:
   state:
     description:
     - Whether the specified DNS address should exist or not.
-    - Required for all operations
+    - Required for all operations.
     type: str
     choices: ['present']
     default: present
@@ -53,6 +53,12 @@ EXAMPLES = """
 """
 
 RETURN = """
+resp:
+    description: Returns information about the configured DNS servers.
+    returned: success
+    type: list
+    elements: str
+    sample: ["8.8.8.8", "8.8.4.4"]
 """
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
