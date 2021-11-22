@@ -99,19 +99,42 @@ options:
 """
 
 EXAMPLES = """
-  - name: create a sg tenant
+  - name: create a tenant account
     netapp.storagegrid.na_sg_grid_account:
       api_url: "https://<storagegrid-endpoint-url>"
       auth_token: "storagegrid-auth-token"
       validate_certs: false
-      state: absent
-      name: storagegrid-user-1
+      state: present
+      name: storagegrid-tenant-1
       protocol: s3
       management: true
       use_own_identity_source: false
       allow_platform_services: false
       password: "tenant-password"
       quota_size: 0
+
+  - name: update a tenant account
+    netapp.storagegrid.na_sg_grid_account:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      validate_certs: false
+      state: present
+      name: storagegrid-tenant-1
+      protocol: s3
+      management: true
+      use_own_identity_source: false
+      allow_platform_services: true
+      password: "tenant-password"
+      quota_size: 10240
+
+  - name: delete a tenant account
+    netapp.storagegrid.na_sg_grid_account:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      validate_certs: false
+      state: absent
+      name: storagegrid-tenant-1
+      protocol: s3
 """
 
 RETURN = """
