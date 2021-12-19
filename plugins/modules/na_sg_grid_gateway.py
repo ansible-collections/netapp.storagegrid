@@ -19,6 +19,8 @@ author: NetApp Ansible Team (@jkandati) <ng-sg-ansibleteam@netapp.com>
 description:
 - Create or Update Load Balancer Endpoints on StorageGRID.
 - This module is idempotent if I(private_key) is not specified.
+- The module will match an existing config based on I(port) and I(display_name).
+- If multiple load balancer endpoints exist utilizing the same port and display name, use I(gateway_id) to select the intended endpoint.
 options:
   state:
     description:
@@ -26,10 +28,15 @@ options:
     type: str
     choices: ['present', 'absent']
     default: present
+  gateway_id:
+    description:
+    - ID of the load balancer endpoint.
+    type: str
+    version_added: '21.9.0'
   display_name:
     description:
     - A display name for the configuration.
-    - This parameter cannot be modified after the load balancer endpoint has been created.
+    - This parameter can be modified if I(gateway_id) is also specified.
     type: str
   port:
     description:
@@ -53,12 +60,42 @@ options:
     - Indicates whether to listen for connections on IPv6.
     type: bool
     default: true
+  binding_mode:
+    description:
+    - Binding mode to restrict accessibility of the load balancer endpoint.
+    - A binding mode other than I(global) requires StorageGRID 11.5 or greater.
+    type: str
+    choices: ['global', 'ha-groups', 'node-interfaces']
+    default: 'global'
+    version_added: '21.9.0'
+  ha_groups:
+    description:
+    - A set of StorageGRID HA Groups to bind the load balancer endpoint to.
+    - Option is ignored unless I(binding_mode=ha-groups).
+    type: list
+    elements: str
+    version_added: '21.9.0'
+  node_interfaces:
+    description:
+    - A set of StorageGRID node interfaces to bind the load balancer endpoint to.
+    type: list
+    elements: dict
+    suboptions:
+      node:
+        description:
+        - Name of the StorageGRID node.
+        type: str
+      interface:
+        description:
+        - The interface to bind to. eth0 corresponds to the Grid Network, eth1 to the Admin Network, and eth2 to the Client Network.
+        type: str
+    version_added: '21.9.0'
   default_service_type:
     description:
     - The type of service to proxy through the load balancer.
     type: str
-    choices: ["s3","swift"]
-    default: "s3"
+    choices: ['s3', 'swift']
+    default: 's3'
   server_certificate:
     description:
     - X.509 server certificate in PEM-encoding.
@@ -80,7 +117,7 @@ options:
 
 """
 EXAMPLES = """
-  - name: Create and Upload Certificate to a Gateway Endpoint
+  - name: Create and Upload Certificate to a Gateway Endpoint with global binding
     netapp.storagegrid.na_sg_grid_gateway:
       api_url: "https://<storagegrid-endpoint-url>"
       auth_token: "storagegrid-auth-token"
@@ -112,6 +149,46 @@ EXAMPLES = """
         -----END PRIVATE KEY-----
       validate_certs: false
 
+  - name: Create a HTTP Gateway Endpoint with HA Group Binding
+    netapp.storagegrid.na_sg_grid_gateway:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      displayName: "App Endpoint 1"
+      port: 10501
+      secure: false
+      enable_ipv4: True
+      enable_ipv6: True
+      default_service_type: "s3"
+      binding_mode: ha-groups
+      ha_groups: site1_ha_group
+      validate_certs: false
+
+  - name: Create a HTTP Gateway Endpoint with Node Interface Binding
+    netapp.storagegrid.na_sg_grid_gateway:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      displayName: "App Endpoint 2"
+      port: 10502
+      secure: false
+      enable_ipv4: True
+      enable_ipv6: True
+      default_service_type: "s3"
+      binding_mode: node-interfaces
+      node_interfaecs:
+      - node: SITE1_ADM1
+        interface: eth2
+      - node: SITE2_ADM1
+        interface: eth2
+      validate_certs: false
+
+  - name: Delete Gateway Endpoint
+    netapp.storagegrid.na_sg_grid_gateway:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      displayName: "App Endpoint 2"
+      port: 10502
+      default_service_type: "s3"
+      validate_certs: false
 """
 
 RETURN = """
@@ -158,11 +235,25 @@ class SgGridGateway:
             dict(
                 # Arguments for Creating Gateway Port
                 state=dict(required=False, type="str", choices=["present", "absent"], default="present"),
+                gateway_id=dict(required=False, type="str"),
                 display_name=dict(required=False, type="str"),
                 port=dict(required=True, type="int"),
                 secure=dict(required=False, type="bool", default=True),
                 enable_ipv4=dict(required=False, type="bool", default=True),
                 enable_ipv6=dict(required=False, type="bool", default=True),
+                binding_mode=dict(
+                    required=False, type="str", choices=["global", "ha-groups", "node-interfaces"], default="global"
+                ),
+                ha_groups=dict(required=False, type="list", elements="str"),
+                node_interfaces=dict(
+                    required=False,
+                    type="list",
+                    elements="dict",
+                    options=dict(
+                        node=dict(required=False, type="str"),
+                        interface=dict(required=False, type="str"),
+                    ),
+                ),
                 # Arguments for setting Gateway Virtual Server
                 default_service_type=dict(required=False, type="str", choices=["s3", "swift"], default="s3"),
                 server_certificate=dict(required=False, type="str"),
@@ -172,6 +263,7 @@ class SgGridGateway:
         )
 
         parameter_map_gateway = {
+            "gateway_id": "id",
             "display_name": "displayName",
             "port": "port",
             "secure": "secure",
@@ -195,6 +287,9 @@ class SgGridGateway:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+
         # Checking for the parameters passed and create new parameters list
 
         # Parameters for creating a new gateway port configuration
@@ -216,6 +311,74 @@ class SgGridGateway:
             for k in parameter_map_server.keys():
                 if self.parameters.get(k) is not None:
                     self.data_server["plaintextCertData"][parameter_map_server[k]] = self.parameters[k]
+
+        if self.parameters["binding_mode"] != "global":
+            self.rest_api.fail_if_not_sg_minimum_version("non-global binding mode", 11, 5)
+
+        if self.parameters["binding_mode"] == "ha-groups":
+            self.data_gateway["pinTargets"] = {}
+            self.data_gateway["pinTargets"]["haGroups"] = self.build_ha_group_list()
+            self.data_gateway["pinTargets"]["nodeInterfaces"] = []
+
+        elif self.parameters["binding_mode"] == "node-interfaces":
+            self.data_gateway["pinTargets"] = {}
+            self.data_gateway["pinTargets"]["nodeInterfaces"] = self.build_node_interface_list()
+            self.data_gateway["pinTargets"]["haGroups"] = []
+
+        else:
+            self.data_gateway["pinTargets"] = {}
+            self.data_gateway["pinTargets"]["haGroups"] = []
+            self.data_gateway["pinTargets"]["nodeInterfaces"] = []
+
+    def build_ha_group_list(self):
+        ha_group_ids = []
+
+        api = "api/v3/private/ha-groups"
+        ha_groups, error = self.rest_api.get(api)
+        if error:
+            self.module.fail_json(msg=error)
+
+        for name in self.parameters["ha_groups"]:
+            ha_group = next((item for item in ha_groups["data"] if item["name"] == name), None)
+            if ha_group is not None:
+                ha_group_ids.append(ha_group["id"])
+            else:
+                self.module.fail_json(msg="HA Group '%s' is invalid" % name)
+
+        return ha_group_ids
+
+    def build_node_interface_list(self):
+        node_interfaces = []
+
+        api = "api/v3/grid/node-health"
+        nodes, error = self.rest_api.get(api)
+
+        if error:
+            self.module.fail_json(msg=error)
+
+        for node_interface in self.parameters["node_interfaces"]:
+            node_dict = {}
+            node = next((item for item in nodes["data"] if item["name"] == node_interface["node"]), None)
+            if node is not None:
+                node_dict["nodeId"] = node["id"]
+                node_dict["interface"] = node_interface["interface"]
+                node_interfaces.append(node_dict)
+            else:
+                self.module.fail_json(msg="Node '%s' is invalid" % node_interface["node"])
+
+        return node_interfaces
+
+    def get_grid_gateway_config(self, gateway_id):
+        api = "api/v3/private/gateway-configs/%s" % gateway_id
+        response, error = self.rest_api.get(api)
+
+        if error:
+            self.module.fail_json(msg=error)
+
+        gateway = response["data"]
+        gateway_config = self.get_grid_gateway_server_config(gateway["id"])
+
+        return gateway, gateway_config
 
     def get_grid_gateway_server_config(self, gateway_id):
         api = "api/v3/private/gateway-configs/%s/server-config" % gateway_id
@@ -245,7 +408,7 @@ class SgGridGateway:
 
         for index, port in enumerate(configured_ports):
             # if port already exists then get gateway ID and get the gateway port server configs
-            if target_port == port:
+            if target_port == port and grid_gateway_ports[index]["displayName"] == self.parameters["display_name"]:
                 gateway = grid_gateway_ports[index]
                 gateway_config = self.get_grid_gateway_server_config(gateway["id"])
                 break
@@ -270,6 +433,15 @@ class SgGridGateway:
             self.module.fail_json(msg=error)
 
     def update_grid_gateway(self, gateway_id):
+        api = "api/v3/private/gateway-configs/%s" % gateway_id
+        response, error = self.rest_api.put(api, self.data_gateway)
+
+        if error:
+            self.module.fail_json(msg=error)
+
+        return response["data"]
+
+    def update_grid_gateway_server(self, gateway_id):
         api = "api/v3/private/gateway-configs/%s/server-config" % gateway_id
         response, error = self.rest_api.put(api, self.data_server)
 
@@ -279,8 +451,18 @@ class SgGridGateway:
         return response["data"]
 
     def apply(self):
-        # Get list of all gateway port configurations
-        gateway, gateway_config = self.get_grid_gateway_ports(self.data_gateway["port"])
+        gateway = None
+        gateway_config = None
+
+        update_gateway = False
+        update_gateway_server = False
+
+        if self.parameters.get("gateway_id"):
+            gateway, gateway_config = self.get_grid_gateway_config(self.parameters["gateway_id"])
+
+        else:
+            # Get list of all gateway port configurations
+            gateway, gateway_config = self.get_grid_gateway_ports(self.data_gateway["port"])
 
         cd_action = self.na_helper.get_cd_action(gateway.get("id"), self.parameters)
 
@@ -299,7 +481,10 @@ class SgGridGateway:
                     del gateway_config["plaintextCertData"]["metadata"]
 
             # compare current and desired state
-            self.na_helper.get_modified_attributes(gateway_config, self.data_server)
+            # gateway config cannot be modified until StorageGRID 11.5
+            if self.rest_api.meets_sg_minimum_version(11, 5):
+                update_gateway = self.na_helper.get_modified_attributes(gateway, self.data_gateway)
+            update_gateway_server = self.na_helper.get_modified_attributes(gateway_config, self.data_server)
 
             if update:
                 self.na_helper.changed = True
@@ -315,13 +500,19 @@ class SgGridGateway:
             elif cd_action == "create":
                 resp_data = self.create_grid_gateway()
                 gateway["id"] = resp_data["id"]
-                resp_data_server = self.update_grid_gateway(gateway["id"])
+                resp_data_server = self.update_grid_gateway_server(gateway["id"])
                 resp_data.update(resp_data_server)
                 result_message = "Load Balancer Gateway Port Created"
 
             else:
-                resp_data = self.update_grid_gateway(gateway["id"])
-                resp_data.update(gateway)
+                resp_data = gateway
+                if update_gateway:
+                    resp_data = self.update_grid_gateway(gateway["id"])
+                    resp_data.update(gateway_config)
+
+                if update_gateway_server:
+                    resp_data_server = self.update_grid_gateway_server(gateway["id"])
+                    resp_data.update(resp_data_server)
                 result_message = "Load Balancer Gateway Port Updated"
 
         self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)

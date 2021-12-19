@@ -111,3 +111,24 @@ releases:
       name: na_sg_grid_gateway
       namespace: ''
     release_date: '2021-10-05'
+  21.8.0:
+    changes:
+      minor_changes:
+      - PR2 - allow usage of Ansible module group defaults - for Ansible 2.12+.
+    fragments:
+    - DEVOPS-4416.yaml
+    release_date: '2021-11-11'
+  21.9.0:
+    changes:
+      bugfixes:
+      - na_sg_grid_account - minor documentation fix.
+      - na_sg_grid_gateway - existing endpoints matched by ``name`` and ``port``.
+      minor_changes:
+      - PR2 - allow usage of Ansible module group defaults - for Ansible 2.12+.
+      - na_sg_grid_gateway - supports load balancer endpoint binding available in
+        StorageGRID 11.5+.
+      - na_sg_org_container - supports creation of S3 Object Lock buckets available
+        in StorageGRID 11.5+.
+    fragments:
+    - 21.9.0.yaml
+    release_date: '2021-12-17'

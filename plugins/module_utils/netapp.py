@@ -43,7 +43,7 @@ from ansible.module_utils.urls import open_url
 from ansible.module_utils.api import basic_auth_argument_spec
 from ansible.module_utils._text import to_native
 
-COLLECTION_VERSION = "21.8.0"
+COLLECTION_VERSION = "21.9.0"
 
 try:
     import requests
@@ -92,13 +92,14 @@ class SGRestAPI(object):
         self.verify = self.module.params["validate_certs"]
         self.timeout = timeout
         self.check_required_library()
+        self.sg_version = dict(major=-1, minor=-1, full="", valid=False)
 
     def check_required_library(self):
         if not HAS_REQUESTS:
             self.module.fail_json(msg=missing_required_lib("requests"))
 
     def send_request(self, method, api, params, json=None):
-        """ send http request and process reponse, including error conditions """
+        """send http request and process reponse, including error conditions"""
         url = "%s/%s" % (self.api_url, api)
         status_code = None
         content = None
@@ -112,7 +113,7 @@ class SGRestAPI(object):
         }
 
         def get_json(response):
-            """ extract json, and error message if present """
+            """extract json, and error message if present"""
             try:
                 json = response.json()
 
@@ -127,7 +128,13 @@ class SGRestAPI(object):
 
         try:
             response = requests.request(
-                method, url, headers=headers, timeout=self.timeout, json=json, verify=self.verify, params=params,
+                method,
+                url,
+                headers=headers,
+                timeout=self.timeout,
+                json=json,
+                verify=self.verify,
+                params=params,
             )
             status_code = response.status_code
             # If the response was successful, no Exception will be raised
@@ -165,3 +172,40 @@ class SGRestAPI(object):
     def delete(self, api, data, params=None):
         method = "DELETE"
         return self.send_request(method, api, params, json=data)
+
+    def get_sg_product_version(self, api_root="grid"):
+        method = "GET"
+        api = "api/v3/%s/config/product-version" % api_root
+        message, error = self.send_request(method, api, params={})
+        if error:
+            self.module.fail_json(msg=error)
+        self.set_version(message)
+
+    def set_version(self, message):
+        try:
+            product_version = message.get("data", "not found").get("productVersion", "not_found")
+        except AttributeError:
+            self.sg_version["valid"] = False
+            return
+
+        self.sg_version["major"], self.sg_version["minor"] = list(map(int, product_version.split(".")[0:2]))
+        self.sg_version["full"] = product_version
+        self.sg_version["valid"] = True
+
+    def get_sg_version(self):
+        if self.sg_version["valid"]:
+            return self.sg_version["major"], self.sg_version["minor"]
+        return -1, -1
+
+    def meets_sg_minimum_version(self, minimum_major, minimum_minor):
+        return self.get_sg_version() >= (minimum_major, minimum_minor)
+
+    def requires_sg_version(self, module_or_option, version):
+        return "%s requires StorageGRID %s or later." % (module_or_option, version)
+
+    def fail_if_not_sg_minimum_version(self, module_or_option, minimum_major, minimum_minor):
+        version = self.get_sg_version()
+        if version < (minimum_major, minimum_minor):
+            msg = "Error: " + self.requires_sg_version(module_or_option, "%d.%d" % (minimum_major, minimum_minor))
+            msg += "  Found: %s.%s." % version
+            self.module.fail_json(msg=msg)

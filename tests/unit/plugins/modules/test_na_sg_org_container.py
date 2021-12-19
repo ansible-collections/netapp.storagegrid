@@ -9,11 +9,12 @@ __metaclass__ = type
 import json
 import pytest
 import sys
+
 try:
     from requests import Response
 except ImportError:
     if sys.version_info < (2, 7):
-        pytestmark = pytest.mark.skip('Skipping Unit Tests on 2.6 as requests is not available')
+        pytestmark = pytest.mark.skip("Skipping Unit Tests on 2.6 as requests is not available")
     else:
         raise
 
@@ -32,16 +33,48 @@ from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_org_container 
 SRR = {
     # common responses
     "empty_good": ({"data": []}, None),
-    "not_found": ({"status": "error", "code": 404, "data": {}}, {"key": "error.404"},),
+    "not_found": (
+        {"status": "error", "code": 404, "data": {}},
+        {"key": "error.404"},
+    ),
     "end_of_sequence": (None, "Unexpected call to send_request"),
     "generic_error": (None, "Expected error"),
     "delete_good": (None, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
+    "version_116": ({"data": {"productVersion": "11.6.0-20211120.0301.850531e"}}, None),
+    "global_compliance_disabled": (
+        {
+            "data": {
+                "complianceEnabled": False,
+            }
+        },
+        None,
+    ),
+    "global_compliance_enabled": (
+        {
+            "data": {
+                "complianceEnabled": True,
+            }
+        },
+        None,
+    ),
     "org_containers": (
         {"data": [{"name": "testbucket", "creationTime": "2020-02-04T12:43:50.777Z", "region": "us-east-1"}]},
         None,
     ),
     "org_container_record": (
         {"data": {"name": "testbucket", "creationTime": "2020-02-04T12:43:50.777Z", "region": "us-east-1"}},
+        None,
+    ),
+    "org_container_objectlock_record": (
+        {
+            "data": {
+                "name": "testbucket",
+                "creationTime": "2020-02-04T12:43:50.777Z",
+                "region": "us-east-1",
+                "s3ObjectLock": {"enabled": True},
+            }
+        },
         None,
     ),
     "org_container_record_update": (
@@ -90,7 +123,7 @@ def fail_json(*args, **kwargs):  # pylint: disable=unused-argument
 
 
 class TestMyModule(unittest.TestCase):
-    """ a group of related Unit Tests """
+    """a group of related Unit Tests"""
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
@@ -135,15 +168,23 @@ class TestMyModule(unittest.TestCase):
             }
         )
 
-    def test_module_fail_when_required_args_missing(self):
-        """ required arguments are reported as errors """
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_missing(self, mock_request):
+        """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleFailJson) as exc:
             set_module_args(self.set_default_args_fail_check())
             org_container_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
-        """ required arguments are reported as errors """
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
+        """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             org_container_module()
@@ -154,12 +195,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_container_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_container())
-        my_obj = org_container_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["empty_good"],  # get
             SRR["org_container_record"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_container_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
@@ -168,11 +210,12 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_create_na_sg_org_container_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_container())
-        my_obj = org_container_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_containers"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = org_container_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_create_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
@@ -183,12 +226,13 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_create_na_sg_org_container()
         args["compliance"] = {"auto_delete": False, "legal_hold": False}
         set_module_args(args)
-        my_obj = org_container_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_containers"],  # get
             SRR["org_container_record_update"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = org_container_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
@@ -197,13 +241,57 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_org_container_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_org_container())
-        my_obj = org_container_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_containers"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
+        my_obj = org_container_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_delete_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_minimum_version_not_met(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["s3_object_lock_enabled"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_114"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            org_container_module()
+        print("Info: test_module_fail_minimum_version_not_met: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_org_container_objectlock_global_compliance_fail(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["s3_object_lock_enabled"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],
+            SRR["empty_good"],  # get
+            SRR["global_compliance_disabled"],  # get
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleFailJson) as exc:
+            my_obj.apply()
+        print("Info: test_create_na_sg_org_container_objectlock_global_compliance_fail: %s" % repr(exc.value.args[0]))
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_org_container_objectlock_pass(self, mock_request):
+        set_module_args(self.set_args_create_na_sg_org_container())
+        mock_request.side_effect = [
+            SRR["version_116"],
+            SRR["empty_good"],  # get
+            SRR["global_compliance_enabled"],  # get
+            SRR["org_container_objectlock_record"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_create_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]

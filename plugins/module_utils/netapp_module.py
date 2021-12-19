@@ -30,6 +30,8 @@
 
 from __future__ import absolute_import, division, print_function
 
+from copy import deepcopy
+
 __metaclass__ = type
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
@@ -150,6 +152,44 @@ class NetAppModule(object):
         # rename is in order
         self.changed = True
         return True
+
+    @staticmethod
+    def compare_lists(current, desired, get_list_diff):
+        ''' compares two lists and return a list of elements that are either the desired elements or elements that are
+            modified from the current state depending on the get_list_diff flag
+            :param: current: current item attribute in ONTAP
+            :param: desired: attributes from playbook
+            :param: get_list_diff: specifies whether to have a diff of desired list w.r.t current list for an attribute
+            :return: list of attributes to be modified
+            :rtype: list
+        '''
+        current_copy = deepcopy(current)
+        desired_copy = deepcopy(desired)
+
+        # get what in desired and not in current
+        desired_diff_list = list()
+        for item in desired:
+            if item in current_copy:
+                current_copy.remove(item)
+            else:
+                desired_diff_list.append(item)
+
+        # get what in current but not in desired
+        current_diff_list = []
+        for item in current:
+            if item in desired_copy:
+                desired_copy.remove(item)
+            else:
+                current_diff_list.append(item)
+
+        if desired_diff_list or current_diff_list:
+            # there are changes
+            if get_list_diff:
+                return desired_diff_list
+            else:
+                return desired
+        else:
+            return None
 
     def get_modified_attributes(self, current, desired, get_list_diff=False):
         ''' takes two dicts of attributes and return a dict of attributes that are

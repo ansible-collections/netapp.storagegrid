@@ -5,6 +5,29 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.9.0
+=======
+
+Minor Changes
+-------------
+
+- na_sg_grid_gateway - supports load balancer endpoint binding available in StorageGRID 11.5+.
+- na_sg_org_container - supports creation of S3 Object Lock buckets available in StorageGRID 11.5+.
+
+Bugfixes
+--------
+
+- na_sg_grid_account - minor documentation fix.
+- na_sg_grid_gateway - existing endpoints matched by ``name`` and ``port``.
+
+v21.8.0
+=======
+
+Minor Changes
+-------------
+
+- PR2 - allow usage of Ansible module group defaults - for Ansible 2.12+.
+
 v21.7.0
 =======
 

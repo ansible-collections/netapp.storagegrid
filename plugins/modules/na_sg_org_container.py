@@ -40,11 +40,12 @@ options:
     type: str
   region:
     description:
-    - Required for specifing a bucket region.
+    - Set a region for the bucket.
     type: str
   compliance:
     description:
-    - Required if specifing bucket compliance.
+    - Configure compliance settings for an S3 bucket.
+    - Cannot be specified along with I(s3_object_lock_enabled).
     type: dict
     suboptions:
       auto_delete:
@@ -59,6 +60,13 @@ options:
         description:
         - specify the length of the retention period for objects added to this bucket, in minutes.
         type: int
+  s3_object_lock_enabled:
+    description:
+    - Enable S3 Object Lock on the bucket.
+    - S3 Object Lock requires StorageGRID 11.5 or greater
+    required: false
+    type: bool
+    version_added: '21.9.0'
 """
 
 EXAMPLES = """
@@ -69,6 +77,23 @@ EXAMPLES = """
       validate_certs: false
       state: present
       name: ansiblebucket1
+
+  - name: delete a s3 bucket
+    netapp.storagegrid.na_sg_org_container:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      validate_certs: false
+      state: absent
+      name: ansiblebucket1
+
+  - name: create a s3 bucket with Object Lock
+    netapp.storagegrid.na_sg_org_container:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      validate_certs: false
+      state: present
+      name: objectlock-bucket1
+      s3_object_lock_enaled: true
 """
 
 RETURN = """
@@ -124,6 +149,7 @@ class SgOrgContainer(object):
                         retention_period_minutes=dict(required=False, type="int"),
                     ),
                 ),
+                s3_object_lock_enabled=dict(required=False, type="bool"),
             )
         )
         parameter_map = {
@@ -131,7 +157,11 @@ class SgOrgContainer(object):
             "legal_hold": "legalHold",
             "retention_period_minutes": "retentionPeriodMinutes",
         }
-        self.module = AnsibleModule(argument_spec=self.argument_spec, supports_check_mode=True,)
+        self.module = AnsibleModule(
+            argument_spec=self.argument_spec,
+            mutually_exclusive=[("compliance", "s3_object_lock_enabled")],
+            supports_check_mode=True,
+        )
 
         self.na_helper = NetAppModule()
 
@@ -139,6 +169,9 @@ class SgOrgContainer(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version(api_root="org")
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
         self.data["name"] = self.parameters["name"]
@@ -147,6 +180,10 @@ class SgOrgContainer(object):
             self.data["compliance"] = dict(
                 (parameter_map[k], v) for (k, v) in self.parameters["compliance"].items() if v is not None
             )
+
+        if self.parameters.get("s3_object_lock_enabled") is not None:
+            self.rest_api.fail_if_not_sg_minimum_version("S3 Object Lock", 11, 5)
+            self.data["s3ObjectLock"] = dict(enabled=self.parameters["s3_object_lock_enabled"])
 
     def get_org_container(self):
         # Check if bucket/container exists
@@ -173,6 +210,16 @@ class SgOrgContainer(object):
             self.module.fail_json(msg=error)
 
         return response["data"]
+
+    def fail_if_global_object_lock_disabled(self):
+        api = "api/v3/org/compliance-global"
+
+        response, error = self.rest_api.get(api)
+        if error:
+            self.module.fail_json(msg=error)
+
+        if not response["data"]["complianceEnabled"]:
+            self.module.fail_json(msg="Error: Global S3 Object Lock setting is not enabled.")
 
     def update_org_container_compliance(self):
         api = "api/v3/org/containers/%s/compliance" % self.parameters["name"]
@@ -218,6 +265,9 @@ class SgOrgContainer(object):
                     result_message = "Org Container deleted"
 
                 elif cd_action == "create":
+                    if self.parameters.get("s3_object_lock_enabled"):  # if it is set and true
+                        self.fail_if_global_object_lock_disabled()
+
                     resp_data = self.create_org_container()
                     result_message = "Org Container created"
 

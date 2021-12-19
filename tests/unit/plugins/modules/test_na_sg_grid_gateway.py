@@ -9,13 +9,14 @@ __metaclass__ = type
 import json
 import pytest
 import sys
-try:
-    from requests import Response
-except ImportError:
-    if sys.version_info < (2, 7):
-        pytestmark = pytest.mark.skip('Skipping Unit Tests on 2.6 as requests is not available')
-    else:
-        raise
+
+# try:
+#     from requests import Response
+# except ImportError:
+#     if sys.version_info < (2, 7):
+#         pytestmark = pytest.mark.skip("Skipping Unit Tests on 2.6 as requests is not available")
+#     else:
+#         raise
 
 from ansible_collections.netapp.storagegrid.tests.unit.compat import unittest
 from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
@@ -32,11 +33,16 @@ from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_grid_gateway i
 SRR = {
     # common responses
     "empty_good": ({"data": []}, None),
-    "not_found": ({"status": "error", "code": 404, "data": {}}, {"key": "error.404"},),
+    "not_found": (
+        {"status": "error", "code": 404, "data": {}},
+        {"key": "error.404"},
+    ),
     "end_of_sequence": (None, "Unexpected call to send_request"),
     "generic_error": (None, "Expected error"),
     "delete_good": (None, None),
     "update_good": (None, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
+    "version_116": ({"data": {"productVersion": "11.6.0-20211120.0301.850531e"}}, None),
     "gateway_record": (
         {
             "data": {
@@ -51,6 +57,111 @@ SRR = {
         },
         None,
     ),
+    "gateway_record_ha_group_binding": (
+        {
+            "data": {
+                "id": "e777d415-057f-4d37-9b0c-6d132d872ea0",
+                "displayName": "ansibletest-secure",
+                "enableIPv4": True,
+                "enableIPv6": True,
+                "port": 10443,
+                "secure": True,
+                "accountId": "0",
+                "pinTargets": {"haGroups": ["c08e6dca-038d-4a05-9499-6fbd1e6a4c3e"], "nodeInterfaces": []},
+            }
+        },
+        None,
+    ),
+    "gateway_record_node_interface_binding": (
+        {
+            "data": {
+                "id": "e777d415-057f-4d37-9b0c-6d132d872ea0",
+                "displayName": "ansibletest-secure",
+                "enableIPv4": True,
+                "enableIPv6": True,
+                "port": 10443,
+                "secure": True,
+                "accountId": "0",
+                "pinTargets": {
+                    "haGroups": [],
+                    "nodeInterfaces": [
+                        {"interface": "eth2", "nodeId": "0b1866ed-d6e7-41b4-815f-bf867348b76b"},
+                        {"interface": "eth2", "nodeId": "970ad050-b68b-4aae-a94d-aef73f3095c4"},
+                    ],
+                },
+            }
+        },
+        None,
+    ),
+    "gateway_record_rename": (
+        {
+            "data": {
+                "id": "e777d415-057f-4d37-9b0c-6d132d872ea0",
+                "displayName": "ansibletest-rename",
+                "enableIPv4": True,
+                "enableIPv6": True,
+                "port": 10443,
+                "secure": True,
+                "accountId": "0",
+                "pinTargets": {"haGroups": ["c08e6dca-038d-4a05-9499-6fbd1e6a4c3e"], "nodeInterfaces": []},
+            }
+        },
+        None,
+    ),
+    "ha_groups": (
+        {
+            "data": [
+                {
+                    "id": "c08e6dca-038d-4a05-9499-6fbd1e6a4c3e",
+                    "name": "site1_primary",
+                    "description": "test ha group",
+                    "virtualIps": ["10.193.174.117"],
+                    "interfaces": [
+                        {
+                            "nodeId": "0b1866ed-d6e7-41b4-815f-bf867348b76b",
+                            "nodeName": "SITE1-ADM1",
+                            "interface": "eth2",
+                            "preferredMaster": True,
+                        },
+                        {
+                            "nodeId": "970ad050-b68b-4aae-a94d-aef73f3095c4",
+                            "nodeName": "SITE2-ADM1",
+                            "interface": "eth2",
+                        },
+                    ],
+                    "gatewayCidr": "192.168.14.1/24",
+                }
+            ]
+        },
+        None,
+    ),
+    "node_health": (
+        {
+            "data": [
+                {
+                    "id": "0b1866ed-d6e7-41b4-815f-bf867348b76b",
+                    "isPrimaryAdmin": True,
+                    "name": "SITE1-ADM1",
+                    "siteId": "ae56d06d-bd83-46bd-adce-77146b1d94bd",
+                    "siteName": "SITE1",
+                    "severity": "normal",
+                    "state": "connected",
+                    "type": "adminNode",
+                },
+                {
+                    "id": "970ad050-b68b-4aae-a94d-aef73f3095c4",
+                    "isPrimaryAdmin": False,
+                    "name": "SITE2-ADM1",
+                    "siteId": "7c24002e-5157-43e9-83e5-02db9b265b02",
+                    "siteName": "SITE2",
+                    "severity": "normal",
+                    "state": "connected",
+                    "type": "adminNode",
+                },
+            ]
+        },
+        None,
+    ),
     "present_gateways": (
         {
             "data": [
@@ -62,6 +173,23 @@ SRR = {
                     "port": 10443,
                     "secure": True,
                     "accountId": "0",
+                }
+            ]
+        },
+        None,
+    ),
+    "present_gateways_with_binding": (
+        {
+            "data": [
+                {
+                    "id": "e777d415-057f-4d37-9b0c-6d132d872ea0",
+                    "displayName": "ansibletest-secure",
+                    "enableIPv4": True,
+                    "enableIPv6": True,
+                    "port": 10443,
+                    "secure": True,
+                    "accountId": "0",
+                    "pinTargets": {"haGroups": [], "nodeInterfaces": []},
                 }
             ]
         },
@@ -192,7 +320,7 @@ def fail_json(*args, **kwargs):  # pylint: disable=unused-argument
 
 
 class TestMyModule(unittest.TestCase):
-    """ a group of related Unit Tests """
+    """a group of related Unit Tests"""
 
     def setUp(self):
         self.mock_module_helper = patch.multiple(basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
@@ -242,7 +370,7 @@ class TestMyModule(unittest.TestCase):
                     "C22n+Ah2EGrQiggyny3wDzuWf5/Qg7ogqQRqiespBFLlV4RGCREHK0y5uq8mzpIa\n"
                     "-----END PRIVATE KEY-----\n"
                 ),
-                "api_url": "gmi.example.com",
+                "api_url": "https://gmi.example.com",
                 "auth_token": "01234567-5678-9abc-78de-9fgabc123def",
                 "validate_certs": False,
             }
@@ -304,7 +432,7 @@ class TestMyModule(unittest.TestCase):
                     "FZtaH2L1IEiA8ZZapMb/MNNozg==\n"
                     "-----END PRIVATE KEY-----\n"
                 ),
-                "api_url": "gmi.example.com",
+                "api_url": "https://gmi.example.com",
                 "auth_token": "01234567-5678-9abc-78de-9fgabc123def",
                 "validate_certs": False,
             }
@@ -330,21 +458,29 @@ class TestMyModule(unittest.TestCase):
                     "C22n+Ah2EGrQiggyny3wDzuWf5/Qg7ogqQRqiespBFLlV4RGCREHK0y5uq8mzpIa\n"
                     "-----END PRIVATE KEY-----\n"
                 ),
-                "api_url": "gmi.example.com",
+                "api_url": "https://gmi.example.com",
                 "auth_token": "01234567-5678-9abc-78de-9fgabc123def",
                 "validate_certs": False,
             }
         )
 
-    def test_module_fail_when_required_args_missing(self):
-        """ required arguments are reported as errors """
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_missing(self, mock_request):
+        """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleFailJson) as exc:
             set_module_args(self.set_default_args_fail_check())
             grid_gateway_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_pass_when_required_args_present(self):
-        """ required arguments are reported as errors """
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_pass_when_required_args_present(self, mock_request):
+        """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             grid_gateway_module()
@@ -355,13 +491,14 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_grid_gateway_port_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_gateway_port())
-        my_obj = grid_gateway_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["empty_good"],  # get
             SRR["gateway_record"],  # post
             SRR["server_config"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_gateway_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_grid_gateway_port_pass: %s" % repr(exc.value.args[0]))
@@ -372,12 +509,13 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_create_na_sg_grid_gateway_port()
         del args["private_key"]
         set_module_args(args)
-        my_obj = grid_gateway_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["present_gateways"],  # get
             SRR["server_config"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_gateway_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_create_na_sg_grid_gateway_port_pass: %s" % repr(exc.value.args[0]))
@@ -390,13 +528,14 @@ class TestMyModule(unittest.TestCase):
         args["private_key"] = "-----BEGIN PRIVATE KEY-----\nABCDEFGABCD\n-----END PRIVATE KEY-----\n"
 
         set_module_args(args)
-        my_obj = grid_gateway_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["present_gateways"],  # get
             SRR["server_config"],  # get
             SRR["server_config_cert_update"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_gateway_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_grid_gateway_certificate_pass: %s" % repr(exc.value.args[0]))
@@ -405,14 +544,120 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_grid_gateway_port_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_grid_gateway_port())
-        my_obj = grid_gateway_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["present_gateways"],  # get
             SRR["server_config"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_gateway_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_delete_na_sg_grid_gateway_port_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_minimum_version_not_met(self, mock_request):
+        args = self.set_args_create_na_sg_grid_gateway_port()
+        args["binding_mode"] = "ha-groups"
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_114"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            grid_gateway_module()
+        print("Info: test_module_fail_minimum_version_not_met: %s" % exc.value.args[0]["msg"])
+
+    # test create with ha groups
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_grid_gateway_port_with_ha_group_binding_pass(self, mock_request):
+        args = self.set_args_create_na_sg_grid_gateway_port()
+        args["binding_mode"] = "ha-groups"
+        args["ha_groups"] = "site1_primary"
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+            SRR["ha_groups"],  # get
+            SRR["empty_good"],  # get
+            SRR["gateway_record_ha_group_binding"],  # post
+            SRR["server_config"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = grid_gateway_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_create_na_sg_grid_gateway_port_with_ha_group_binding_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    # test create with node interfaces
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_grid_gateway_port_with_node_interface_binding_pass(self, mock_request):
+        args = self.set_args_create_na_sg_grid_gateway_port()
+        args["binding_mode"] = "node-interfaces"
+        args["node_interfaces"] = [
+            {"node": "SITE1-ADM1", "interface": "eth2"},
+            {"node": "SITE2-ADM1", "interface": "eth2"},
+        ]
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+            SRR["node_health"],  # get
+            SRR["empty_good"],  # get
+            SRR["gateway_record_node_interface_binding"],  # post
+            SRR["server_config"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = grid_gateway_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print(
+            "Info: test_create_na_sg_grid_gateway_port_with_node_interface_binding_pass: %s" % repr(exc.value.args[0])
+        )
+        assert exc.value.args[0]["changed"]
+
+    # test change from global to ha groups
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_grid_gateway_binding_to_ha_groups_pass(self, mock_request):
+        args = self.set_args_create_na_sg_grid_gateway_port()
+        args["binding_mode"] = "ha-groups"
+        args["ha_groups"] = "site1_primary"
+        args["server_certificate"] = "-----BEGIN CERTIFICATE-----\nABCDEFGABCD\n-----END CERTIFICATE-----\n"
+        args["private_key"] = "-----BEGIN PRIVATE KEY-----\nABCDEFGABCD\n-----END PRIVATE KEY-----\n"
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+            SRR["ha_groups"],  # get
+            SRR["present_gateways_with_binding"],  # get
+            SRR["server_config"],  # get
+            SRR["gateway_record_ha_group_binding"],  # put
+            SRR["server_config_cert_update"],  # put
+            SRR["end_of_sequence"],
+        ]
+        my_obj = grid_gateway_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_grid_gateway_binding_to_ha_groups_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    # test rename by supplying gateway_id
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_grid_gateway_rename_pass(self, mock_request):
+        args = self.set_args_create_na_sg_grid_gateway_port()
+        args["gateway_id"] = "e777d415-057f-4d37-9b0c-6d132d872ea0"
+        args["binding_mode"] = "ha-groups"
+        args["ha_groups"] = "site1_primary"
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+            SRR["ha_groups"],  # get
+            SRR["gateway_record_ha_group_binding"],  # get
+            SRR["server_config"],  # get
+            SRR["gateway_record_rename"],  # put
+            SRR["end_of_sequence"],
+        ]
+        my_obj = grid_gateway_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_grid_gateway_rename_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
