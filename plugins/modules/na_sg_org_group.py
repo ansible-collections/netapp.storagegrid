@@ -257,7 +257,7 @@ class SgOrgGroup(object):
             if self.parameters.get("management_policy"):
                 if org_group.get("policies") is None or org_group.get("policies", {}).get("management") != self.data["policies"]["management"]:
                     update = True
-            elif self.parameters.get("s3_policy"):
+            if self.parameters.get("s3_policy"):
                 if org_group.get("policies") is None or org_group.get("policies", {}).get("s3") != self.data["policies"]["s3"]:
                     update = True
 
