@@ -130,6 +130,21 @@ SRR = {
                         },
                     ],
                     "gatewayCidr": "192.168.14.1/24",
+                },
+                {
+                    "id": "da9ac524-9a16-4be0-9d6e-ec9b22218e75",
+                    "name": "site1_gw",
+                    "description": "another test ha group",
+                    "virtualIps": ["10.193.204.200"],
+                    "interfaces": [
+                        {
+                            "nodeId": "7bb5bf05-a04c-4344-8abd-08c5c4048666",
+                            "nodeName": "SITE1-GW1",
+                            "interface": "eth0",
+                            "preferredMaster": True,
+                        },
+                    ],
+                    "gatewayCidr": "192.168.14.1/24",
                 }
             ]
         },
@@ -574,7 +589,7 @@ class TestMyModule(unittest.TestCase):
     def test_create_na_sg_grid_gateway_port_with_ha_group_binding_pass(self, mock_request):
         args = self.set_args_create_na_sg_grid_gateway_port()
         args["binding_mode"] = "ha-groups"
-        args["ha_groups"] = "site1_primary"
+        args["ha_groups"] = ["site1_primary", "da9ac524-9a16-4be0-9d6e-ec9b22218e75"]
         set_module_args(args)
         mock_request.side_effect = [
             SRR["version_116"],  # get
@@ -589,6 +604,21 @@ class TestMyModule(unittest.TestCase):
             my_obj.apply()
         print("Info: test_create_na_sg_grid_gateway_port_with_ha_group_binding_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
+
+    # test create with bad ha group ID
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_grid_gateway_port_with_bad_ha_group_binding_fail(self, mock_request):
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+            SRR["ha_groups"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            args = self.set_args_create_na_sg_grid_gateway_port()
+            args["binding_mode"] = "ha-groups"
+            args["ha_groups"] = ["fffac524-9a16-4be0-9d6e-ec9b22218e75"]
+            set_module_args(args)
+            grid_gateway_module()
+        print("Info: test_create_na_sg_grid_gateway_port_with_bad_ha_group_binding_fail: %s" % repr(exc.value.args[0]))
 
     # test create with node interfaces
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")

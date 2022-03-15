@@ -70,7 +70,7 @@ options:
     version_added: '21.9.0'
   ha_groups:
     description:
-    - A set of StorageGRID HA Groups to bind the load balancer endpoint to.
+    - A set of StorageGRID HA Groups by name or UUID to bind the load balancer endpoint to.
     - Option is ignored unless I(binding_mode=ha-groups).
     type: list
     elements: str
@@ -338,12 +338,14 @@ class SgGridGateway:
         if error:
             self.module.fail_json(msg=error)
 
-        for name in self.parameters["ha_groups"]:
-            ha_group = next((item for item in ha_groups["data"] if item["name"] == name), None)
+        for param in self.parameters["ha_groups"]:
+            ha_group = next(
+                (item for item in ha_groups["data"] if (item["name"] == param or item["id"] == param)), None
+            )
             if ha_group is not None:
                 ha_group_ids.append(ha_group["id"])
             else:
-                self.module.fail_json(msg="HA Group '%s' is invalid" % name)
+                self.module.fail_json(msg="HA Group '%s' is invalid" % param)
 
         return ha_group_ids
 
