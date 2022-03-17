@@ -7,6 +7,7 @@ action_groups:
     - na_sg_grid_dns
     - na_sg_grid_gateway
     - na_sg_grid_group
+    - na_sg_grid_ha_group
     - na_sg_grid_identity_federation
     - na_sg_grid_info
     - na_sg_grid_ntp
