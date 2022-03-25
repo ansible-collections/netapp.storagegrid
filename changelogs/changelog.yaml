@@ -80,6 +80,24 @@ releases:
     fragments:
     - 20.6.1.yaml
     release_date: '2020-06-09'
+  21.10.0:
+    changes:
+      bugfixes:
+      - na_sg_org_group - fixed behaviour where update to ``s3_policy`` is ignored
+        if ``management_policy`` is set.
+      minor_changes:
+      - na_sg_grid_gateway - supports specifying HA Groups by name or UUID.
+    fragments:
+    - github-10.yaml
+    - github-8.yaml
+    modules:
+    - description: Manage high availability (HA) group configuration on StorageGRID.
+      name: na_sg_grid_ha_group
+      namespace: ''
+    - description: Manage Traffic Classification Policy configuration on StorageGRID.
+      name: na_sg_grid_traffic_classes
+      namespace: ''
+    release_date: '2022-03-17'
   21.6.0:
     changes:
       bugfixes:

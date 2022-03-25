@@ -5,12 +5,32 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.10.0
+========
+
+Minor Changes
+-------------
+
+- na_sg_grid_gateway - supports specifying HA Groups by name or UUID.
+
+Bugfixes
+--------
+
+- na_sg_org_group - fixed behaviour where update to ``s3_policy`` is ignored if ``management_policy`` is set.
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_ha_group - Manage high availability (HA) group configuration on StorageGRID.
+- netapp.storagegrid.na_sg_grid_traffic_classes - Manage Traffic Classification Policy configuration on StorageGRID.
+
 v21.9.0
 =======
 
 Minor Changes
 -------------
 
+- PR2 - allow usage of Ansible module group defaults - for Ansible 2.12+.
 - na_sg_grid_gateway - supports load balancer endpoint binding available in StorageGRID 11.5+.
 - na_sg_org_container - supports creation of S3 Object Lock buckets available in StorageGRID 11.5+.
 

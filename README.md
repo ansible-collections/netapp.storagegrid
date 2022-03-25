@@ -78,8 +78,20 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
-## 21.9.0
+## 21.10.0
 
+### Minor Changes
+  - na_sg_grid_gateway - supports specifying HA Groups by name or UUID.
+
+### Bug Fixes
+  - na_sg_org_group - fixed behaviour where update to ``s3_policy`` is ignored if ``management_policy`` is set.
+
+### New Modules
+  - na_sg_grid_ha_group - Manage high availability (HA) group configuration on StorageGRID.
+  - na_sg_grid_traffic_classes - Manage Traffic Classification Policy configuration on StorageGRID.
+  
+## 21.9.0
+  
 ### Minor Changes
   - na_sg_grid_gateway - supports load balancer endpoint binding available in StorageGRID 11.5+.
   - na_sg_org_container - supports creation of S3 Object Lock buckets available in StorageGRID 11.5+.

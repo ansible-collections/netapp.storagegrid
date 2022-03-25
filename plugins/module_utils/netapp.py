@@ -43,7 +43,7 @@ from ansible.module_utils.urls import open_url
 from ansible.module_utils.api import basic_auth_argument_spec
 from ansible.module_utils._text import to_native
 
-COLLECTION_VERSION = "21.9.0"
+COLLECTION_VERSION = "21.10.0"
 
 try:
     import requests
@@ -65,13 +65,13 @@ POW2_BYTE_MAP = dict(
     bytes=1,
     b=1,
     kb=1024,
-    mb=1024 ** 2,
-    gb=1024 ** 3,
-    tb=1024 ** 4,
-    pb=1024 ** 5,
-    eb=1024 ** 6,
-    zb=1024 ** 7,
-    yb=1024 ** 8,
+    mb=1024**2,
+    gb=1024**3,
+    tb=1024**4,
+    pb=1024**5,
+    eb=1024**6,
+    zb=1024**7,
+    yb=1024**8,
 )
 
 
