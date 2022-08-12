@@ -1,5 +1,6 @@
 ![example workflow](https://github.com/ansible-collections/netapp.storagegrid/actions/workflows/main.yml/badge.svg)
 [![codecov](https://codecov.io/gh/ansible-collections/netapp.storagegrid/branch/main/graph/badge.svg?token=weBYkksxSi)](https://codecov.io/gh/ansible-collections/netapp.storagegrid)
+[![Discord](https://img.shields.io/discord/855068651522490400)](https://discord.gg/NetApp)
 
 
 =============================================================
@@ -70,7 +71,7 @@ Subsequent tasks can leverage the registered auth token.
 
 # Need help
 
-Join our Slack Channel at [Netapp.io](http://netapp.io/slack)
+Join our [Discord](https://discord.gg/NetApp)
 
 # Code of Conduct
 
