@@ -63,10 +63,15 @@ options:
   s3_object_lock_enabled:
     description:
     - Enable S3 Object Lock on the bucket.
-    - S3 Object Lock requires StorageGRID 11.5 or greater
-    required: false
+    - S3 Object Lock requires StorageGRID 11.5 or greater.
     type: bool
     version_added: '21.9.0'
+  bucket_versioning_enabled:
+    description:
+    - Enable versioning on the bucket.
+    - This API requires StorageGRID 11.6 or greater.
+    type: bool
+    version_added: '21.11.0'
 """
 
 EXAMPLES = """
@@ -93,7 +98,16 @@ EXAMPLES = """
       validate_certs: false
       state: present
       name: objectlock-bucket1
-      s3_object_lock_enaled: true
+      s3_object_lock_enabled: true
+
+  - name: create a s3 bucket with versioning enabled
+    netapp.storagegrid.na_sg_org_container:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      validate_certs: false
+      state: present
+      name: ansiblebucket1
+      bucket_versioning_enabled: true
 """
 
 RETURN = """
@@ -150,6 +164,7 @@ class SgOrgContainer(object):
                     ),
                 ),
                 s3_object_lock_enabled=dict(required=False, type="bool"),
+                bucket_versioning_enabled=dict(required=False, type="bool"),
             )
         )
         parameter_map = {
@@ -173,6 +188,10 @@ class SgOrgContainer(object):
         self.rest_api.get_sg_product_version(api_root="org")
 
         # Checking for the parameters passed and create new parameters list
+
+        self.data_versioning = {}
+        self.data_versioning["versioningSuspended"] = True
+
         self.data = {}
         self.data["name"] = self.parameters["name"]
         self.data["region"] = self.parameters.get("region")
@@ -184,6 +203,12 @@ class SgOrgContainer(object):
         if self.parameters.get("s3_object_lock_enabled") is not None:
             self.rest_api.fail_if_not_sg_minimum_version("S3 Object Lock", 11, 5)
             self.data["s3ObjectLock"] = dict(enabled=self.parameters["s3_object_lock_enabled"])
+
+        if self.parameters.get("bucket_versioning_enabled") is not None:
+            self.rest_api.fail_if_not_sg_minimum_version("Bucket versioning configuration", 11, 6)
+            self.data_versioning["versioningEnabled"] = self.parameters["bucket_versioning_enabled"]
+            if self.data_versioning["versioningEnabled"]:
+                self.data_versioning["versioningSuspended"] = False
 
     def get_org_container(self):
         # Check if bucket/container exists
@@ -206,6 +231,24 @@ class SgOrgContainer(object):
 
         response, error = self.rest_api.post(api, self.data)
 
+        if error:
+            self.module.fail_json(msg=error)
+
+        return response["data"]
+
+    def get_org_container_versioning(self):
+        api = "api/v3/org/containers/%s/versioning" % self.parameters["name"]
+        response, error = self.rest_api.get(api)
+
+        if error:
+            self.module.fail_json(msg=error)
+
+        return response["data"]
+
+    def update_org_container_versioning(self):
+        api = "api/v3/org/containers/%s/versioning" % self.parameters["name"]
+
+        response, error = self.rest_api.put(api, self.data_versioning)
         if error:
             self.module.fail_json(msg=error)
 
@@ -241,7 +284,13 @@ class SgOrgContainer(object):
         """
         Perform pre-checks, call functions and exit
         """
+        versioning_config = None
+        update_versioning = False
+
         org_container = self.get_org_container()
+
+        if org_container and self.parameters.get("bucket_versioning_enabled") is not None:
+            versioning_config = self.get_org_container_versioning()
 
         cd_action = self.na_helper.get_cd_action(org_container, self.parameters)
 
@@ -251,6 +300,13 @@ class SgOrgContainer(object):
 
             if self.parameters.get("compliance") and org_container.get("compliance") != self.data["compliance"]:
                 update_compliance = True
+                self.na_helper.changed = True
+
+            if (
+                versioning_config
+                and versioning_config["versioningEnabled"] != self.data_versioning["versioningEnabled"]
+            ):
+                update_versioning = True
                 self.na_helper.changed = True
 
         result_message = ""
@@ -269,10 +325,16 @@ class SgOrgContainer(object):
                         self.fail_if_global_object_lock_disabled()
 
                     resp_data = self.create_org_container()
+
+                    if self.parameters.get("bucket_versioning_enabled") is not None:
+                        self.update_org_container_versioning
                     result_message = "Org Container created"
 
-                elif update_compliance:
-                    resp_data = self.update_org_container_compliance()
+                else:
+                    if update_compliance:
+                        resp_data = self.update_org_container_compliance()
+                    if update_versioning:
+                        self.update_org_container_versioning()
                     result_message = "Org Container updated"
 
         self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)

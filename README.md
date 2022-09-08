@@ -79,6 +79,11 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.11.0
+
+### Minor Changes
+  - na_sg_org_container - supports versioning configuration for S3 buckets available in StorageGRID 11.6+.
+  
 ## 21.10.0
 
 ### Minor Changes

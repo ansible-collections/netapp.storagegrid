@@ -88,6 +88,9 @@ SRR = {
         },
         None,
     ),
+    "org_container_versioning_disabled": ({"data": {"versioningEnabled": False, "versioningSuspended": False}}, None),
+    "org_container_versioning_enabled": ({"data": {"versioningEnabled": True, "versioningSuspended": False}}, None),
+    "org_container_versioning_suspended": ({"data": {"versioningEnabled": False, "versioningSuspended": True}}, None),
 }
 
 
@@ -254,7 +257,7 @@ class TestMyModule(unittest.TestCase):
         assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
-    def test_module_fail_minimum_version_not_met(self, mock_request):
+    def test_module_fail_minimum_version_not_met_object_lock(self, mock_request):
         args = self.set_args_create_na_sg_org_container()
         args["s3_object_lock_enabled"] = True
         set_module_args(args)
@@ -263,7 +266,7 @@ class TestMyModule(unittest.TestCase):
         ]
         with pytest.raises(AnsibleFailJson) as exc:
             org_container_module()
-        print("Info: test_module_fail_minimum_version_not_met: %s" % exc.value.args[0]["msg"])
+        print("Info: test_module_fail_minimum_version_not_met_object_lock: %s" % exc.value.args[0]["msg"])
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_container_objectlock_global_compliance_fail(self, mock_request):
@@ -294,4 +297,52 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_container_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_minimum_version_not_met_versioning(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["bucket_versioning_enabled"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_114"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            org_container_module()
+        print("Info: test_module_fail_minimum_version_not_met_versioning: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_org_container_with_versioning_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["bucket_versioning_enabled"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],
+            SRR["empty_good"],  # get
+            SRR["org_container_record"],  # post
+            SRR["org_container_versioning_enabled"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_create_na_sg_org_container_with_versioning_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_org_container_enable_versioning_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["bucket_versioning_enabled"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],
+            SRR["org_containers"],  # get
+            SRR["org_container_versioning_disabled"],  # get
+            SRR["org_container_versioning_enabled"],  # put
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_org_container_enable_versioning_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
