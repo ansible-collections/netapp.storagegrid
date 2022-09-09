@@ -4,6 +4,7 @@ action_groups:
   netapp_storagegrid:
     - na_sg_grid_account
     - na_sg_grid_certificate
+    - na_sg_grid_client_certificate
     - na_sg_grid_dns
     - na_sg_grid_gateway
     - na_sg_grid_group

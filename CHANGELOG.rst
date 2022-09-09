@@ -5,6 +5,19 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.11.0
+========
+
+Minor Changes
+-------------
+
+- na_sg_org_container - supports versioning configuration for S3 buckets available in StorageGRID 11.6+.
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_client_certificate - Manage Client Certificates on StorageGRID.
+
 v21.10.0
 ========
 

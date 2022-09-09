@@ -98,6 +98,18 @@ releases:
       name: na_sg_grid_traffic_classes
       namespace: ''
     release_date: '2022-03-17'
+  21.11.0:
+    changes:
+      minor_changes:
+      - na_sg_org_container - supports versioning configuration for S3 buckets available
+        in StorageGRID 11.6+.
+    fragments:
+    - 21.11.0.yaml
+    modules:
+    - description: Manage Client Certificates on StorageGRID.
+      name: na_sg_grid_client_certificate
+      namespace: ''
+    release_date: '2022-09-06'
   21.6.0:
     changes:
       bugfixes:

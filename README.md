@@ -83,6 +83,9 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 ### Minor Changes
   - na_sg_org_container - supports versioning configuration for S3 buckets available in StorageGRID 11.6+.
+
+### New Modules
+  - na_sg_grid_client_certificate - Manage Client Certificates on StorageGRID.
   
 ## 21.10.0
 
