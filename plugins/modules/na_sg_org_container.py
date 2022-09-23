@@ -327,7 +327,7 @@ class SgOrgContainer(object):
                     resp_data = self.create_org_container()
 
                     if self.parameters.get("bucket_versioning_enabled") is not None:
-                        self.update_org_container_versioning
+                        self.update_org_container_versioning()
                     result_message = "Org Container created"
 
                 else:

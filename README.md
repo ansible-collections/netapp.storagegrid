@@ -79,6 +79,11 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.11.1
+
+### Bug Fixes
+  - na_sg_org_container - fix versioning not enabled on initial bucket creation.
+
 ## 21.11.0
 
 ### Minor Changes
