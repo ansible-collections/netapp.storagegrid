@@ -5,6 +5,14 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.11.1
+========
+
+Bugfixes
+--------
+
+- na_sg_org_container - fix versioning not enabled on initial bucket creation.
+
 v21.11.0
 ========
 
