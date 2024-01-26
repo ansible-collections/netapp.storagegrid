@@ -68,7 +68,10 @@ options:
     - Existing federated group to have initial Root Access permissions for the tenant.
     - Must begin with C(federated-group/)
     type: str
-    version_added: 20.11.0
+  comment:
+    description:
+    - Storage Tenant Account description.
+    type: str
   quota_size:
     description:
     - Quota to apply to the tenant specified in I(quota_size_unit).
@@ -185,6 +188,7 @@ class SgGridAccount(object):
                 use_own_identity_source=dict(required=False, type="bool"),
                 allow_platform_services=dict(required=False, type="bool"),
                 root_access_group=dict(required=False, type="str"),
+                comment=dict(required=False, type="str"),
                 quota_size=dict(required=False, type="int", default=0),
                 quota_size_unit=dict(
                     default="gb",
@@ -259,6 +263,9 @@ class SgGridAccount(object):
 
         if self.parameters.get("root_access_group") is not None:
             self.data["grantRootAccessToGroup"] = self.parameters["root_access_group"]
+
+        if self.parameters.get("comment") is not None:
+            self.data["description"] = self.parameters["comment"]
 
         if self.parameters["quota_size"] > 0:
             self.parameters["quota_size"] = (
