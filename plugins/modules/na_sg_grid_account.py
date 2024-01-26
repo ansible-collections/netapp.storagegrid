@@ -70,7 +70,7 @@ options:
     type: str
   comment:
     description:
-    - Storage Tenant Account description.
+    - Storage Tenant Account description
     type: str
   quota_size:
     description:
