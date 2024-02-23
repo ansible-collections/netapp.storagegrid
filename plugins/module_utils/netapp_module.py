@@ -34,8 +34,6 @@ from copy import deepcopy
 
 __metaclass__ = type
 
-import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
-
 
 def cmp(obj1, obj2):
     """
@@ -79,14 +77,14 @@ class NetAppModule(object):
         return self.parameters
 
     def get_cd_action(self, current, desired):
-        """ takes a desired state and a current state, and return an action:
-            create, delete, None
-            eg:
-            is_present = 'absent'
-            some_object = self.get_object(source)
-            if some_object is not None:
-                is_present = 'present'
-            action = cd_action(current=is_present, desired = self.desired.state())
+        """takes a desired state and a current state, and return an action:
+        create, delete, None
+        eg:
+        is_present = 'absent'
+        some_object = self.get_object(source)
+        if some_object is not None:
+            is_present = 'present'
+        action = cd_action(current=is_present, desired = self.desired.state())
         """
         if "state" in desired:
             desired_state = desired["state"]
@@ -121,19 +119,19 @@ class NetAppModule(object):
 
     @staticmethod
     def check_keys(current, desired):
-        ''' TODO: raise an error if keys do not match
-            with the exception of:
-            new_name, state in desired
-        '''
+        """TODO: raise an error if keys do not match
+        with the exception of:
+        new_name, state in desired
+        """
 
     def is_rename_action(self, source, target):
-        """ takes a source and target object, and returns True
-            if a rename is required
-            eg:
-            source = self.get_object(source_name)
-            target = self.get_object(target_name)
-            action = is_rename_action(source, target)
-            :return: None for error, True for rename action, False otherwise
+        """takes a source and target object, and returns True
+        if a rename is required
+        eg:
+        source = self.get_object(source_name)
+        target = self.get_object(target_name)
+        action = is_rename_action(source, target)
+        :return: None for error, True for rename action, False otherwise
         """
         if source is None and target is None:
             # error, do nothing
@@ -155,14 +153,14 @@ class NetAppModule(object):
 
     @staticmethod
     def compare_lists(current, desired, get_list_diff):
-        ''' compares two lists and return a list of elements that are either the desired elements or elements that are
-            modified from the current state depending on the get_list_diff flag
-            :param: current: current item attribute in ONTAP
-            :param: desired: attributes from playbook
-            :param: get_list_diff: specifies whether to have a diff of desired list w.r.t current list for an attribute
-            :return: list of attributes to be modified
-            :rtype: list
-        '''
+        """compares two lists and return a list of elements that are either the desired elements or elements that are
+        modified from the current state depending on the get_list_diff flag
+        :param: current: current item attribute in ONTAP
+        :param: desired: attributes from playbook
+        :param: get_list_diff: specifies whether to have a diff of desired list w.r.t current list for an attribute
+        :return: list of attributes to be modified
+        :rtype: list
+        """
         current_copy = deepcopy(current)
         desired_copy = deepcopy(desired)
 
@@ -192,19 +190,19 @@ class NetAppModule(object):
             return None
 
     def get_modified_attributes(self, current, desired, get_list_diff=False):
-        ''' takes two dicts of attributes and return a dict of attributes that are
-            not in the current state
-            It is expected that all attributes of interest are listed in current and
-            desired.
-            :param: current: current attributes on StorageGRID
-            :param: desired: attributes from playbook
-            :param: get_list_diff: specifies whether to have a diff of desired list w.r.t current list for an attribute
-            :return: dict of attributes to be modified
-            :rtype: dict
-            NOTE: depending on the attribute, the caller may need to do a modify or a
-            different operation (eg move volume if the modified attribute is an
-            aggregate name)
-        '''
+        """takes two dicts of attributes and return a dict of attributes that are
+        not in the current state
+        It is expected that all attributes of interest are listed in current and
+        desired.
+        :param: current: current attributes on StorageGRID
+        :param: desired: attributes from playbook
+        :param: get_list_diff: specifies whether to have a diff of desired list w.r.t current list for an attribute
+        :return: dict of attributes to be modified
+        :rtype: dict
+        NOTE: depending on the attribute, the caller may need to do a modify or a
+        different operation (eg move volume if the modified attribute is an
+        aggregate name)
+        """
         # if the object does not exist,  we can't modify it
         modified = {}
         if current is None:
@@ -217,7 +215,9 @@ class NetAppModule(object):
         for key, value in current.items():
             if key in desired and desired[key] is not None:
                 if isinstance(value, list):
-                    modified_list = self.compare_lists(value, desired[key], get_list_diff)  # get modified list from current and desired
+                    modified_list = self.compare_lists(
+                        value, desired[key], get_list_diff
+                    )  # get modified list from current and desired
                     if modified_list is not None:
                         modified[key] = modified_list
                 elif isinstance(value, dict):
@@ -228,7 +228,9 @@ class NetAppModule(object):
                     try:
                         result = cmp(value, desired[key])
                     except TypeError as exc:
-                        raise TypeError("%s, key: %s, value: %s, desired: %s" % (repr(exc), key, repr(value), repr(desired[key])))
+                        raise TypeError(
+                            "%s, key: %s, value: %s, desired: %s" % (repr(exc), key, repr(value), repr(desired[key]))
+                        )
                     else:
                         if result != 0:
                             modified[key] = desired[key]

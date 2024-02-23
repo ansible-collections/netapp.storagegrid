@@ -10,24 +10,18 @@ import json
 import pytest
 import sys
 
-try:
-    from requests import Response
-except ImportError:
-    if sys.version_info < (2, 7):
-        pytestmark = pytest.mark.skip("Skipping Unit Tests on 2.6 as requests is not available")
-    else:
-        raise
 
+import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible_collections.netapp.storagegrid.tests.unit.compat import unittest
-from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
-    patch,
-    Mock,
-)
+from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_org_container import (
     SgOrgContainer as org_container_module,
 )
+
+if not netapp_utils.HAS_REQUESTS and sys.version_info < (2, 7):
+    pytestmark = pytest.mark.skip("Skipping Unit Tests on 2.6 as requests is not available")
 
 # REST API canned responses when mocking send_request
 SRR = {

@@ -70,7 +70,6 @@ options:
   s3_policy:
     description:
     - StorageGRID S3 Group Policy.
-    default: ""
     type: json
 """
 
@@ -255,10 +254,16 @@ class SgOrgGroup(object):
             update = False
 
             if self.parameters.get("management_policy"):
-                if org_group.get("policies") is None or org_group.get("policies", {}).get("management") != self.data["policies"]["management"]:
+                if (
+                    org_group.get("policies") is None
+                    or org_group.get("policies", {}).get("management") != self.data["policies"]["management"]
+                ):
                     update = True
             if self.parameters.get("s3_policy"):
-                if org_group.get("policies") is None or org_group.get("policies", {}).get("s3") != self.data["policies"]["s3"]:
+                if (
+                    org_group.get("policies") is None
+                    or org_group.get("policies", {}).get("s3") != self.data["policies"]["s3"]
+                ):
                     update = True
 
             if update:

@@ -102,9 +102,7 @@ resp:
     }
 """
 
-import json
 import re
-
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
@@ -133,9 +131,7 @@ class SgOrgUser(object):
                 member_of=dict(required=False, type="list", elements="str"),
                 disable=dict(required=False, type="bool"),
                 password=dict(required=False, type="str", no_log=True),
-                update_password=dict(
-                    default="on_create", choices=["on_create", "always"]
-                ),
+                update_password=dict(default="on_create", choices=["on_create", "always"]),
             )
         )
 
@@ -169,9 +165,7 @@ class SgOrgUser(object):
             re_local_user.match(self.parameters["unique_name"]) is None
             and re_fed_user.match(self.parameters["unique_name"]) is None
         ):
-            self.module.fail_json(
-                msg="unique_name must begin with 'user/' or 'federated-user/'"
-            )
+            self.module.fail_json(msg="unique_name must begin with 'user/' or 'federated-user/'")
 
         self.pw_change = {}
         if self.parameters.get("password") is not None:
@@ -254,13 +248,9 @@ class SgOrgUser(object):
         if self.parameters.get("member_of"):
             org_groups = self.get_org_groups()
             try:
-                self.data["memberOf"] = [
-                    org_groups[x] for x in self.parameters["member_of"]
-                ]
+                self.data["memberOf"] = [org_groups[x] for x in self.parameters["member_of"]]
             except KeyError as e:
-                self.module.fail_json(
-                    msg="Invalid unique_group supplied: '%s' not found" % e.args[0]
-                )
+                self.module.fail_json(msg="Invalid unique_group supplied: '%s' not found" % e.args[0])
 
         cd_action = self.na_helper.get_cd_action(org_user, self.parameters)
 
@@ -279,9 +269,7 @@ class SgOrgUser(object):
             if member_of_diff:
                 update = True
 
-            if self.parameters.get("disable") is not None and self.parameters[
-                "disable"
-            ] != org_user.get("disable"):
+            if self.parameters.get("disable") is not None and self.parameters["disable"] != org_user.get("disable"):
                 update = True
 
             if update:
@@ -318,9 +306,7 @@ class SgOrgUser(object):
                     results = [result_message, "Org User password updated"]
                     result_message = "; ".join(filter(None, results))
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

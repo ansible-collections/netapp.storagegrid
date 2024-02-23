@@ -5,6 +5,20 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.12.0
+========
+
+Minor Changes
+-------------
+
+- na_sg_grid_account - New option ``allow_select_object_content`` for enabling use of the S3 SelectObjectContent API.
+- na_sg_grid_account - New option ``description`` for setting additional identifying information for the tenant account.
+
+Bugfixes
+--------
+
+- Removed fetch limit in API request and implemented pagination.
+
 v21.11.1
 ========
 

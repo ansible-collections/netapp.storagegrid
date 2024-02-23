@@ -153,7 +153,6 @@ resp:
     }
 """
 
-import json
 import re
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
@@ -210,7 +209,10 @@ class SgGridGroup(object):
             "object_metadata": "objectMetadata",
             "root_access": "rootAccess",
         }
-        self.module = AnsibleModule(argument_spec=self.argument_spec, supports_check_mode=True,)
+        self.module = AnsibleModule(
+            argument_spec=self.argument_spec,
+            supports_check_mode=True,
+        )
 
         self.na_helper = NetAppModule()
 

@@ -30,20 +30,9 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import json
-import mimetypes
-import os
-import random
+from ansible.module_utils.basic import missing_required_lib
 
-from pprint import pformat
-from ansible.module_utils import six
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
-from ansible.module_utils.urls import open_url
-from ansible.module_utils.api import basic_auth_argument_spec
-from ansible.module_utils._text import to_native
-
-COLLECTION_VERSION = "21.11.1"
+COLLECTION_VERSION = "21.12.0"
 
 try:
     import requests
@@ -51,13 +40,6 @@ try:
     HAS_REQUESTS = True
 except ImportError:
     HAS_REQUESTS = False
-
-import ssl
-
-try:
-    from urlparse import urlparse, urlunparse
-except ImportError:
-    from urllib.parse import urlparse, urlunparse
 
 
 POW2_BYTE_MAP = dict(
@@ -76,7 +58,6 @@ POW2_BYTE_MAP = dict(
 
 
 def na_storagegrid_host_argument_spec():
-
     return dict(
         api_url=dict(required=True, type="str"),
         validate_certs=dict(required=False, type="bool", default=True),

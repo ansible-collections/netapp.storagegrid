@@ -164,9 +164,6 @@ resp:
     }
 """
 
-import json
-import re
-
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
@@ -218,7 +215,10 @@ class SgOrgIdentityFederation:
             "ldap_group_uuid_attribute": "ldapGroupUUIDAttribute",
             "ca_cert": "caCert",
         }
-        self.module = AnsibleModule(argument_spec=self.argument_spec, supports_check_mode=True,)
+        self.module = AnsibleModule(
+            argument_spec=self.argument_spec,
+            supports_check_mode=True,
+        )
 
         self.na_helper = NetAppModule()
 

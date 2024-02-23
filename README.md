@@ -79,6 +79,15 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.12.0
+
+### Minor Changes
+  - na_sg_grid_account - New option ``description`` for setting additional identifying information for the tenant account.
+  - na_sg_grid_account - New option ``allow_select_object_content`` for enabling use of the S3 SelectObjectContent API.
+
+### Bug Fixes
+  - Removed fetch limit in API request and implemented pagination.
+
 ## 21.11.1
 
 ### Bug Fixes

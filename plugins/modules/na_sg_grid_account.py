@@ -39,6 +39,11 @@ options:
     - Name of the tenant.
     - Required for create or modify operation.
     type: str
+  description:
+    description:
+    - Additional identifying information for the tenant account.
+    type: str
+    version_added: 21.12.0
   account_id:
     description:
     - Account Id of the tenant.
@@ -63,6 +68,11 @@ options:
     description:
     - Allows tenant to use platform services features such as CloudMirror.
     type: bool
+  allow_select_object_content:
+    description:
+    - Allows tenant to use the S3 SelectObjectContent API to filter and retrieve object data.
+    type: bool
+    version_added: 21.12.0
   root_access_group:
     description:
     - Existing federated group to have initial Root Access permissions for the tenant.
@@ -177,13 +187,20 @@ class SgGridAccount(object):
         self.argument_spec = netapp_utils.na_storagegrid_host_argument_spec()
         self.argument_spec.update(
             dict(
-                state=dict(required=False, type="str", choices=["present", "absent"], default="present"),
+                state=dict(
+                    required=False,
+                    type="str",
+                    choices=["present", "absent"],
+                    default="present",
+                ),
                 name=dict(required=False, type="str"),
+                description=dict(required=False, type="str"),
                 account_id=dict(required=False, type="str"),
                 protocol=dict(required=False, choices=["s3", "swift"]),
                 management=dict(required=False, type="bool", default=True),
                 use_own_identity_source=dict(required=False, type="bool"),
                 allow_platform_services=dict(required=False, type="bool"),
+                allow_select_object_content=dict(required=False, type="bool"),
                 root_access_group=dict(required=False, type="str"),
                 quota_size=dict(required=False, type="int", default=0),
                 quota_size_unit=dict(
@@ -203,9 +220,7 @@ class SgGridAccount(object):
                     type="str",
                 ),
                 password=dict(required=False, type="str", no_log=True),
-                update_password=dict(
-                    default="on_create", choices=["on_create", "always"]
-                ),
+                update_password=dict(default="on_create", choices=["on_create", "always"]),
             )
         )
 
@@ -232,11 +247,16 @@ class SgGridAccount(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
 
         # Checking for the parameters passed and create new parameters list
         self.data = {}
         self.data["name"] = self.parameters["name"]
         self.data["capabilities"] = [self.parameters["protocol"]]
+
+        if self.parameters.get("description") is not None:
+            self.data["description"] = self.parameters["description"]
 
         if self.parameters.get("password") is not None:
             self.data["password"] = self.parameters["password"]
@@ -248,28 +268,19 @@ class SgGridAccount(object):
         self.data["policy"] = {}
 
         if "use_own_identity_source" in self.parameters:
-            self.data["policy"]["useAccountIdentitySource"] = self.parameters[
-                "use_own_identity_source"
-            ]
+            self.data["policy"]["useAccountIdentitySource"] = self.parameters["use_own_identity_source"]
 
         if "allow_platform_services" in self.parameters:
-            self.data["policy"]["allowPlatformServices"] = self.parameters[
-                "allow_platform_services"
-            ]
+            self.data["policy"]["allowPlatformServices"] = self.parameters["allow_platform_services"]
 
         if self.parameters.get("root_access_group") is not None:
             self.data["grantRootAccessToGroup"] = self.parameters["root_access_group"]
 
         if self.parameters["quota_size"] > 0:
             self.parameters["quota_size"] = (
-                self.parameters["quota_size"]
-                * netapp_utils.POW2_BYTE_MAP[
-                    self.parameters["quota_size_unit"]
-                ]
+                self.parameters["quota_size"] * netapp_utils.POW2_BYTE_MAP[self.parameters["quota_size_unit"]]
             )
-            self.data["policy"]["quotaObjectBytes"] = self.parameters[
-                "quota_size"
-            ]
+            self.data["policy"]["quotaObjectBytes"] = self.parameters["quota_size"]
         elif self.parameters["quota_size"] == 0:
             self.data["policy"]["quotaObjectBytes"] = None
 
@@ -277,19 +288,31 @@ class SgGridAccount(object):
         if self.parameters.get("password") is not None:
             self.pw_change["password"] = self.parameters["password"]
 
+        if "allow_select_object_content" in self.parameters:
+            self.rest_api.fail_if_not_sg_minimum_version("S3 SelectObjectContent API", 11, 6)
+            self.data["policy"]["allowSelectObjectContent"] = self.parameters["allow_select_object_content"]
+
     def get_tenant_account_id(self):
         # Check if tenant account exists
         # Return tenant account info if found, or None
-        api = "api/v3/grid/accounts?limit=350"
+        api = "api/v3/grid/accounts"
+        params = {"limit": 20}
+        params["marker"] = ""
 
-        list_accounts, error = self.rest_api.get(api)
+        while params["marker"] is not None:
+            list_accounts, error = self.rest_api.get(api, params)
 
-        if error:
-            self.module.fail_json(msg=error)
+            if error:
+                self.module.fail_json(msg=error)
 
-        for account in list_accounts.get("data"):
-            if account["name"] == self.parameters["name"]:
-                return account["id"]
+            if len(list_accounts.get("data")) > 0:
+                for account in list_accounts["data"]:
+                    if account["name"] == self.parameters["name"]:
+                        return account["id"]
+                # Set marker to last element
+                params["marker"] = list_accounts["data"][-1]["id"]
+            else:
+                params["marker"] = None
 
         return None
 
@@ -351,62 +374,18 @@ class SgGridAccount(object):
         tenant_account = None
 
         if self.parameters.get("account_id"):
-            tenant_account = self.get_tenant_account(
-                self.parameters["account_id"]
-            )
+            tenant_account = self.get_tenant_account(self.parameters["account_id"])
 
         else:
             tenant_account_id = self.get_tenant_account_id()
             if tenant_account_id:
                 tenant_account = self.get_tenant_account(tenant_account_id)
 
-        cd_action = self.na_helper.get_cd_action(
-            tenant_account, self.parameters
-        )
+        cd_action = self.na_helper.get_cd_action(tenant_account, self.parameters)
 
         if cd_action is None and self.parameters["state"] == "present":
             # let's see if we need to update parameters
-            update = False
-
-            capability_diff = [
-                i
-                for i in self.data["capabilities"]
-                + tenant_account["capabilities"]
-                if i not in self.data["capabilities"]
-                or i not in tenant_account["capabilities"]
-            ]
-
-            if self.parameters["quota_size"] > 0:
-                if (
-                    tenant_account["policy"]["quotaObjectBytes"]
-                    != self.parameters["quota_size"]
-                ):
-                    update = True
-            elif (
-                self.parameters["quota_size"] == 0
-                and tenant_account["policy"]["quotaObjectBytes"] is not None
-            ):
-                update = True
-
-            if (
-                "use_own_identity_source" in self.parameters
-                and tenant_account["policy"]["useAccountIdentitySource"]
-                != self.parameters["use_own_identity_source"]
-            ):
-                update = True
-
-            elif (
-                "allow_platform_services" in self.parameters
-                and tenant_account["policy"]["allowPlatformServices"]
-                != self.parameters["allow_platform_services"]
-            ):
-                update = True
-
-            elif capability_diff:
-                update = True
-
-            if update:
-                self.na_helper.changed = True
+            modify = self.na_helper.get_modified_attributes(tenant_account, self.data)
 
         result_message = ""
         resp_data = tenant_account
@@ -423,7 +402,7 @@ class SgGridAccount(object):
                     resp_data = self.create_tenant_account()
                     result_message = "Tenant Account created"
 
-                else:
+                elif modify:
                     resp_data = self.update_tenant_account(tenant_account["id"])
                     result_message = "Tenant Account updated"
 
@@ -441,9 +420,7 @@ class SgGridAccount(object):
                     results = [result_message, "Tenant Account root password updated"]
                     result_message = "; ".join(filter(None, results))
 
-        self.module.exit_json(
-            changed=self.na_helper.changed, msg=result_message, resp=resp_data
-        )
+        self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)
 
 
 def main():

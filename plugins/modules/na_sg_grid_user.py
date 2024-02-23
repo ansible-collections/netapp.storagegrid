@@ -102,9 +102,7 @@ resp:
     }
 """
 
-import json
 import re
-
 
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule

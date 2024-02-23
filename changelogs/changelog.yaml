@@ -117,6 +117,18 @@ releases:
     fragments:
     - 21.11.1.yaml
     release_date: '2022-09-23'
+  21.12.0:
+    changes:
+      bugfixes:
+      - Removed fetch limit in API request and implemented pagination.
+      minor_changes:
+      - na_sg_grid_account - New option ``allow_select_object_content`` for enabling
+        use of the S3 SelectObjectContent API.
+      - na_sg_grid_account - New option ``description`` for setting additional identifying
+        information for the tenant account.
+    fragments:
+    - github-18-19.yaml
+    release_date: '2024-01-11'
   21.6.0:
     changes:
       bugfixes:

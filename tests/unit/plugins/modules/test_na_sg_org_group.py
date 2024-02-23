@@ -9,24 +9,18 @@ __metaclass__ = type
 import json
 import pytest
 import sys
-try:
-    from requests import Response
-except ImportError:
-    if sys.version_info < (2, 7):
-        pytestmark = pytest.mark.skip('Skipping Unit Tests on 2.6 as requests is not available')
-    else:
-        raise
 
+import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible_collections.netapp.storagegrid.tests.unit.compat import unittest
-from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
-    patch,
-    Mock,
-)
+from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_org_group import (
     SgOrgGroup as org_group_module,
 )
+
+if not netapp_utils.HAS_REQUESTS and sys.version_info < (2, 7):
+    pytestmark = pytest.mark.skip("Skipping Unit Tests on 2.6 as requests is not available")
 
 # REST API canned responses when mocking send_request
 SRR = {
@@ -164,12 +158,10 @@ def fail_json(*args, **kwargs):  # pylint: disable=unused-argument
 
 
 class TestMyModule(unittest.TestCase):
-    """ a group of related Unit Tests """
+    """a group of related Unit Tests"""
 
     def setUp(self):
-        self.mock_module_helper = patch.multiple(
-            basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json
-        )
+        self.mock_module_helper = patch.multiple(basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
         self.mock_module_helper.start()
         self.addCleanup(self.mock_module_helper.stop)
 
@@ -279,42 +271,31 @@ class TestMyModule(unittest.TestCase):
         )
 
     def test_module_fail_when_required_args_missing(self):
-        """ required arguments are reported as errors """
+        """required arguments are reported as errors"""
         with pytest.raises(AnsibleFailJson) as exc:
             set_module_args(self.set_default_args_fail_check())
             org_group_module()
-        print(
-            "Info: test_module_fail_when_required_args_missing: %s"
-            % exc.value.args[0]["msg"]
-        )
+        print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
     def test_module_fail_when_required_args_present(self):
-        """ required arguments are reported as errors """
+        """required arguments are reported as errors"""
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             org_group_module()
             exit_json(changed=True, msg="Induced arguments check")
-        print(
-            "Info: test_module_fail_when_required_args_present: %s"
-            % exc.value.args[0]["msg"]
-        )
+        print("Info: test_module_fail_when_required_args_present: %s" % exc.value.args[0]["msg"])
         assert exc.value.args[0]["changed"]
 
     def test_module_fail_with_bad_unique_name(self):
-        """ error returned if unique_name doesn't start with group or federated_group """
+        """error returned if unique_name doesn't start with group or federated_group"""
         with pytest.raises(AnsibleFailJson) as exc:
             args = self.set_default_args_pass_check()
             args["unique_name"] = "noprefixgroup"
             set_module_args(args)
             org_group_module()
-        print(
-            "Info: test_module_fail_with_bad_unique_name: %s"
-            % exc.value.args[0]["msg"]
-        )
+        print("Info: test_module_fail_with_bad_unique_name: %s" % exc.value.args[0]["msg"])
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_group())
         my_obj = org_group_module()
@@ -325,15 +306,10 @@ class TestMyModule(unittest.TestCase):
         ]
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_create_na_sg_org_group_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_create_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_create_na_sg_org_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_group())
         my_obj = org_group_module()
@@ -343,15 +319,10 @@ class TestMyModule(unittest.TestCase):
         ]
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_idempotent_create_na_sg_org_group_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_idempotent_create_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
         assert not exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_update_na_sg_org_group_pass(self, mock_request):
         args = self.set_args_create_na_sg_org_group()
         args["s3_policy"] = (
@@ -377,15 +348,10 @@ class TestMyModule(unittest.TestCase):
         ]
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_update_na_sg_org_group_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_update_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_org_group_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_org_group())
         my_obj = org_group_module()
@@ -396,8 +362,5 @@ class TestMyModule(unittest.TestCase):
         ]
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_delete_na_sg_org_group_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_delete_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]

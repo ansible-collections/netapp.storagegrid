@@ -74,8 +74,6 @@ resp:
     }
 """
 
-import json
-
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp_module import NetAppModule
@@ -135,7 +133,10 @@ class SgOrgUserS3Key(object):
         api = "api/v3/org/users/current-user/s3-access-keys/%s" % access_key
 
         if user_id:
-            api = "api/v3/org/users/%s/s3-access-keys/%s" % (user_id, access_key,)
+            api = "api/v3/org/users/%s/s3-access-keys/%s" % (
+                user_id,
+                access_key,
+            )
 
         response, error = self.rest_api.get(api)
 
@@ -162,7 +163,10 @@ class SgOrgUserS3Key(object):
         api = "api/v3/org/users/current-user/s3-access-keys"
 
         if user_id:
-            api = "api/v3/org/users/%s/s3-access-keys/%s" % (user_id, access_key,)
+            api = "api/v3/org/users/%s/s3-access-keys/%s" % (
+                user_id,
+                access_key,
+            )
 
         self.data = None
         response, error = self.rest_api.delete(api, self.data)

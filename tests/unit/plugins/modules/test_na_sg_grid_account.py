@@ -9,24 +9,19 @@ __metaclass__ = type
 import json
 import pytest
 import sys
-try:
-    from requests import Response
-except ImportError:
-    if sys.version_info < (2, 7):
-        pytestmark = pytest.mark.skip('Skipping Unit Tests on 2.6 as requests is not available')
-    else:
-        raise
 
+import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible_collections.netapp.storagegrid.tests.unit.compat import unittest
-from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import (
-    patch,
-    Mock,
-)
+from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import patch
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_grid_account import (
     SgGridAccount as grid_account_module,
 )
+
+if not netapp_utils.HAS_REQUESTS and sys.version_info < (2, 7):
+    pytestmark = pytest.mark.skip("Skipping Unit Tests on 2.6 as requests is not available")
+
 
 # REST API canned responses when mocking send_request
 SRR = {
@@ -35,12 +30,15 @@ SRR = {
     "end_of_sequence": (None, "Unexpected call to send_request"),
     "generic_error": (None, "Expected error"),
     "delete_good": ({"code": 204}, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
+    "version_116": ({"data": {"productVersion": "11.6.0-20211120.0301.850531e"}}, None),
     "pw_change_good": ({"code": 204}, None),
     "grid_accounts": (
         {
             "data": [
                 {
                     "name": "TestTenantAccount",
+                    "description": "Ansible Test",
                     "capabilities": ["management", "s3"],
                     "policy": {
                         "useAccountIdentitySource": True,
@@ -57,6 +55,7 @@ SRR = {
         {
             "data": {
                 "name": "TestTenantAccount",
+                "description": "Ansible Test",
                 "capabilities": ["management", "s3"],
                 "policy": {
                     "useAccountIdentitySource": True,
@@ -72,6 +71,7 @@ SRR = {
         {
             "data": {
                 "name": "TestTenantAccount",
+                "description": "Update Account",
                 "capabilities": ["management", "s3"],
                 "policy": {
                     "useAccountIdentitySource": True,
@@ -133,12 +133,10 @@ def fail_json(*args, **kwargs):  # pylint: disable=unused-argument
 
 
 class TestMyModule(unittest.TestCase):
-    """ a group of related Unit Tests """
+    """a group of related Unit Tests"""
 
     def setUp(self):
-        self.mock_module_helper = patch.multiple(
-            basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json
-        )
+        self.mock_module_helper = patch.multiple(basic.AnsibleModule, exit_json=exit_json, fail_json=fail_json)
         self.mock_module_helper.start()
         self.addCleanup(self.mock_module_helper.stop)
 
@@ -179,6 +177,7 @@ class TestMyModule(unittest.TestCase):
             {
                 "state": "present",
                 "name": "TestTenantAccount",
+                "description": "Ansible Test",
                 "protocol": "s3",
                 "management": True,
                 "use_own_identity_source": True,
@@ -204,114 +203,95 @@ class TestMyModule(unittest.TestCase):
         )
 
     def test_module_fail_when_required_args_missing(self):
-        """ required arguments are reported as errors """
+        """required arguments are reported as errors"""
         with pytest.raises(AnsibleFailJson) as exc:
             set_module_args(self.set_default_args_fail_check())
             grid_account_module()
-        print(
-            "Info: test_module_fail_when_required_args_missing: %s"
-            % exc.value.args[0]["msg"]
-        )
+        print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
-        """ required arguments are reported as errors """
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
+        """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             grid_account_module()
             exit_json(changed=True, msg="Induced arguments check")
-        print(
-            "Info: test_module_fail_when_required_args_present: %s"
-            % exc.value.args[0]["msg"]
-        )
+        print("Info: test_module_fail_when_required_args_present: %s" % exc.value.args[0]["msg"])
         assert exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_grid_account_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_account())
-        my_obj = grid_account_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["empty_good"],  # get
             SRR["grid_accounts"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_account_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_create_na_sg_tenant_account_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_create_na_sg_tenant_account_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_create_na_sg_grid_account_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_account())
-        my_obj = grid_account_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["grid_accounts"],  # get id
             SRR["grid_account_record"],  # get account
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_account_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_idempotent_create_na_sg_tenant_account_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_idempotent_create_na_sg_tenant_account_pass: %s" % repr(exc.value.args[0]))
         assert not exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_update_na_sg_grid_account_pass(self, mock_request):
         args = self.set_args_create_na_sg_grid_account()
         args["quota_size"] = 10
+        args["description"] = "Update Account"
         set_module_args(args)
-        my_obj = grid_account_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["grid_accounts"],  # get
             SRR["grid_account_record"],  # get
             SRR["grid_account_record_with_quota"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_account_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_update_na_sg_tenant_account_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_update_na_sg_tenant_account_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_update_na_sg_grid_account_quota_pass(self, mock_request):
         args = self.set_args_create_na_sg_grid_account()
         args["quota_size"] = 20480
         args["quota_size_unit"] = "mb"
         set_module_args(args)
-        my_obj = grid_account_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["grid_accounts"],  # get
             SRR["grid_account_record_with_quota"],  # get
             SRR["grid_account_record_update_quota"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_account_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_create_na_sg_tenant_account_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_create_na_sg_tenant_account_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
     # update Tenant Account and set pass
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_update_na_sg_grid_account_and_set_password_pass(self, mock_request):
         args = self.set_args_create_na_sg_grid_account()
         args["quota_size"] = 20480
@@ -319,62 +299,84 @@ class TestMyModule(unittest.TestCase):
         args["update_password"] = "always"
 
         set_module_args(args)
-        my_obj = grid_account_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["grid_accounts"],  # get
             SRR["grid_account_record_with_quota"],  # get
             SRR["grid_account_record_update_quota"],  # put
             SRR["pw_change_good"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_account_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_update_na_sg_grid_account_and_set_password_pass: %s"
-            % repr(exc.value.args[0])
-        )
+        print("Info: test_update_na_sg_grid_account_and_set_password_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
     # set pass only
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_set_na_sg_grid_account_root_password_pass(self, mock_request):
         args = self.set_args_create_na_sg_grid_account()
         args["update_password"] = "always"
 
         set_module_args(args)
-        my_obj = grid_account_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["grid_accounts"],  # get id
             SRR["grid_account_record"],  # get account
             SRR["pw_change_good"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_account_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
-        print(
-            "Info: test_set_na_sg_grid_account_root_password_pass: %s" % repr(exc.value.args[0])
-        )
+        print("Info: test_set_na_sg_grid_account_root_password_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
-    @patch(
-        "ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request"
-    )
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_grid_account_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_grid_account())
-        my_obj = grid_account_module()
         mock_request.side_effect = [
+            SRR["version_114"],  # get
             SRR["grid_accounts"],  # get
             SRR["grid_account_record"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_account_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_create_na_sg_tenant_account_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_minimum_version_not_met(self, mock_request):
+        args = self.set_args_create_na_sg_grid_account()
+        args["allow_select_object_content"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_114"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            grid_account_module()
+        print("Info: test_module_fail_minimum_version_not_met: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_grid_account_with_allow_select_object_content_pass(self, mock_request):
+        args = self.set_args_create_na_sg_grid_account()
+        args["allow_select_object_content"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+            SRR["empty_good"],  # get
+            SRR["grid_accounts"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = grid_account_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print(
-            "Info: test_create_na_sg_tenant_account_pass: %s"
-            % repr(exc.value.args[0])
+            "Info: test_create_na_sg_tenant_account_with_allow_select_object_content_pass: %s" % repr(exc.value.args[0])
         )
         assert exc.value.args[0]["changed"]
