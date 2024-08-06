@@ -131,7 +131,7 @@ class SgOrgUser(object):
                 member_of=dict(required=False, type="list", elements="str"),
                 disable=dict(required=False, type="bool"),
                 password=dict(required=False, type="str", no_log=True),
-                update_password=dict(default="on_create", choices=["on_create", "always"]),
+                update_password=dict(default="on_create", choices=["on_create", "always"], no_log=True),
             )
         )
 
