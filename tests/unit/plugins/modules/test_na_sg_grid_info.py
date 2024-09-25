@@ -7,6 +7,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 import json
 import pytest
+import sys
 
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
@@ -15,6 +16,9 @@ from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import patch
 
 from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_grid_info \
     import NetAppSgGatherInfo as sg_grid_info_module
+
+if sys.version_info < (3, 11):
+    pytestmark = pytest.mark.skip("Skipping Unit Tests on 3.11")
 
 # REST API canned responses when mocking send_request
 SRR = {

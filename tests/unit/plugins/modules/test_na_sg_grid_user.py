@@ -10,7 +10,6 @@ import json
 import pytest
 import sys
 
-import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible_collections.netapp.storagegrid.tests.unit.compat import unittest
 from ansible_collections.netapp.storagegrid.tests.unit.compat.mock import patch
 from ansible.module_utils import basic
@@ -19,8 +18,8 @@ from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_grid_user impo
     SgGridUser as grid_user_module,
 )
 
-if not netapp_utils.HAS_REQUESTS and sys.version_info < (2, 7):
-    pytestmark = pytest.mark.skip("Skipping Unit Tests on 2.6 as requests is not available")
+if sys.version_info < (3, 11):
+    pytestmark = pytest.mark.skip("Skipping Unit Tests on 3.11")
 
 # REST API canned responses when mocking send_request
 SRR = {
