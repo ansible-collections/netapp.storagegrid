@@ -258,17 +258,14 @@ class SgOrgUser(object):
             # let's see if we need to update parameters
             update = False
 
-            if org_user["memberOf"] is None:
-                member_of_diff = []
-            else:
-                member_of_diff = [
-                    i
-                    for i in self.data["memberOf"] + org_user["memberOf"]
-                    if i not in self.data["memberOf"] or i not in org_user["memberOf"]
-                ]
-            if member_of_diff:
+            # Compare current and desired group memberships
+            current_groups = set(org_user["memberOf"] or [])
+            desired_groups = set(self.data["memberOf"] or [])
+
+            if current_groups != desired_groups:
                 update = True
 
+            # Check if disable state needs to be updated
             if self.parameters.get("disable") is not None and self.parameters["disable"] != org_user.get("disable"):
                 update = True
 
