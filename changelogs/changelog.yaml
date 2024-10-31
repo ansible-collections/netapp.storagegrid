@@ -129,6 +129,8 @@ releases:
     fragments:
     - github-18-19.yaml
     release_date: '2024-01-11'
+  21.13.0:
+    release_date: '2024-10-31'
   21.6.0:
     changes:
       bugfixes:

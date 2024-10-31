@@ -79,6 +79,11 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.13.0
+
+### Minor Changes
+- updated pipleine.
+
 ## 21.12.0
 
 ### Minor Changes

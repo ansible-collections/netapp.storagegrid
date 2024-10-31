@@ -5,6 +5,13 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.13.0
+========
+
+Minor Changes
+-------------
+- updated pipeline.
+
 v21.12.0
 ========
 
