@@ -67,6 +67,8 @@ options:
             - C(grid_users_info) or C(grid/users)
             - C(grid_users_root_info) or C(grid/users/root)
             - C(versions_info) or C(versions)
+            - C(grid_load_balancer_endpoints_config_info) or C(private/gateway-configs)
+            - C(grid_ha_groups_info) or C(private/ha-groups)
             - Can specify a list of values to include a larger subset.
         default: all
     parameters:
@@ -155,7 +157,9 @@ sg_info:
         "grid/untrusted-client-network": {...},
         "grid/users": {...},
         "grid/users/root": {...},
-        "grid/versions": {...}
+        "grid/versions": {...},
+        "private/gateway-configs": {...},
+        "private/ha-groups": {...},
     }
 """
 
@@ -250,8 +254,10 @@ class NetAppSgGatherInfo(object):
             'grid_users_info': 'grid/users',
             'grid_users_root_info': 'grid/users/root',
             'versions_info': 'versions',
+            'grid_load_balancer_endpoints_config_info': 'private/gateway-configs',
+            'grid_ha_groups_info': 'private/ha-groups',
         }
-        # Add rest API names as there info version, also make sure we don't add a duplicate
+        # Add rest API names as there info version, also make sure we don't add a duplicate.
         subsets = []
         for subset in self.parameters['gather_subset']:
             if subset in info_to_rest_mapping:
@@ -267,7 +273,7 @@ class NetAppSgGatherInfo(object):
 
         result_message = dict()
 
-        # Defining gather_subset and appropriate api_call
+        # Defining gather_subset and appropriate api_call.
         get_sg_subset_info = {
             'grid/accounts': {
                 'api_call': 'api/v3/grid/accounts',
@@ -374,17 +380,23 @@ class NetAppSgGatherInfo(object):
             'versions': {
                 'api_call': 'api/v3/versions',
             },
+            'private/gateway-configs': {
+                'api_call': 'api/v3/private/gateway-configs'
+            },
+            'private/ha-groups': {
+                'api_call': 'api/v3/private/ha-groups'
+            },
         }
 
         if 'all' in self.parameters['gather_subset']:
-            # If all in subset list, get the information of all subsets
+            # If all in subset list, get the information of all subsets.
             self.parameters['gather_subset'] = sorted(get_sg_subset_info.keys())
 
         converted_subsets = self.convert_subsets()
 
         for subset in converted_subsets:
             try:
-                # Verify whether the supported subset passed
+                # Verify whether the supported subset passed.
                 specified_subset = get_sg_subset_info[subset]
             except KeyError:
                 self.module.fail_json(msg="Specified subset %s not found, supported subsets are %s" %

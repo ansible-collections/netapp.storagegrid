@@ -20,7 +20,7 @@ from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_grid_info \
 if sys.version_info < (3, 11):
     pytestmark = pytest.mark.skip("Skipping Unit Tests on 3.11")
 
-# REST API canned responses when mocking send_request
+# REST API canned responses when mocking send_request.
 SRR = {
     # common responses
     'empty_good': ({'data': []}, None),
@@ -127,6 +127,24 @@ SRR = {
         None
     ),
     'versions': ({'data': [2, 3]}, None),
+    'grid_load_balancer_endpoints_config': (
+        {
+            'data': {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "displayName": "FabricPool"
+            }
+        },
+        None
+    ),
+    'grid_ha_groups': (
+        {
+            'data': {
+                "id": "00000000-0000-0000-0000-000000000000",
+                "name": "HAGroup1"
+            }
+        },
+        None
+    ),
 }
 
 
@@ -218,6 +236,22 @@ class TestMyModule(unittest.TestCase):
             'gather_subset': ['grid_accounts_info', 'grid/users/root'],
         })
 
+    def set_args_run_sg_gather_facts_for_lb_endpoints_info(self):
+        return dict({
+            'api_url': 'sgmi.example.com',
+            'auth_token': '01234567-5678-9abc-78de-9fgabc123def',
+            'validate_certs': False,
+            'gather_subset': ['grid_load_balancer_endpoints_config_info'],
+        })
+
+    def set_args_run_sg_gather_facts_for_ha_group_info(self):
+        return dict({
+            'api_url': 'sgmi.example.com',
+            'auth_token': '01234567-5678-9abc-78de-9fgabc123def',
+            'validate_certs': False,
+            'gather_subset': ['grid_ha_groups_info'],
+        })
+
     def test_module_fail_when_required_args_missing(self):
         ''' required arguments are reported as errors '''
         with pytest.raises(AnsibleFailJson) as exc:
@@ -292,6 +326,8 @@ class TestMyModule(unittest.TestCase):
             'grid/users',
             'grid/users/root',
             'versions',
+            'private/gateway-configs',
+            'private/ha-groups',
         ]
         mock_request.side_effect = [
             SRR['grid_accounts'],
@@ -329,6 +365,8 @@ class TestMyModule(unittest.TestCase):
             SRR['grid_users'],
             SRR['grid_users_root'],
             SRR['versions'],
+            SRR['grid_load_balancer_endpoints_config'],
+            SRR['grid_ha_groups'],
             SRR['end_of_sequence'],
         ]
         with pytest.raises(AnsibleExitJson) as exc:
@@ -363,4 +401,32 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print('Info: test_run_sg_gather_facts_for_grid_accounts_and_grid_users_root_info_pass: %s' % repr(exc.value.args))
+        assert set(exc.value.args[0]['sg_info']) == set(gather_subset)
+
+    @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
+    def test_get_na_sg_grid_info_lb_endpoints_pass(self, mock_request):
+        set_module_args(self.set_args_run_sg_gather_facts_for_lb_endpoints_info())
+        my_obj = sg_grid_info_module()
+        gather_subset = ['private/gateway-configs']
+        mock_request.side_effect = [
+            SRR['grid_load_balancer_endpoints_config'],
+            SRR['end_of_sequence'],
+        ]
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print('Info: test_get_na_sg_grid_info_lb_endpoints_pass: %s' % repr(exc.value.args))
+        assert set(exc.value.args[0]['sg_info']) == set(gather_subset)
+
+    @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
+    def test_get_na_sg_grid_info_ha_groups_pass(self, mock_request):
+        set_module_args(self.set_args_run_sg_gather_facts_for_ha_group_info())
+        my_obj = sg_grid_info_module()
+        gather_subset = ['private/ha-groups']
+        mock_request.side_effect = [
+            SRR['grid_ha_groups'],
+            SRR['end_of_sequence'],
+        ]
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print('Info: test_get_na_sg_grid_info_ha_groups_pass: %s' % repr(exc.value.args))
         assert set(exc.value.args[0]['sg_info']) == set(gather_subset)
