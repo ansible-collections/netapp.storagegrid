@@ -10,6 +10,7 @@ action_groups:
     - na_sg_grid_group
     - na_sg_grid_ha_group
     - na_sg_grid_identity_federation
+    - na_sg_grid_ilm_policy_tag
     - na_sg_grid_ilm_policy
     - na_sg_grid_info
     - na_sg_grid_ntp
