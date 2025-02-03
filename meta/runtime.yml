@@ -13,6 +13,7 @@ action_groups:
     - na_sg_grid_ilm_rule
     - na_sg_grid_ilm_policy_tag
     - na_sg_grid_ilm_policy
+    - na_sg_grid_ilm_pool
     - na_sg_grid_info
     - na_sg_grid_ntp
     - na_sg_grid_regions

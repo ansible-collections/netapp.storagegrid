@@ -86,6 +86,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_ilm_policy - Added new module for ILM policy management.
   - na_sg_grid_ilm_policy_tag - Added new module for ILM policy tag management.
   - na_sg_grid_ilm_rule - Added new module for ILM rule management.
+  - na_sg_grid_ilm_pool - Added new module for ILM pool management.
 
 ## 21.13.0
 
