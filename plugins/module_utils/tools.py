@@ -38,7 +38,7 @@ def first_inside_second_dict_or_list(d1, d2):
     None values in the desired state are skipped and ignored.
     This method checks, whether d1 is a subset of d2, it does not prove equality.
     """
-    if isinstance(d1, type(d2)):
+    if not isinstance(d1, type(d2)):
         raise AssertionError("Inputs are not of same type. Got %s and %s." % (type(d1), type(d2)))
     answer = True
 
@@ -75,7 +75,7 @@ def first_inside_second_dict_or_list(d1, d2):
         if len(d1) == 0:
             return answer
         else:
-            if all(isinstance(x, type(d1[0])) for x in d1):
+            if not all(isinstance(x, type(d1[0])) for x in d1):
                 raise AssertionError("all elements in a list must be of same type. Not the case for: %s." % (d1))
         # case if list elements are "simple": strings, integers, bools, none
         if isinstance(d1[0], (str, int, float, bool, type(None))):

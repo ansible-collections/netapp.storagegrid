@@ -79,6 +79,14 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.14.0
+
+### Minor Changes
+  - na_sg_grid_info - LB endpoints and HA group in info module.
+  - na_sg_grid_ilm_policy - Added new module for ILM policy management.
+  - na_sg_grid_ilm_policy_tag - Added new module for ILM policy tag management.
+  - na_sg_grid_ilm_rule - Added new module for ILM rule management.
+
 ## 21.13.0
 
 ### Minor Changes
