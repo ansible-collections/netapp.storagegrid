@@ -28,7 +28,7 @@ description:
 options:
   api_url:
     description:
-    - Rest endpoint for all invocations against the grid, e.g. `https://192.168.0.80`
+    - Rest endpoint for all invocations against the grid
     required: true
     type: str
   auth_token:
@@ -76,9 +76,9 @@ options:
 
 EXAMPLES = """
   - name: Create ILM policy
-    na_sg_ilm_policy:
-      auth_token: 9bcf4902-d5a3-479a-8d5e-8f98ef879f4e
-      api_url: https://192.168.0.80
+    na_sg_grid_ilm_policy:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
       name: "1 Copy Per Site"
       state: present
       reason: "The 1 Copy Per Site policy placves 1 replicated copy at each site"
@@ -86,10 +86,10 @@ EXAMPLES = """
       rules:
         - r601033236249396421
 
-  - name: Delete existing ILM rule
-    na_sg_ilm_rule:
-      auth_token: 9bcf4902-d5a3-479a-8d5e-8f98ef879f4e
-      api_url: https://192.168.0.80
+  - name: Delete existing ILM policy
+    na_sg_grid_ilm_policy:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
       name: "1 Copy Per Site"
       state: absent
 """
