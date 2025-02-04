@@ -31,6 +31,7 @@ SRR = {
     "delete_good": ({"code": 204}, None),
     "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "version_116": ({"data": {"productVersion": "11.6.0-20211120.0301.850531e"}}, None),
+    "version_119": ({"data": {"productVersion": "11.9.0-20241190.0301.431531e"}}, None),
     "pw_change_good": ({"code": 204}, None),
     "grid_accounts": (
         {
@@ -362,6 +363,19 @@ class TestMyModule(unittest.TestCase):
         print("Info: test_module_fail_minimum_version_not_met: %s" % exc.value.args[0]["msg"])
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_minimum_version_not_met_for_compliance_and_retention(self, mock_request):
+        args = self.set_args_create_na_sg_grid_account()
+        args["allow_compliance_mode"] = True
+        args["max_retention_days"] = 365
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            grid_account_module()
+        print("Info: test_module_fail_minimum_version_not_met_for_compliance_and_retention: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_grid_account_with_allow_select_object_content_pass(self, mock_request):
         args = self.set_args_create_na_sg_grid_account()
         args["allow_select_object_content"] = True
@@ -377,5 +391,26 @@ class TestMyModule(unittest.TestCase):
             my_obj.apply()
         print(
             "Info: test_create_na_sg_tenant_account_with_allow_select_object_content_pass: %s" % repr(exc.value.args[0])
+        )
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_grid_account_with_compliance_mode_and_retention_time(self, mock_request):
+        args = self.set_args_create_na_sg_grid_account()
+        args["allow_compliance_mode"] = True
+        args["max_retention_days"] = 365
+        print("args", args)
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_119"],  # get
+            SRR["empty_good"],  # get
+            SRR["grid_accounts"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = grid_account_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print(
+            "Info: test_create_na_sg_grid_account_with_compliance_mode_and_retention_time: %s" % repr(exc.value.args[0])
         )
         assert exc.value.args[0]["changed"]
