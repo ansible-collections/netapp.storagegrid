@@ -59,7 +59,9 @@ SRR = {
                 "port": 10443,
                 "secure": True,
                 "accountId": "0",
-                "pinTargets": {"haGroups": ["c08e6dca-038d-4a05-9499-6fbd1e6a4c3e"], "nodeInterfaces": []},
+                "enable_tenant_manager": True,
+                "enable_grid_manager": True,
+                "pinTargets": {"haGroups": ["c08e6dca-038d-4a05-9499-6fbd1e6a4c3e"], "nodeInterfaces": [], "nodeTypes": ["adminNode"]},
             }
         },
         None,
@@ -73,6 +75,8 @@ SRR = {
                 "enableIPv6": True,
                 "port": 10443,
                 "secure": True,
+                "enable_tenant_manager": True,
+                "enable_grid_manager": True,
                 "accountId": "0",
                 "pinTargets": {
                     "haGroups": [],
@@ -80,6 +84,7 @@ SRR = {
                         {"interface": "eth2", "nodeId": "0b1866ed-d6e7-41b4-815f-bf867348b76b"},
                         {"interface": "eth2", "nodeId": "970ad050-b68b-4aae-a94d-aef73f3095c4"},
                     ],
+                    "nodeTypes": ["adminNode"],
                 },
             }
         },
@@ -94,8 +99,10 @@ SRR = {
                 "enableIPv6": True,
                 "port": 10443,
                 "secure": True,
+                "enable_tenant_manager": True,
+                "enable_grid_manager": True,
                 "accountId": "0",
-                "pinTargets": {"haGroups": ["c08e6dca-038d-4a05-9499-6fbd1e6a4c3e"], "nodeInterfaces": []},
+                "pinTargets": {"haGroups": ["c08e6dca-038d-4a05-9499-6fbd1e6a4c3e"], "nodeInterfaces": [], "nodeTypes": ["adminNode"]},
             }
         },
         None,

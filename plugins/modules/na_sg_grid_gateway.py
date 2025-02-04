@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# (c) 2021, NetApp Inc
+# (c) 2021-2025, NetApp Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """NetApp StorageGRID - Manage Load Balancer Endpoints"""
@@ -90,6 +90,24 @@ options:
         - The interface to bind to. eth0 corresponds to the Grid Network, eth1 to the Admin Network, and eth2 to the Client Network.
         type: str
     version_added: '21.9.0'
+  node_type:
+    description:
+    - A list of node types to bind to.
+    - This Load Balancer Endpoint will listen on all nodes of this type.
+    - The adminNode type includes both primary and non-primary admin nodes.
+    type: str
+    choices: ['adminNode', 'apiGatewayNode']
+    version_added: '21.14.0'
+  enable_tenant_manager:
+    description:
+    - Whether to use the port bind for tenant manager traffic.
+    type: bool
+    version_added: '21.14.0'
+  enable_grid_manager:
+    description:
+    - Whether to use the port bind for grid manager traffic.
+    type: bool
+    version_added: '21.14.0'
   default_service_type:
     description:
     - The type of service to proxy through the load balancer.
@@ -241,6 +259,8 @@ class SgGridGateway:
                 secure=dict(required=False, type="bool", default=True),
                 enable_ipv4=dict(required=False, type="bool", default=True),
                 enable_ipv6=dict(required=False, type="bool", default=True),
+                enable_tenant_manager=dict(required=False, type="bool"),
+                enable_grid_manager=dict(required=False, type="bool"),
                 binding_mode=dict(
                     required=False, type="str", choices=["global", "ha-groups", "node-interfaces"], default="global"
                 ),
@@ -254,6 +274,7 @@ class SgGridGateway:
                         interface=dict(required=False, type="str"),
                     ),
                 ),
+                node_type=dict(required=False, type="str", choices=["adminNode", "apiGatewayNode"]),
                 # Arguments for setting Gateway Virtual Server
                 default_service_type=dict(required=False, type="str", choices=["s3", "swift"], default="s3"),
                 server_certificate=dict(required=False, type="str"),
@@ -315,20 +336,23 @@ class SgGridGateway:
         if self.parameters["binding_mode"] != "global":
             self.rest_api.fail_if_not_sg_minimum_version("non-global binding mode", 11, 5)
 
+        self.data_gateway["pinTargets"] = {
+            "haGroups": [],
+            "nodeInterfaces": [],
+            "nodeTypes": [],
+        }
+        if self.parameters.get("node_type") is not None:
+            self.data_gateway["pinTargets"]["nodeTypes"] = [self.parameters["node_type"]]
         if self.parameters["binding_mode"] == "ha-groups":
-            self.data_gateway["pinTargets"] = {}
             self.data_gateway["pinTargets"]["haGroups"] = self.build_ha_group_list()
-            self.data_gateway["pinTargets"]["nodeInterfaces"] = []
-
         elif self.parameters["binding_mode"] == "node-interfaces":
-            self.data_gateway["pinTargets"] = {}
             self.data_gateway["pinTargets"]["nodeInterfaces"] = self.build_node_interface_list()
-            self.data_gateway["pinTargets"]["haGroups"] = []
 
-        else:
-            self.data_gateway["pinTargets"] = {}
-            self.data_gateway["pinTargets"]["haGroups"] = []
-            self.data_gateway["pinTargets"]["nodeInterfaces"] = []
+        # Parameters for allowing Management Interfaces for a gateway port
+        self.data_gateway["managementInterfaces"] = {
+            "enableTenantManager": self.parameters.get("enable_tenant_manager"),
+            "enableGridManager": self.parameters.get("enable_grid_manager")
+        }
 
     def build_ha_group_list(self):
         ha_group_ids = []
