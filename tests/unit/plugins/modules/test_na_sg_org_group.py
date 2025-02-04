@@ -68,6 +68,7 @@ SRR = {
             "data": {
                 "displayName": "TestOrgGroup",
                 "uniqueName": "group/testorggroup",
+                "read_only": False,
                 "policies": {
                     "management": {
                         "manageAllContainers": True,
@@ -97,6 +98,7 @@ SRR = {
             "data": {
                 "displayName": "TestOrgGroup",
                 "uniqueName": "group/testorggroup",
+                "read_only": True,
                 "policies": {
                     "management": {
                         "manageAllContainers": True,

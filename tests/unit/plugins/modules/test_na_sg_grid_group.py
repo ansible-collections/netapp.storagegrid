@@ -58,6 +58,7 @@ SRR = {
             "data": {
                 "displayName": "TestGridGroup",
                 "uniqueName": "group/testgridgroup",
+                "read_only": False,
                 "policies": {
                     "management": {
                         "tenantAccounts": True,
@@ -77,6 +78,7 @@ SRR = {
             "data": {
                 "displayName": "TestGridGroup",
                 "uniqueName": "group/testgridgroup",
+                "read_only": True,
                 "policies": {
                     "management": {
                         "tenantAccounts": True,

@@ -88,6 +88,8 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_ilm_rule - Added new module for ILM rule management.
   - na_sg_grid_ilm_pool - Added new module for ILM pool management.
   - na_sg_grid_account - new option `allow_compliance_mode` and `max_retention_days` added for tenant account, requires storageGRID 11.9 or later.
+  - na_sg_grid_group - new option `read_only` added for grid groups.
+  - na_sg_org_group - new option `read_only` added for tenant groups.
 
 ## 21.13.0
 

@@ -44,6 +44,11 @@ options:
     - Required for create, modify or delete operation.
     type: str
     required: true
+  read_only:
+    description:
+    - Users can view settings and features but cannot make changes or perform operations.
+    type: bool
+    version_added: '21.14.0'
   management_policy:
     description:
     - Management access controls granted to the group within the tenancy.
@@ -177,6 +182,7 @@ class SgGridGroup(object):
                 state=dict(required=False, type="str", choices=["present", "absent"], default="present"),
                 display_name=dict(required=False, type="str"),
                 unique_name=dict(required=True, type="str"),
+                read_only=dict(required=False, type="bool"),
                 management_policy=dict(
                     required=False,
                     type="dict",
@@ -224,6 +230,8 @@ class SgGridGroup(object):
         self.data = {}
         self.data["displayName"] = self.parameters.get("display_name")
         self.data["uniqueName"] = self.parameters["unique_name"]
+        if self.parameters.get("read_only"):
+            self.data["managementReadOnly"] = self.parameters["read_only"]
         # Only add the parameter if value is True, as JSON response does not include non-true objects
         self.data["policies"] = {}
 
@@ -294,17 +302,13 @@ class SgGridGroup(object):
 
         if cd_action is None and self.parameters["state"] == "present":
             # let's see if we need to update parameters
-            update = False
 
             if self.parameters.get("management_policy"):
-                if (
-                    grid_group.get("policies") is None
-                    or grid_group.get("policies", {}).get("management") != self.data["policies"]["management"]
-                ):
-                    update = True
-
-            if update:
+                if grid_group.get("policies") is None or grid_group.get("policies", {}).get("management") != self.data["policies"]["management"]:
+                    self.na_helper.changed = True
+            if self.parameters.get("read_only") is not None and self.parameters.get("read_only") != grid_group["managementReadOnly"]:
                 self.na_helper.changed = True
+
         result_message = ""
         resp_data = grid_group
         if self.na_helper.changed:
