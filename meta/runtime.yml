@@ -6,6 +6,7 @@ action_groups:
     - na_sg_grid_certificate
     - na_sg_grid_client_certificate
     - na_sg_grid_dns
+    - na_sg_grid_ec_profile
     - na_sg_grid_gateway
     - na_sg_grid_group
     - na_sg_grid_ha_group
