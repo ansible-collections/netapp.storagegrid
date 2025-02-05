@@ -5,12 +5,29 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
-v21.13.0
+v21.14.0
 ========
 
 Minor Changes
 -------------
-- updated pipeline.
+
+- na_sg_grid_account - new option `allow_compliance_mode` and `max_retention_days` added for tenant account, requires storageGRID 11.9 or later.
+- na_sg_grid_gateway - new option `enable_tenant_manager`, `enable_grid_manager` and `node_type` added to support management interfaces.
+- na_sg_grid_group - new option `read_only` added for grid groups.
+- na_sg_grid_info - LB endpoints and HA group in info module.
+- na_sg_org_group - new option `read_only` added for tenant groups.
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_ec_profile - Manage EC profiles on StorageGRID.
+- netapp.storagegrid.na_sg_grid_ilm_policy - Manage ILM policies on StorageGRID.
+- netapp.storagegrid.na_sg_grid_ilm_policy_tag - Manage ILM policy tags on StorageGRID.
+- netapp.storagegrid.na_sg_grid_ilm_pool - Manage ILM pools on StorageGRID.
+- netapp.storagegrid.na_sg_grid_ilm_rule - Manage ILM rules on StorageGRID.
+
+v21.13.0
+========
 
 v21.12.0
 ========
