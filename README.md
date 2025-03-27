@@ -79,6 +79,11 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.15.0
+
+### New Modules
+  - na_sg_grid_domain_name - new module added to configure endpoint domain name.
+
 ## 21.14.0
 
 ### New Modules
