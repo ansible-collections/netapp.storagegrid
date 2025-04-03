@@ -258,8 +258,11 @@ class SgOrgUser(object):
             # let's see if we need to update parameters
             update = False
 
-            if org_user["memberOf"] is None:
-                member_of_diff = []
+            if org_user.get("memberOf") is None:
+                if self.data.get("memberOf"):
+                    member_of_diff = [self.data['memberOf']]
+                else:
+                    member_of_diff = []
             else:
                 member_of_diff = [
                     i

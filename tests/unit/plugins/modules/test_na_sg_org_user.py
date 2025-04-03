@@ -323,6 +323,24 @@ class TestMyModule(unittest.TestCase):
         assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_org_user_add_group_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_user()
+        args["member_of"] = ["group/testorggroup1", "group/testorggroup2"]
+
+        set_module_args(args)
+        my_obj = org_user_module()
+        mock_request.side_effect = [
+            SRR["org_user_record_no_group"],  # get
+            SRR["org_groups"],  # get
+            SRR["org_user_record_update"],  # put
+            SRR["end_of_sequence"],
+        ]
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_org_user_add_group_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_org_user_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_org_user())
         my_obj = org_user_module()
