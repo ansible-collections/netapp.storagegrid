@@ -83,6 +83,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 ### New Modules
   - na_sg_grid_domain_name - new module added to configure endpoint domain name.
+  - na_sg_grid_autosupport - new module added to configure autosupport.
 
 ### Bug Fixes
   - na_sg_org_user - fix where existing users with no groups attached were not getting any groups added.
