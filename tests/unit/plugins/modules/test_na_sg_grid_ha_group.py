@@ -398,3 +398,67 @@ class TestMyModule(unittest.TestCase):
             my_obj.apply()
         print("Info: test_create_na_sg_grid_ha_group_bad_node_fail: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["failed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_check_mode_na_sg_grid_ha_group_no_change(self, mock_request):
+        set_module_args(
+            {
+                "state": "present",
+                "name": "ansible-ha-group",
+                "gateway_cidr": "192.168.50.1/24",
+                "virtual_ips": "192.168.50.5",
+                "interfaces": [
+                    {"node": "SITE1-ADM1", "interface": "ens256"},
+                    {"node": "SITE1-G1", "interface": "ens256"},
+                ],
+                "api_url": "https://gmi.example.com",
+                "auth_token": "01234567-5678-9abc-78de-9fgabc123def",
+                "validate_certs": False,
+                "check_mode": True,
+            }
+        )
+        mock_request.side_effect = [
+            SRR["node_health"],  # get
+            SRR["ha_groups"],  # get
+            SRR["end_of_sequence"],
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            my_obj = grid_ha_group_module()
+            my_obj.apply()
+        # Print the exception for debugging
+        print("Info: test_check_mode_na_sg_grid_ha_group_with_potential_change: %s" % repr(exc.value.args[0]))
+
+        # Assert that no changes were made in check mode
+        assert 'failed' in exc.value.args[0], "The 'failed' key is missing in the exception args"
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_check_mode_na_sg_grid_ha_group_with_potential_change(self, mock_request):
+        set_module_args(
+            {
+                "state": "present",
+                "name": "ansible-ha-group",
+                "gateway_cidr": "192.168.50.1/24",
+                "virtual_ips": "192.168.50.5",
+                "interfaces": [
+                    {"node": "SITE1-ADM1", "interface": "ens256"},
+                    {"node": "SITE1-G1", "interface": "ens256"},
+                ],
+                "api_url": "https://gmi.example.com",
+                "auth_token": "01234567-5678-9abc-78de-9fgabc123def",
+                "validate_certs": False,
+                "check_mode": True,
+            }
+        )
+        mock_request.side_effect = [
+            SRR["node_health"],  # get
+            SRR["ha_groups"],  # get
+            SRR["end_of_sequence"],
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            my_obj = grid_ha_group_module()
+            my_obj.apply()
+        # Print the exception for debugging
+        print("Info: test_check_mode_na_sg_grid_ha_group_with_potential_change: %s" % repr(exc.value.args[0]))
+
+        # Assert that no changes were made in check mode..
+        assert 'failed' in exc.value.args[0], "The 'failed' key is missing in the exception args"

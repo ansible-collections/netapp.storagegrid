@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# (c) 2020, NetApp Inc
+# (c) 2020-2025, NetApp Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """NetApp StorageGRID - Manage Buckets"""
@@ -60,6 +60,13 @@ options:
         description:
         - specify the length of the retention period for objects added to this bucket, in minutes.
         type: int
+  capacity_limit:
+    description:
+    - The maximum number of bytes available for this buckets's objects.
+    - Represents a logical amount (object size), not a physical amount (size on disk).
+    - Requires storageGRID 11.9 or later.
+    type: int
+    version_added: '21.15.0'
   s3_object_lock_enabled:
     description:
     - Enable S3 Object Lock on the bucket.
@@ -108,6 +115,15 @@ EXAMPLES = """
       state: present
       name: ansiblebucket1
       bucket_versioning_enabled: true
+
+  - name: create a s3 bucket with capacity_limit
+    netapp.storagegrid.na_sg_org_container:
+      api_url: "https://<storagegrid-endpoint-url>"
+      auth_token: "storagegrid-auth-token"
+      validate_certs: false
+      state: present
+      name: ansiblebucket1
+      capacity_limit: 10000
 """
 
 RETURN = """
@@ -126,7 +142,8 @@ resp:
         },
         "s3ObjectLock": {
             "enabled": false
-        }
+        },
+        "quotaObjectBytes": 1000000000
     }
 """
 
@@ -161,6 +178,7 @@ class SgOrgContainer(object):
                         retention_period_minutes=dict(required=False, type="int"),
                     ),
                 ),
+                capacity_limit=dict(required=False, type="int"),
                 s3_object_lock_enabled=dict(required=False, type="bool"),
                 bucket_versioning_enabled=dict(required=False, type="bool"),
             )
@@ -190,6 +208,8 @@ class SgOrgContainer(object):
         self.data_versioning = {}
         self.data_versioning["versioningSuspended"] = True
 
+        self.quota_object_bytes = {}
+
         self.data = {}
         self.data["name"] = self.parameters["name"]
         self.data["region"] = self.parameters.get("region")
@@ -208,11 +228,13 @@ class SgOrgContainer(object):
             if self.data_versioning["versioningEnabled"]:
                 self.data_versioning["versioningSuspended"] = False
 
-    def get_org_container(self):
-        # Check if bucket/container exists
-        # Return info if found, or None
+        if self.parameters.get("capacity_limit"):
+            self.rest_api.fail_if_not_sg_minimum_version("Bucket capacity limit", 11, 9)
+            self.quota_object_bytes["quotaObjectBytes"] = self.parameters["capacity_limit"]
 
-        params = {"include": "compliance,region"}
+    def get_org_container(self):
+        ''' Get org container details '''
+        params = {"include": "compliance,region,quotaObjectBytes"}
         response, error = self.rest_api.get("api/v3/org/containers", params=params)
 
         if error:
@@ -225,6 +247,7 @@ class SgOrgContainer(object):
         return None
 
     def create_org_container(self):
+        ''' Create org container '''
         api = "api/v3/org/containers"
 
         response, error = self.rest_api.post(api, self.data)
@@ -235,6 +258,7 @@ class SgOrgContainer(object):
         return response["data"]
 
     def get_org_container_versioning(self):
+        ''' Get org container versioning details '''
         api = "api/v3/org/containers/%s/versioning" % self.parameters["name"]
         response, error = self.rest_api.get(api)
 
@@ -244,6 +268,7 @@ class SgOrgContainer(object):
         return response["data"]
 
     def update_org_container_versioning(self):
+        ''' Update org container versioning '''
         api = "api/v3/org/containers/%s/versioning" % self.parameters["name"]
 
         response, error = self.rest_api.put(api, self.data_versioning)
@@ -253,6 +278,7 @@ class SgOrgContainer(object):
         return response["data"]
 
     def fail_if_global_object_lock_disabled(self):
+        ''' Fail if global object lock is disabled '''
         api = "api/v3/org/compliance-global"
 
         response, error = self.rest_api.get(api)
@@ -263,6 +289,7 @@ class SgOrgContainer(object):
             self.module.fail_json(msg="Error: Global S3 Object Lock setting is not enabled.")
 
     def update_org_container_compliance(self):
+        ''' Update org container compliance '''
         api = "api/v3/org/containers/%s/compliance" % self.parameters["name"]
 
         response, error = self.rest_api.put(api, self.data["compliance"])
@@ -271,7 +298,18 @@ class SgOrgContainer(object):
 
         return response["data"]
 
+    def update_org_container_quota_object_bytes(self):
+        ''' Update org container quota object bytes '''
+        api = "api/v3/org/containers/%s/quota-object-bytes" % self.parameters["name"]
+
+        response, error = self.rest_api.put(api, self.quota_object_bytes)
+        if error:
+            self.module.fail_json(msg=error)
+
+        return response["data"]
+
     def delete_org_container(self):
+        ''' Delete org container '''
         api = "api/v3/org/containers/%s" % self.parameters["name"]
 
         response, error = self.rest_api.delete(api, None)
@@ -295,9 +333,14 @@ class SgOrgContainer(object):
         if cd_action is None and self.parameters["state"] == "present":
             # let's see if we need to update parameters
             update_compliance = False
+            update_quota_object_bytes = False
 
             if self.parameters.get("compliance") and org_container.get("compliance") != self.data["compliance"]:
                 update_compliance = True
+                self.na_helper.changed = True
+
+            if self.parameters.get("capacity_limit") and org_container.get("quotaObjectBytes") != self.quota_object_bytes["quotaObjectBytes"]:
+                update_quota_object_bytes = True
                 self.na_helper.changed = True
 
             if (
@@ -326,6 +369,9 @@ class SgOrgContainer(object):
 
                     if self.parameters.get("bucket_versioning_enabled") is not None:
                         self.update_org_container_versioning()
+
+                    if self.parameters.get("capacity_limit"):
+                        resp_data.update(self.update_org_container_quota_object_bytes())
                     result_message = "Org Container created"
 
                 else:
@@ -333,6 +379,8 @@ class SgOrgContainer(object):
                         resp_data = self.update_org_container_compliance()
                     if update_versioning:
                         self.update_org_container_versioning()
+                    if update_quota_object_bytes:
+                        resp_data = self.update_org_container_quota_object_bytes()
                     result_message = "Org Container updated"
 
         self.module.exit_json(changed=self.na_helper.changed, msg=result_message, resp=resp_data)

@@ -306,7 +306,18 @@ class SgGridHaGroup:
         result_message = ""
         resp_data = {}
 
-        if self.na_helper.changed and not self.module.check_mode:
+        # check if we are in check mode
+        if self.module.check_mode:
+            if cd_action == "delete":
+                self.module.exit_json(changed=True, msg="HA Group would be deleted.")
+            elif cd_action == "create":
+                self.module.exit_json(changed=True, msg="HA Group would be created.")
+            elif modify:
+                self.module.exit_json(changed=True, msg="HA Group would be updated.")
+            else:
+                self.module.exit_json(changed=False, msg="No changes would be made.")
+
+        if self.na_helper.changed:
             if cd_action == "delete":
                 self.delete_ha_group(ha_group["id"])
                 result_message = "HA Group deleted"
