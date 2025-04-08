@@ -22,6 +22,7 @@ action_groups:
     - na_sg_grid_regions
     - na_sg_grid_traffic_classes
     - na_sg_grid_user
+    - na_sg_grid_vlan_interface
     - na_sg_org_container
     - na_sg_org_group
     - na_sg_org_identity_federation
