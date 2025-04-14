@@ -82,9 +82,10 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ## 21.15.0
 
 ### New Modules
-  - na_sg_grid_domain_name - new module added to configure endpoint domain name.
-  - na_sg_grid_vlan_interface - new module added to configure VLAN interface.
-  - na_sg_grid_autosupport - new module added to configure autosupport.
+  - na_sg_grid_domain_name - configure endpoint domain names on StorageGRID.
+  - na_sg_grid_vlan_interface - configure VLAN interfaces on StorageGRID.
+  - na_sg_grid_audit_destination - configure audit log destinations on StorageGRID.
+  - na_sg_grid_autosupport - configure autosupport settings on StorageGRID.
 
 ### Minor Changes
   - na_sg_org_container - new option `capacity_limit` added for bucket, requires storageGRID 11.9 or later.
