@@ -234,7 +234,9 @@ class SgOrgContainer(object):
 
     def get_org_container(self):
         ''' Get org container details '''
-        params = {"include": "compliance,region,quotaObjectBytes"}
+        params = {"include": "compliance,region"}
+        if self.rest_api.meets_sg_minimum_version(11, 9):
+            params["include"] += ",quotaObjectBytes"
         response, error = self.rest_api.get("api/v3/org/containers", params=params)
 
         if error:
