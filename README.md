@@ -82,6 +82,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ## 21.15.0
 
 ### New Modules
+  - na_sg_grid_proxy_settings - configure proxy settings on StorageGRID.
   - na_sg_grid_domain_name - configure endpoint domain names on StorageGRID.
   - na_sg_grid_vlan_interface - configure VLAN interfaces on StorageGRID.
   - na_sg_grid_audit_destination - configure audit log destinations on StorageGRID.
@@ -137,7 +138,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 ### New Modules
   - na_sg_grid_client_certificate - Manage Client Certificates on StorageGRID.
-  
+
 ## 21.10.0
 
 ### Minor Changes
@@ -149,9 +150,9 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### New Modules
   - na_sg_grid_ha_group - Manage high availability (HA) group configuration on StorageGRID.
   - na_sg_grid_traffic_classes - Manage Traffic Classification Policy configuration on StorageGRID.
-  
+
 ## 21.9.0
-  
+
 ### Minor Changes
   - na_sg_grid_gateway - supports load balancer endpoint binding available in StorageGRID 11.5+.
   - na_sg_org_container - supports creation of S3 Object Lock buckets available in StorageGRID 11.5+.

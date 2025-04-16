@@ -3,6 +3,7 @@ requires_ansible: ">=2.14"
 action_groups:
   netapp_storagegrid:
     - na_sg_grid_account
+    - na_sg_grid_proxy_settings
     - na_sg_grid_audit_destination
     - na_sg_grid_autosupport
     - na_sg_grid_certificate
