@@ -89,6 +89,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_autosupport - configure autosupport settings on StorageGRID.
   - na_sg_grid_snmp - configure SNMP agent for monitoring on StorageGRID.
   - na_sg_org_bucket - duplicate of `na_sg_org_container` module to manage bucket.
+  - na_sg_grid_tenant - duplicate of `na_sg_grid_account` module to manage tenant account.
 
 ### Minor Changes
   - na_sg_org_container - new option `capacity_limit` added for bucket, requires storageGRID 11.9 or later.
