@@ -84,6 +84,8 @@ SRR = {
     "org_container_versioning_disabled": ({"data": {"versioningEnabled": False, "versioningSuspended": False}}, None),
     "org_container_versioning_enabled": ({"data": {"versioningEnabled": True, "versioningSuspended": False}}, None),
     "org_container_versioning_suspended": ({"data": {"versioningEnabled": False, "versioningSuspended": True}}, None),
+    "consistency": ({"data": {"consistency": "available"}}, None),
+    "consistency_updated": ({"data": {"consistency": "all"}}, None),
     "org_container_capacity_limit": ({"data": {"quotaObjectBytes": 100000}}, None),
     "org_container_capacity_limit_updated": ({"data": {"quotaObjectBytes": 200000}}, None),
 }
@@ -181,7 +183,7 @@ class TestMyModule(unittest.TestCase):
     def test_module_fail_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
         mock_request.side_effect = [
-            SRR["version_114"],
+            SRR["version_116"],
         ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
@@ -194,7 +196,7 @@ class TestMyModule(unittest.TestCase):
     def test_create_na_sg_org_container_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_container())
         mock_request.side_effect = [
-            SRR["version_114"],
+            SRR["version_116"],
             SRR["empty_good"],  # get
             SRR["org_container_record"],  # post
             SRR["end_of_sequence"],
@@ -209,7 +211,7 @@ class TestMyModule(unittest.TestCase):
     def test_idempotent_create_na_sg_org_container_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_container())
         mock_request.side_effect = [
-            SRR["version_114"],
+            SRR["version_116"],
             SRR["org_containers"],  # get
             SRR["end_of_sequence"],
         ]
@@ -225,7 +227,7 @@ class TestMyModule(unittest.TestCase):
         args["compliance"] = {"auto_delete": False, "legal_hold": False}
         set_module_args(args)
         mock_request.side_effect = [
-            SRR["version_114"],
+            SRR["version_116"],
             SRR["org_containers"],  # get
             SRR["org_container_record_update"],  # put
             SRR["end_of_sequence"],
@@ -240,7 +242,7 @@ class TestMyModule(unittest.TestCase):
     def test_delete_na_sg_org_container_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_org_container())
         mock_request.side_effect = [
-            SRR["version_114"],
+            SRR["version_116"],
             SRR["org_containers"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
@@ -343,6 +345,18 @@ class TestMyModule(unittest.TestCase):
         assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_minimum_version_not_met_versioning(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["consistency"] = "available"
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_114"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            org_container_module()
+        print("Info: test_module_fail_minimum_version_not_met_consistency: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_module_fail_minimum_version_not_met_capacity_limit(self, mock_request):
         args = self.set_args_create_na_sg_org_container()
         args["capacity_limit"] = 100000
@@ -353,6 +367,24 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleFailJson) as exc:
             org_container_module()
         print("Info: test_module_fail_minimum_version_not_met_capacity_limit: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_org_container_with_consistency_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["consistency"] = "available"
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],
+            SRR["empty_good"],  # get
+            SRR["org_container_record"],  # post
+            SRR["consistency"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_create_na_sg_org_container_with_consistency_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_container_with_capacity_limit_pass(self, mock_request):
@@ -370,6 +402,24 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_container_with_capacity_limit_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_org_container_consistency_setting_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["consistency"] = "all"
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],
+            SRR["org_containers"],  # get
+            SRR["consistency"],  # put
+            SRR["consistency_updated"],
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_org_container_consistency_setting_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")

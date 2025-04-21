@@ -94,6 +94,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### Minor Changes
   - na_sg_org_container - new option `capacity_limit` added for bucket, requires storageGRID 11.9 or later.
   - na_sg_grid_ha_group - added check mode support in the module.
+  - na_sg_org_container - Enhanced the Consistency setting.
 
 ### Bug Fixes
   - na_sg_org_user - fix where existing users with no groups attached were not getting any groups added.
@@ -114,7 +115,9 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_org_group - new option `read_only` added for tenant groups.
   - na_sg_grid_gateway - new option `enable_tenant_manager`, `enable_grid_manager` and `node_type` added to support management interfaces.
 
+
 ## 21.13.0
+
 
 ### Minor Changes
 - updated pipleine.

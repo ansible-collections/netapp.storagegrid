@@ -79,6 +79,13 @@ options:
     - This API requires StorageGRID 11.6 or greater.
     type: bool
     version_added: '21.11.0'
+  consistency:
+    description:
+    - The consistency control affects the availability of objects for client requests.
+    required: false
+    type: str
+    choices: ['all', 'strong-global', 'strong-site', 'read-after-new-write', 'available']
+    version_added: '21.15.0'
 """
 
 EXAMPLES = """
@@ -181,6 +188,7 @@ class SgOrgContainer(object):
                 capacity_limit=dict(required=False, type="int"),
                 s3_object_lock_enabled=dict(required=False, type="bool"),
                 bucket_versioning_enabled=dict(required=False, type="bool"),
+                consistency=dict(required=False, type="str", choices=["all", "strong-global", "strong-site", "read-after-new-write", "available"]),
             )
         )
         parameter_map = {
@@ -203,11 +211,12 @@ class SgOrgContainer(object):
         # Get API version
         self.rest_api.get_sg_product_version(api_root="org")
 
-        # Checking for the parameters passed and create new parameters list
+        # Checking for the parameters passed and create new parameters list.
 
         self.data_versioning = {}
         self.data_versioning["versioningSuspended"] = True
 
+        self.consistency_setting = {}
         self.quota_object_bytes = {}
 
         self.data = {}
@@ -227,6 +236,10 @@ class SgOrgContainer(object):
             self.data_versioning["versioningEnabled"] = self.parameters["bucket_versioning_enabled"]
             if self.data_versioning["versioningEnabled"]:
                 self.data_versioning["versioningSuspended"] = False
+
+        if self.parameters.get("consistency") is not None:
+            self.rest_api.fail_if_not_sg_minimum_version("consistency setting", 11, 6)
+            self.consistency_setting["consistency"] = self.parameters["consistency"]
 
         if self.parameters.get("capacity_limit"):
             self.rest_api.fail_if_not_sg_minimum_version("Bucket capacity limit", 11, 9)
@@ -318,17 +331,39 @@ class SgOrgContainer(object):
         if error:
             self.module.fail_json(msg=error["text"])
 
+    def get_org_container_consistency(self):
+        api = "api/v3/org/containers/%s/consistency" % self.parameters["name"]
+        response, error = self.rest_api.get(api)
+
+        if error:
+            self.module.fail_json(msg=error)
+
+        return response["data"]
+
+    def update_org_container_consistency(self):
+        api = "api/v3/org/containers/%s/consistency" % self.parameters["name"]
+
+        response, error = self.rest_api.put(api, self.consistency_setting)
+        if error:
+            self.module.fail_json(msg=error)
+
+        return response["data"]
+
     def apply(self):
         """
         Perform pre-checks, call functions and exit
         """
         versioning_config = None
         update_versioning = False
+        consistency_setting = None
+        update_consistency = False
 
         org_container = self.get_org_container()
 
         if org_container and self.parameters.get("bucket_versioning_enabled") is not None:
             versioning_config = self.get_org_container_versioning()
+        if org_container and self.parameters.get("consistency") is not None:
+            consistency_setting = self.get_org_container_consistency()
 
         cd_action = self.na_helper.get_cd_action(org_container, self.parameters)
 
@@ -352,6 +387,13 @@ class SgOrgContainer(object):
                 update_versioning = True
                 self.na_helper.changed = True
 
+            if (
+                consistency_setting
+                and consistency_setting["consistency"] != self.consistency_setting["consistency"]
+            ):
+                update_consistency = True
+                self.na_helper.changed = True
+
         result_message = ""
         resp_data = org_container
         if self.na_helper.changed:
@@ -371,6 +413,8 @@ class SgOrgContainer(object):
 
                     if self.parameters.get("bucket_versioning_enabled") is not None:
                         self.update_org_container_versioning()
+                    if self.parameters.get("consistency") is not None:
+                        self.update_org_container_consistency()
 
                     if self.parameters.get("capacity_limit"):
                         resp_data.update(self.update_org_container_quota_object_bytes())
@@ -381,6 +425,8 @@ class SgOrgContainer(object):
                         resp_data = self.update_org_container_compliance()
                     if update_versioning:
                         self.update_org_container_versioning()
+                    if update_consistency:
+                        self.update_org_container_consistency()
                     if update_quota_object_bytes:
                         resp_data = self.update_org_container_quota_object_bytes()
                     result_message = "Org Container updated"
