@@ -1,0 +1,32 @@
+{
+ "collection_info": {
+  "namespace": "netapp",
+  "name": "storagegrid",
+  "version": "21.15.0",
+  "authors": [
+   "NetApp Ansible Team <ng-ansibleteam@netapp.com>"
+  ],
+  "readme": "README.md",
+  "tags": [
+   "storage",
+   "netapp",
+   "storagegrid"
+  ],
+  "description": "NetApp StorageGRID Collection",
+  "license": [],
+  "license_file": "COPYING",
+  "dependencies": {},
+  "repository": "https://github.com/ansible-collections/netapp.storagegrid",
+  "documentation": null,
+  "homepage": "https://netapp.io/configuration-management-and-automation/",
+  "issues": null
+ },
+ "file_manifest_file": {
+  "name": "FILES.json",
+  "ftype": "file",
+  "chksum_type": "sha256",
+  "chksum_sha256": "f03ebae8a9c1d33db34e6eb6e184735c5e6525c95855991210b6c426cd7de1d0",
+  "format": 1
+ },
+ "format": 1
+}

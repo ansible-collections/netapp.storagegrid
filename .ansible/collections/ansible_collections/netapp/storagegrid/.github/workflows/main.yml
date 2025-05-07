@@ -1,0 +1,46 @@
+name: NetApp.storagegrid Ansible CI
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 6 * * *'
+
+jobs:
+  sanity:
+    name: Sanity (${{ matrix.ansible }} on storagegrid
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ansible:
+          - stable-2.16
+          - stable-2.17
+          - stable-2.18
+          - devel
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          # Ansible 2.17 requires 3.11 as a minimum
+          python-version: 3.11
+
+      - name: Install ansible (${{ matrix.ansible }})
+        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+
+      - name: Make directory to make ansible-test happy
+        run: |
+          pwd
+          mkdir -p ansible_collections/netapp/storagegrid/
+          rsync -av . ansible_collections/netapp/storagegrid/ --exclude ansible_collections/netapp/storagegrid/
+      - name: Run sanity tests storagegrid
+        run: ansible-test sanity --docker -v --color
+        working-directory: ansible_collections/netapp/storagegrid/
+
+      - name: Run Unit Tests
+        run: ansible-test units --docker -v --color
+        working-directory: ansible_collections/netapp/storagegrid/
