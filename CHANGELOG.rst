@@ -5,6 +5,40 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.15.0
+========
+
+Minor Changes
+-------------
+
+- na_sg_grid_ha_group - added check mode support in the module.
+- na_sg_org_container - Enhanced the Consistency setting.
+- na_sg_org_container - new option `capacity_limit` added for bucket, requires storageGRID 11.9 or later.
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- all modules - added ability to authenticate using `username/password` and `tenant_id` (for Tenant) in the module.
+
+Bugfixes
+--------
+
+- na_sg_org_user - fix where existing users with no groups attached were not getting any groups added.
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_alert_receiver - NetApp StorageGRID manage alert receiver.
+- netapp.storagegrid.na_sg_grid_audit_destination - Configure audit log destinations on StorageGRID.
+- netapp.storagegrid.na_sg_grid_autosupport - Configure autosupport on StorageGRID.
+- netapp.storagegrid.na_sg_grid_domain_name - Configure endpoint domain name on StorageGRID.
+- netapp.storagegrid.na_sg_grid_hotfix - Apply hotfixes on StorageGRID.
+- netapp.storagegrid.na_sg_grid_proxy_settings - NetApp StorageGRID manage proxy settings for the grid.
+- netapp.storagegrid.na_sg_grid_snmp - Configure SNMP agent on StorageGRID.
+- netapp.storagegrid.na_sg_grid_tenant - NetApp StorageGRID manage tenant accounts.
+- netapp.storagegrid.na_sg_grid_vlan_interface - Configure VLAN interface on StorageGRID.
+- netapp.storagegrid.na_sg_org_bucket - Manage buckets on StorageGRID.
+
 v21.14.0
 ========
 

@@ -163,6 +163,57 @@ releases:
       name: na_sg_grid_ilm_rule
       namespace: ''
     release_date: '2025-02-05'
+  21.15.0:
+    changes:
+      breaking_changes:
+      - all modules - added ability to authenticate using `username/password` and
+        `tenant_id` (for Tenant) in the module.
+      bugfixes:
+      - na_sg_org_user - fix where existing users with no groups attached were not
+        getting any groups added.
+      minor_changes:
+      - na_sg_grid_ha_group - added check mode support in the module.
+      - na_sg_org_container - Enhanced the Consistency setting.
+      - na_sg_org_container - new option `capacity_limit` added for bucket, requires
+        storageGRID 11.9 or later.
+    fragments:
+    - DEVOPS-7022.yaml
+    - DEVOPS-7025.yaml
+    - DEVOPS-7170.yaml
+    - DEVOPS-7440.yaml
+    - DEVOPS-7505.yaml
+    modules:
+    - description: NetApp StorageGRID manage alert receiver.
+      name: na_sg_grid_alert_receiver
+      namespace: ''
+    - description: Configure audit log destinations on StorageGRID.
+      name: na_sg_grid_audit_destination
+      namespace: ''
+    - description: Configure autosupport on StorageGRID.
+      name: na_sg_grid_autosupport
+      namespace: ''
+    - description: Configure endpoint domain name on StorageGRID.
+      name: na_sg_grid_domain_name
+      namespace: ''
+    - description: Apply hotfixes on StorageGRID.
+      name: na_sg_grid_hotfix
+      namespace: ''
+    - description: NetApp StorageGRID manage proxy settings for the grid.
+      name: na_sg_grid_proxy_settings
+      namespace: ''
+    - description: Configure SNMP agent on StorageGRID.
+      name: na_sg_grid_snmp
+      namespace: ''
+    - description: NetApp StorageGRID manage tenant accounts.
+      name: na_sg_grid_tenant
+      namespace: ''
+    - description: Configure VLAN interface on StorageGRID.
+      name: na_sg_grid_vlan_interface
+      namespace: ''
+    - description: Manage buckets on StorageGRID.
+      name: na_sg_org_bucket
+      namespace: ''
+    release_date: '2025-05-07'
   21.6.0:
     changes:
       bugfixes:
