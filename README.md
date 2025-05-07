@@ -242,3 +242,6 @@ Initial release of NetApp StorageGRID Ansible modules
 - nac_sg_org_user: create/modify/delete Tenant user
 - nac_sg_org_user_s3_key: create/delete S3 key
 
+## License
+GNU General Public License v3.0
+See [LICENSE](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
