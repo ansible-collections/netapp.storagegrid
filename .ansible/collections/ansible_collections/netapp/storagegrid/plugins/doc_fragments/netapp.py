@@ -21,7 +21,7 @@ notes:
     SG = """
 options:
   auth_token:
-    required: false
+    required: true
     type: str
     description:
     - The authorization token for the API request
@@ -30,24 +30,6 @@ options:
     type: str
     description:
     - The url to the StorageGRID Admin Node REST API.
-  username:
-    required: false
-    type: str
-    description:
-    - The username for the API request
-    version_added: 21.15.0
-  password:
-    required: false
-    type: str
-    description:
-    - The password for the API request
-    version_added: 21.15.0
-  tenant_id:
-    required: false
-    type: str
-    description:
-    - The tenant ID for the API request
-    version_added: 21.15.0
   validate_certs:
     required: false
     default: true

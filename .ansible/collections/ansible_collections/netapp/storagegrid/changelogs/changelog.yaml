@@ -165,9 +165,6 @@ releases:
     release_date: '2025-02-05'
   21.15.0:
     changes:
-      breaking_changes:
-      - all modules - added ability to authenticate using `username/password` and
-        `tenant_id` (for Tenant) in the module.
       bugfixes:
       - na_sg_org_user - fix where existing users with no groups attached were not
         getting any groups added.
@@ -181,7 +178,6 @@ releases:
     - DEVOPS-7025.yaml
     - DEVOPS-7170.yaml
     - DEVOPS-7440.yaml
-    - DEVOPS-7505.yaml
     modules:
     - description: NetApp StorageGRID manage alert receiver.
       name: na_sg_grid_alert_receiver
@@ -213,7 +209,7 @@ releases:
     - description: Manage buckets on StorageGRID.
       name: na_sg_org_bucket
       namespace: ''
-    release_date: '2025-05-07'
+    release_date: '2025-06-16'
   21.6.0:
     changes:
       bugfixes:

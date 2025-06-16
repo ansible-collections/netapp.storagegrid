@@ -61,10 +61,7 @@ def na_storagegrid_host_argument_spec():
     return dict(
         api_url=dict(required=True, type="str"),
         validate_certs=dict(required=False, type="bool", default=True),
-        auth_token=dict(required=False, type="str", no_log=True),
-        username=dict(required=False, type="str"),
-        password=dict(required=False, type="str", no_log=True),
-        tenant_id=dict(required=False, type="str"),
+        auth_token=dict(required=True, type="str", no_log=True),
     )
 
 
@@ -75,35 +72,8 @@ class SGRestAPI(object):
         self.api_url = self.module.params["api_url"]
         self.verify = self.module.params["validate_certs"]
         self.timeout = timeout
-        self.username = self.module.params["username"]
-        self.password = self.module.params["password"]
-        self.tenant_id = self.module.params["tenant_id"]
         self.check_required_library()
         self.sg_version = dict(major=-1, minor=-1, full="", valid=False)
-
-        # do fail, if all the auth parameters are provided
-        if self.auth_token and self.username and self.password:
-            self.module.fail_json("auth_token and username/password cannot be used at the same time")
-        # Generate auth token if username/password is provided
-        if not self.auth_token and self.username and self.password:
-            self.auth_token = self.generate_auth_token()
-
-    def generate_auth_token(self):
-        """Generate auth token using username and password"""
-        api = "api/v4/authorize"
-        body = {
-            "username": self.username,
-            "password": self.password,
-            "cookie": False,
-            "csrfToken": False,
-        }
-        if self.tenant_id:
-            body["accountId"] = self.tenant_id
-
-        response, error = self.send_request("POST", api, params=None, json=body)
-        if error:
-            self.module.fail_json(msg=error)
-        return response.get("data")
 
     def check_required_library(self):
         if not HAS_REQUESTS:

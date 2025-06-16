@@ -15,11 +15,6 @@ Minor Changes
 - na_sg_org_container - Enhanced the Consistency setting.
 - na_sg_org_container - new option `capacity_limit` added for bucket, requires storageGRID 11.9 or later.
 
-Breaking Changes / Porting Guide
---------------------------------
-
-- all modules - added ability to authenticate using `username/password` and `tenant_id` (for Tenant) in the module.
-
 Bugfixes
 --------
 

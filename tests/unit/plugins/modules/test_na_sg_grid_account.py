@@ -182,7 +182,7 @@ class TestMyModule(unittest.TestCase):
                 "management": True,
                 "use_own_identity_source": True,
                 "allow_platform_services": False,
-                "tenant_password": "abc123",
+                "password": "abc123",
                 "quota_size": 0,
                 "api_url": "gmi.example.com",
                 "auth_token": "01234567-5678-9abc-78de-9fgabc123def",

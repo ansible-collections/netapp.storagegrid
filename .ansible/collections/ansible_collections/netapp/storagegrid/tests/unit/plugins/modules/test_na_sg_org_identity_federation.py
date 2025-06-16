@@ -166,8 +166,8 @@ class TestMyModule(unittest.TestCase):
                 "ldap_service_type": "Active Directory",
                 "hostname": "ad.example.com",
                 "port": 389,
-                "identity_username": "binduser",
-                "identity_password": "bindpass",
+                "username": "binduser",
+                "password": "bindpass",
                 "base_group_dn": "DC=example,DC=com",
                 "base_user_dn": "DC=example,DC=com",
                 "tls": "Disabled",
@@ -182,8 +182,8 @@ class TestMyModule(unittest.TestCase):
                 "ldap_service_type": "Active Directory",
                 "hostname": "ad.example.com",
                 "port": 389,
-                "identity_username": "binduser",
-                "identity_password": "bindpass",
+                "username": "binduser",
+                "password": "bindpass",
                 "base_group_dn": "DC=example,DC=com",
                 "base_user_dn": "DC=example,DC=com",
                 "tls": "Disabled",
@@ -200,8 +200,8 @@ class TestMyModule(unittest.TestCase):
                 "ldap_service_type": "Active Directory",
                 "hostname": "ad.example.com",
                 "port": 389,
-                "identity_username": "binduser",
-                "identity_password": "bindpass",
+                "username": "binduser",
+                "password": "bindpass",
                 "base_group_dn": "DC=example,DC=com",
                 "base_user_dn": "DC=example,DC=com",
                 "tls": "Disabled",
@@ -218,8 +218,8 @@ class TestMyModule(unittest.TestCase):
                 "ldap_service_type": "Active Directory",
                 "hostname": "ad.example.com",
                 "port": 636,
-                "identity_username": "binduser",
-                "identity_password": "bindpass",
+                "username": "binduser",
+                "password": "bindpass",
                 "base_group_dn": "DC=example,DC=com",
                 "base_user_dn": "DC=example,DC=com",
                 "tls": "LDAPS",
@@ -287,8 +287,8 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_set_na_sg_org_identity_federation_pass(self, mock_request):
         args = self.set_args_set_na_sg_org_identity_federation()
-        # remove identity_password
-        del args["identity_password"]
+        # remove password
+        del args["password"]
         set_module_args(args)
         my_obj = org_identity_federation_module()
         mock_request.side_effect = [

@@ -20,7 +20,7 @@ author: NetApp Ansible Team (@joshedmonds) <ng-ansibleteam@netapp.com>
 description:
 - Configure Tenant Identity Federation within NetApp StorageGRID.
 - If module is run with C(check_mode), a connectivity test will be performed using the supplied values without changing the configuration.
-- This module is idempotent if I(identity_password) is not specified.
+- This module is idempotent if I(password) is not specified.
 options:
   state:
     description:
@@ -28,16 +28,14 @@ options:
     type: str
     choices: ['present', 'absent']
     default: present
-  identity_username:
+  username:
     description:
     - The username to bind to the LDAP server.
     type: str
-    version_added: 21.15.0
-  identity_password:
+  password:
     description:
     - The password associated with the username.
     type: str
-    version_added: 21.15.0
   hostname:
     description:
     - The hostname or IP address of the LDAP server.
@@ -108,8 +106,8 @@ EXAMPLES = """
     ldap_service_type: "Active Directory"
     hostname: "ad.example.com"
     port: 389
-    identity_username: "binduser"
-    identity_password: "bindpass"
+    username: "binduser"
+    password: "bindpass"
     base_group_dn: "DC=example,DC=com"
     base_user_dn: "DC=example,DC=com"
     tls: "Disabled"
@@ -123,9 +121,9 @@ EXAMPLES = """
     state: present
     ldap_service_type: "Active Directory"
     hostname: "ad.example.com"
-    port: 636,
-    identity_username: "binduser"
-    identity_password: "bindpass"
+    port: 636
+    username: "binduser"
+    password: "bindpass"
     base_group_dn: "DC=example,DC=com"
     base_user_dn: "DC=example,DC=com"
     tls: "LDAPS"
@@ -186,8 +184,8 @@ class SgOrgIdentityFederation:
         self.argument_spec.update(
             dict(
                 state=dict(required=False, type="str", choices=["present", "absent"], default="present"),
-                identity_username=dict(required=False, type="str"),
-                identity_password=dict(required=False, type="str", no_log=True),
+                username=dict(required=False, type="str"),
+                password=dict(required=False, type="str", no_log=True),
                 hostname=dict(required=False, type="str"),
                 port=dict(required=False, type="int"),
                 base_group_dn=dict(required=False, type="str"),
@@ -204,8 +202,8 @@ class SgOrgIdentityFederation:
         )
 
         parameter_map = {
-            "identity_username": "username",
-            "identity_password": "password",
+            "username": "username",
+            "password": "password",
             "hostname": "hostname",
             "port": "port",
             "base_group_dn": "baseGroupDn",

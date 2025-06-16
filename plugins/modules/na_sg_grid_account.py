@@ -103,12 +103,11 @@ options:
     choices: ['bytes', 'b', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb']
     type: str
     default: 'gb'
-  tenant_password:
+  password:
     description:
     - Root password for tenant account.
     - Requires root privilege.
     type: str
-    version_added: 21.15.0
   update_password:
     description:
     - Choose when to update the tenant password.
@@ -135,7 +134,7 @@ EXAMPLES = """
     max_retention_days: 365
     use_own_identity_source: false
     allow_platform_services: false
-    tenant_password: "tenant-password"
+    password: "tenant-password"
     quota_size: 0
 
 - name: update a tenant account
@@ -151,7 +150,7 @@ EXAMPLES = """
     max_retention_days: 500
     use_own_identity_source: false
     allow_platform_services: true
-    tenant_password: "tenant-password"
+    password: "tenant-password"
     quota_size: 10240
 
 - name: delete a tenant account
@@ -238,7 +237,7 @@ class SgGridAccount(object):
                     ],
                     type="str",
                 ),
-                tenant_password=dict(required=False, type="str", no_log=True),
+                password=dict(required=False, type="str", no_log=True),
                 update_password=dict(default="on_create", choices=["on_create", "always"]),
             )
         )
@@ -277,8 +276,8 @@ class SgGridAccount(object):
         if self.parameters.get("description") is not None:
             self.data["description"] = self.parameters["description"]
 
-        if self.parameters.get("tenant_password") is not None:
-            self.data["password"] = self.parameters["tenant_password"]
+        if self.parameters.get("password") is not None:
+            self.data["password"] = self.parameters["password"]
 
         # Append "management" to the capability list only if parameter is True
         if self.parameters.get("management"):
@@ -312,8 +311,8 @@ class SgGridAccount(object):
             self.data["policy"]["quotaObjectBytes"] = None
 
         self.pw_change = {}
-        if self.parameters.get("tenant_password") is not None:
-            self.pw_change["password"] = self.parameters["tenant_password"]
+        if self.parameters.get("password") is not None:
+            self.pw_change["password"] = self.parameters["password"]
 
         if "allow_select_object_content" in self.parameters:
             self.rest_api.fail_if_not_sg_minimum_version("S3 SelectObjectContent API", 11, 6)
@@ -433,13 +432,13 @@ class SgGridAccount(object):
                     resp_data = self.update_tenant_account(tenant_account["id"])
                     result_message = "Tenant Account updated"
 
-        # If a tenant_password has been set
+        # If a tenant password has been set
         if self.pw_change:
             if self.module.check_mode:
                 pass
             else:
-                # Only update the tenant_password if update_password is always
-                # On a create action, the tenant_password is set directly by the POST /grid/accounts method
+                # Only update the tenant password if update_password is always
+                # On a create action, the tenant password is set directly by the POST /grid/accounts method
                 if self.parameters["update_password"] == "always" and cd_action != "create":
                     self.set_tenant_root_password(tenant_account["id"])
                     self.na_helper.changed = True

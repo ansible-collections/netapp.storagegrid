@@ -30,23 +30,42 @@ collections:
 
 # Usage
 
-Each of the StorageGRID modules requires either `username` and `password` or `auth_token` parameters to be specified for authentication. If you are performing a Tenant operation, ensure that the `tenant_id` parameter is also specified in the playbook. Note that you should use either `username` and `password` or `auth_token`, but not both.
+Each of the StorageGRID modules require an `auth_token` parameter to be specified. This can be obtained by executing a `uri` task against the StorageGRID Authorization API endpoint and registering the output as the first item in a Playbook.
+
+If you are performing a Tenant operation, ensure that the `accountId` parameter is also specified in the URI body and set to the Tenant Account ID. For example, `"accountId": "01234567890123456789"`
 
 ```yaml
-- name: Create a StorageGRID Tenant Group
-  netapp.storagegrid.na_sg_org_group:
-    api_url: "https://<storagegrid-endpoint-url>"
-    username: root
-    password: storagegrid123
-    tenant_id: 01234567890123456789
+- name: Get Grid Authorization token
+  uri:
+    url: "https://sgadmin.example.com/api/v3/authorize"
+    method: POST
+    body: {
+      "username": "root",
+      "password": "storagegrid123",
+      "cookie": false,
+      "csrfToken": false
+    }
+    body_format: json
+    validate_certs: false
+  register: auth
+```
+
+Subsequent tasks can leverage the registered auth token.
+
+```yaml
+- name: Create a StorageGRID Tenant Account
+  netapp.storagegrid.na_sg_grid_account:
+    api_url: "https://sgadmin.example.com"
+    auth_token: "{{ auth.json.data }}"
     validate_certs: false
     state: present
-    display_name: ansiblegroup1
-    unique_name: group/ansiblegroup1
-    management_policy:
-      manage_all_containers: true
-      manage_own_s3_credentials: false
-    s3_policy: {"Statement":[{"Effect":"Deny","Action":"s3:*","Resource":"arn:aws:s3:::*"}]}
+    name: AnsibleTenant
+    protocol: s3
+    management: true
+    use_own_identity_source: true
+    allow_platform_services: true
+    password: "mytenantrootpassword"
+    quota_size: 10
 ```
 
 # Module documentation
@@ -85,9 +104,6 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_org_container - new option `capacity_limit` added for bucket, requires storageGRID 11.9 or later.
   - na_sg_grid_ha_group - added check mode support in the module.
   - na_sg_org_container - Enhanced the Consistency setting.
-
-### Breaking Changes
-  - all modules - added ability to authenticate using `username/password` and `tenant_id` (for Tenant) in the module.
 
 ### Bug Fixes
   - na_sg_org_user - fix where existing users with no groups attached were not getting any groups added.
