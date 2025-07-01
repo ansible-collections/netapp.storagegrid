@@ -2,7 +2,7 @@
  "collection_info": {
   "namespace": "netapp",
   "name": "storagegrid",
-  "version": "21.15.0",
+  "version": "21.16.0",
   "authors": [
    "NetApp Ansible Team <ng-ansibleteam@netapp.com>"
   ],
@@ -25,7 +25,7 @@
   "name": "FILES.json",
   "ftype": "file",
   "chksum_type": "sha256",
-  "chksum_sha256": "e2b9ae54e43b2c6ab8314bc1322d35b10d6110436905260cdbf834498d8b44f3",
+  "chksum_sha256": "aa349f3066c48b0bc6110ed15928f4ade1f2b394670bc4c982a2afbd14601484",
   "format": 1
  },
  "format": 1

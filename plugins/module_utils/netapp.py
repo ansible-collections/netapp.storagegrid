@@ -32,7 +32,7 @@ __metaclass__ = type
 
 from ansible.module_utils.basic import missing_required_lib
 
-COLLECTION_VERSION = "21.15.0"
+COLLECTION_VERSION = "21.16.0"
 
 try:
     import requests
@@ -134,7 +134,7 @@ class SGRestAPI(object):
             # check if response is binary file
             content_type = response.headers.get("content-type", "").lower()
             if "application/zip" in content_type or "octet-stream" in content_type:
-                return response.content, None
+                return response, None
 
             # If the response was successful, no Exception will be raised
             # Add status_code to the json_dict

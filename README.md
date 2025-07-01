@@ -86,6 +86,11 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.16.0
+
+### New Modules
+  - na_sg_grid_recovery_package - downloading recovery package.
+
 ## 21.15.0
 
 ### New Modules

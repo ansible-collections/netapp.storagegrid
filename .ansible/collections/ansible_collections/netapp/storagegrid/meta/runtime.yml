@@ -24,6 +24,7 @@ action_groups:
     - na_sg_grid_info
     - na_sg_grid_ntp
     - na_sg_grid_regions
+    - na_sg_grid_recovery_package
     - na_sg_grid_snmp
     - na_sg_grid_tenant
     - na_sg_grid_traffic_classes
