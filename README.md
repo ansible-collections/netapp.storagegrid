@@ -91,6 +91,9 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### New Modules
   - na_sg_grid_recovery_package - downloading recovery package.
 
+### Bug Fixes
+  - na_sg_org_user_s3_key - fixed for incorrect handling of the unique_user_name. 
+
 ## 21.15.0
 
 ### New Modules

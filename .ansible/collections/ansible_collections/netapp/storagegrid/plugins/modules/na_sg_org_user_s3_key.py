@@ -116,11 +116,10 @@ class SgOrgUserS3Key(object):
         self.data = {}
         self.data["expires"] = self.parameters.get("expires")
 
-    def get_org_user_id(self, unique_name):
+    def get_org_user_id(self, unique_user_name):
         # Use the unique name to check if the user exists
-        api = "api/v3/org/users/%s" % unique_name
+        api = "api/v3/org/users/%s" % unique_user_name
         response, error = self.rest_api.get(api)
-
         if error:
             if response["code"] != 404:
                 self.module.fail_json(msg=error)

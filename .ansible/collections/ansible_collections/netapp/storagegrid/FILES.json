@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "db51cd93127316e7498b3269232766687cfe481ff4002ecc3aec4bce76119974",
+   "chksum_sha256": "9246c4f97438fe88e2b28f6b5e38f106d018407b9c34927728d68f715396ff29",
    "format": 1
   },
   {
@@ -194,6 +194,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "5979c8679205eec8463fecf5f15fc95e31acd29ab8f098119d5543008fa976bb",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/DEVOPS-7671.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "fa6cb7886941570ef02ee6a44e8e7f6cc147f9e98a2925725ed17dc8f924a725",
    "format": 1
   },
   {
@@ -536,7 +543,7 @@
    "name": "plugins/modules/na_sg_org_user_s3_key.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "17534ddf544bf935997d9ad25bc04e0737b3b05aeeb6f8eda715979c3c9ee189",
+   "chksum_sha256": "5d3e9ab18bb17c36852268050a7582ae1856930dc014b04457f922a5e3f9ea6a",
    "format": 1
   },
   {
