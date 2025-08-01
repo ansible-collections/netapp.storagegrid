@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# (c) 2020, NetApp Inc
+# (c) 2020-2025, NetApp Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """NetApp StorageGRID - Manage Grid Regions"""
@@ -25,17 +25,17 @@ extends_documentation_fragment:
 version_added: '20.6.0'
 author: NetApp Ansible Team (@joshedmonds) <ng-ansibleteam@netapp.com>
 description:
-- Create, Update, Delete Users within a NetApp StorageGRID tenant.
+- Create and Update Regions configured for the NetApp StorageGRID.
 options:
   state:
     description:
-    - Whether the specified user should exist or not.
+    - Whether the specified regions should be present.
     type: str
     choices: ['present']
     default: present
   regions:
     description:
-    - List of regions
+    - List of the regions.
     required: true
     type: list
     elements: str
@@ -68,7 +68,7 @@ from ansible_collections.netapp.storagegrid.plugins.module_utils.netapp import S
 
 class SgGridRegions(object):
     """
-    Create, modify and delete Regions for StorageGRID
+    Create, Update Regions for StorageGRID
     """
 
     def __init__(self):
@@ -86,7 +86,6 @@ class SgGridRegions(object):
 
         self.module = AnsibleModule(
             argument_spec=self.argument_spec,
-            # required_if=[("state", "present", ["state", "name", "protocol"])],
             supports_check_mode=True,
         )
 
@@ -100,8 +99,7 @@ class SgGridRegions(object):
         self.data = self.parameters["regions"]
 
     def get_grid_regions(self):
-        # Check if tenant account exists
-        # Return tenant account info if found, or None
+        """ Get the current grid regions """
         api = "api/v3/grid/regions"
 
         response, error = self.rest_api.get(api)
@@ -112,6 +110,7 @@ class SgGridRegions(object):
         return response["data"]
 
     def update_grid_regions(self):
+        """ Update the grid regions """
         api = "api/v3/grid/regions"
 
         response, error = self.rest_api.put(api, self.data)

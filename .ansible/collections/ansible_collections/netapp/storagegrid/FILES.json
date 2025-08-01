@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "9246c4f97438fe88e2b28f6b5e38f106d018407b9c34927728d68f715396ff29",
+   "chksum_sha256": "5958bb3bd08a71b650109c67493e717d57fcd94b89874834147b1376f89a6b44",
    "format": 1
   },
   {
@@ -194,6 +194,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "5979c8679205eec8463fecf5f15fc95e31acd29ab8f098119d5543008fa976bb",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/DEVOPS-7669.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4b8d8504bd35ccbd633f86b4a89c008c33918af8bf4ac5a4e49943f40170d27e",
    "format": 1
   },
   {
@@ -459,7 +466,7 @@
    "name": "plugins/modules/na_sg_grid_regions.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "f2ef9b0542d9470dda3f83b699e53e8bc2922193e10b9a592cadf9866cbe10f5",
+   "chksum_sha256": "aabc8896b30f2552639ad3c45a458372b4b99ece7d437612786094bc368e1311",
    "format": 1
   },
   {
