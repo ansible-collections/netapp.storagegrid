@@ -40,7 +40,11 @@ options:
     type: str
   gateway_cidr:
     description:
-    - CIDR for the gateway IP and VIP subnet.
+    - The C(gateway_cidr) field specifies the gateway IP address and prefix length of the VIP subnet in CIDR notation. i.e. C(IP_address/prefix_length).
+    - This must match the subnet CIDR if any interface in the HA group already has an IP address configured.
+    - The IP address may be specified as the network address of the subnet, or as the gateway IP address within the subnet if clients will access the VIP
+      address from a different subnet.
+    - For example C(10.193.150.0/25) or C(10.193.150.1/25).
     type: str
   virtual_ips:
     description:
@@ -65,7 +69,23 @@ options:
 """
 
 EXAMPLES = """
-- name: create HA Group
+- name: create HA Group (layer 2)
+  netapp.storagegrid.na_sg_grid_ha_group:
+    api_url: "https://<storagegrid-endpoint-url>"
+    auth_token: "storagegrid-auth-token"
+    validate_certs: false
+    state: present
+    name: Site1-HA-Group
+    description: "Site 1 HA Group"
+    gateway_cidr: 192.168.50.0/24
+    virtual_ips: 192.168.50.5
+    interfaces:
+      - node: SITE1-ADM1
+        interface: eth2
+      - node: SITE1-G1
+        interface: eth2
+
+- name: create HA Group (routable)
   netapp.storagegrid.na_sg_grid_ha_group:
     api_url: "https://<storagegrid-endpoint-url>"
     auth_token: "storagegrid-auth-token"

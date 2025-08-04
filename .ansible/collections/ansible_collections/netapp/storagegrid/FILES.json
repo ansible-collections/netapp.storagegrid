@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "5958bb3bd08a71b650109c67493e717d57fcd94b89874834147b1376f89a6b44",
+   "chksum_sha256": "ec73e2f8f5e844be559ac6bd3478a4ba3d6c5e5c77238c9728f6c5cb4f4e455b",
    "format": 1
   },
   {
@@ -208,6 +208,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "fa6cb7886941570ef02ee6a44e8e7f6cc147f9e98a2925725ed17dc8f924a725",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/DEVOPS-7804.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "901b058933d0d4d9d66e2088484affebe6827135b02e2f5a82739858e79643cc",
    "format": 1
   },
   {
@@ -389,7 +396,7 @@
    "name": "plugins/modules/na_sg_grid_ha_group.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "d3a167a71f8fd7a05d8860025542fd802aabe42f7e0710ce62a949e9bc310fd4",
+   "chksum_sha256": "ccf3a87b2ff2edfb6b72490adc9a3da4c4d1513c926056e4b09242665ddcea10",
    "format": 1
   },
   {
