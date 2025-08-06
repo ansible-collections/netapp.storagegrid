@@ -404,7 +404,7 @@ class NetAppSgGatherInfo(object):
 
             result_message[subset] = self.get_subset_info(specified_subset)
 
-        self.module.exit_json(changed='False', sg_info=result_message)
+        self.module.exit_json(changed=False, sg_info=result_message)
 
 
 def main():

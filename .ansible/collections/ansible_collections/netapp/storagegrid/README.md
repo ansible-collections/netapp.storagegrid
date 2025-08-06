@@ -92,9 +92,11 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_recovery_package - downloading recovery package.
 
 ### Bug Fixes
-  - na_sg_org_user_s3_key - fixed for incorrect handling of the unique_user_name.
+  - na_sg_org_user_s3_key - fixed for incorrect handling of the `unique_user_name`.
   - na_sg_grid_ha_group - correct documentation section in the module for better understanding.
   - na_sg_grid_regions - correct documentation section in the module for better understanding.
+  - na_sg_grid_info - Fix issue where the module incorrectly reported tasks as changed.
+  - na_sg_org_info - Fix issue where the module incorrectly reported tasks as changed.
 
 ## 21.15.0
 
