@@ -91,6 +91,10 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### New Modules
   - na_sg_grid_recovery_package - downloading recovery package.
 
+### Minor Changes
+  - na_sg_grid_gateway - new option `closed_on_untrusted_client_network`. Requires StorageGRID 11.8 or later.
+  - na_sg_grid_gateway - parameter `default_service_type` allows option for `management`. Requires StorageGRID 11.8 or later.
+
 ### Bug Fixes
   - na_sg_org_user_s3_key - fixed for incorrect handling of the `unique_user_name`.
   - na_sg_grid_ha_group - correct documentation section in the module for better understanding.

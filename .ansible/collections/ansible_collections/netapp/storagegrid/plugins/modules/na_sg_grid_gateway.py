@@ -112,8 +112,14 @@ options:
     description:
     - The type of service to proxy through the load balancer.
     type: str
-    choices: ['s3', 'swift']
+    choices: ['s3', 'swift', 'management']
     default: 's3'
+  closed_on_untrusted_client_network:
+    description:
+    - Whether to close the port on an untrusted Client Network.
+    type: bool
+    required: false
+    version_added: '21.16.0'
   server_certificate:
     description:
     - X.509 server certificate in PEM-encoding.
@@ -261,6 +267,7 @@ class SgGridGateway:
                 enable_ipv6=dict(required=False, type="bool", default=True),
                 enable_tenant_manager=dict(required=False, type="bool"),
                 enable_grid_manager=dict(required=False, type="bool"),
+                closed_on_untrusted_client_network=dict(required=False, type="bool"),
                 binding_mode=dict(
                     required=False, type="str", choices=["global", "ha-groups", "node-interfaces"], default="global"
                 ),
@@ -276,7 +283,7 @@ class SgGridGateway:
                 ),
                 node_type=dict(required=False, type="str", choices=["adminNode", "apiGatewayNode"]),
                 # Arguments for setting Gateway Virtual Server
-                default_service_type=dict(required=False, type="str", choices=["s3", "swift"], default="s3"),
+                default_service_type=dict(required=False, type="str", choices=["s3", "swift", "management"], default="s3"),
                 server_certificate=dict(required=False, type="str"),
                 ca_bundle=dict(required=False, type="str"),
                 private_key=dict(required=False, type="str", no_log=True),
@@ -298,7 +305,10 @@ class SgGridGateway:
         }
         self.module = AnsibleModule(
             argument_spec=self.argument_spec,
-            required_if=[("state", "present", ["display_name"])],
+            required_if=[
+                ("state", "present", ["display_name"]),
+                ("default_service_type", "management", ["enable_tenant_manager", "enable_grid_manager"], True),
+            ],
             supports_check_mode=True,
         )
 
@@ -335,6 +345,8 @@ class SgGridGateway:
 
         if self.parameters["binding_mode"] != "global":
             self.rest_api.fail_if_not_sg_minimum_version("non-global binding mode", 11, 5)
+        if self.parameters["default_service_type"] == "management":
+            self.rest_api.fail_if_not_sg_minimum_version("management default service type", 11, 8)
 
         self.data_gateway["pinTargets"] = {
             "haGroups": [],
@@ -348,11 +360,16 @@ class SgGridGateway:
         elif self.parameters["binding_mode"] == "node-interfaces":
             self.data_gateway["pinTargets"]["nodeInterfaces"] = self.build_node_interface_list()
 
-        # Parameters for allowing Management Interfaces for a gateway port
-        self.data_gateway["managementInterfaces"] = {
-            "enableTenantManager": self.parameters.get("enable_tenant_manager"),
-            "enableGridManager": self.parameters.get("enable_grid_manager")
-        }
+        # Parameters for configuring Management Interface
+        if self.parameters["default_service_type"] == "management":
+            self.data_gateway["managementInterfaces"] = {
+                "enableTenantManager": self.parameters.get("enable_tenant_manager"),
+                "enableGridManager": self.parameters.get("enable_grid_manager")
+            }
+            self.data_gateway["closedOnUntrustedClientNetwork"] = self.parameters.get("closed_on_untrusted_client_network")
+            # If no binding targets are specified, default to adminNode
+            if not any(self.data_gateway["pinTargets"].values()):
+                self.data_gateway["pinTargets"]["nodeTypes"] = ["adminNode"]
 
     def build_ha_group_list(self):
         ha_group_ids = []

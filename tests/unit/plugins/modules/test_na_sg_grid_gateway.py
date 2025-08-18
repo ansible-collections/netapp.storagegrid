@@ -390,6 +390,29 @@ class TestMyModule(unittest.TestCase):
             }
         )
 
+    def set_management_args_fail_check(self):
+        return dict(
+            {
+                "display_name": "ansibletest-secure",
+                "default_service_type": "management",
+                "server_certificate": (
+                    "-----BEGIN CERTIFICATE-----\n"
+                    "MIICyDCCAbACCQCgFntI3q7iADANBgkqhkiG9w0BAQsFADAmMQswCQYDVQQGEwJV\n"
+                    "UzEXMBUGA1UEAwwOczMuZXhhbXBsZS5jb20wHhcNMjEwNDI5MDQ1NTM1WhcNMjIw\n"
+                    "-----END CERTIFICATE-----\n"
+                ),
+                "private_key": (
+                    "-----BEGIN PRIVATE KEY-----\n"
+                    "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQD0LMcJUdWmTtxi\n"
+                    "7U7ByldDRfyCD9W+QJ1Ygm7E9iFwvkThUCV5q+DIcgSfogoSKaQuHaImLXMZn36Q\n"
+                    "C22n+Ah2EGrQiggyny3wDzuWf5/Qg7ogqQRqiespBFLlV4RGCREHK0y5uq8mzpIa\n"
+                    "-----END PRIVATE KEY-----\n"
+                ),
+                "auth_token": "01234567-5678-9abc-78de-9fgabc123def",
+                "validate_certs": False,
+            }
+        )
+
     def set_args_create_na_sg_grid_gateway_port(self):
         return dict(
             {
@@ -503,6 +526,17 @@ class TestMyModule(unittest.TestCase):
         assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_deps_missing(self, mock_request):
+        """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            set_module_args(self.set_management_args_fail_check())
+            grid_gateway_module()
+        print("Info: test_module_fail_when_required_mgmt_args_missing: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_grid_gateway_port_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_gateway_port())
         mock_request.side_effect = [
@@ -578,6 +612,21 @@ class TestMyModule(unittest.TestCase):
         set_module_args(args)
         mock_request.side_effect = [
             SRR["version_114"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            grid_gateway_module()
+        print("Info: test_module_fail_minimum_version_not_met: %s" % exc.value.args[0]["msg"])
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_management_service_minimum_version_not_met(self, mock_request):
+        args = self.set_args_create_na_sg_grid_gateway_port()
+        args["default_service_type"] = "management"
+        args["enable_grid_manager"] = True
+        args["enable_tenant_manager"] = True
+        args["closed_on_untrusted_client_network"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
         ]
         with pytest.raises(AnsibleFailJson) as exc:
             grid_gateway_module()
