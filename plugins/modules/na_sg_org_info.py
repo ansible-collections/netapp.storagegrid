@@ -45,6 +45,8 @@ options:
             - C(org_usage_info) or C(org/usage)
             - C(org_users_info) or C(org/users)
             - C(org_users_root_info) or C(org/users/root)
+            - C(org_users_grid_federation_connections_info) or C(org/grid-federation-connections)
+            - C(org_ilm_info) or C(org/ilm-policy-tags)
             - C(versions_info) or C(versions)
             - Can specify a list of values to include a larger subset.
         default: "all"
@@ -113,6 +115,8 @@ sg_info:
         "org/usage": {...},
         "org/users": {...},
         "org/users/root": {...},
+        "org/grid-federation-connections": {...},
+        "org/ilm-policy-tags": {...},
         "org/versions": {...}
     }
 """
@@ -186,6 +190,8 @@ class NetAppSgGatherInfo(object):
             'org_usage_info': 'org/usage',
             'org_users_info': 'org/users',
             'org_users_root_info': 'org/users/root',
+            'org_grid_federation_connections_info': 'org/grid-federation-connections',
+            'org_ilm_info': 'org/ilm-policy-tags',
             'versions_info': 'versions'
         }
         # Add rest API names as there info version, also make sure we don't add a duplicate
@@ -247,6 +253,12 @@ class NetAppSgGatherInfo(object):
             },
             'versions': {
                 'api_call': 'api/v3/versions',
+            },
+            'org/grid-federation-connections': {
+                'api_call': 'api/v3/org/grid-federation-connections',
+            },
+            'org/ilm-policy-tags': {
+                'api_call': 'api/v3/org/ilm-policy-tags',
             },
         }
 

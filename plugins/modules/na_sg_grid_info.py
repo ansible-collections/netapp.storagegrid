@@ -69,6 +69,12 @@ options:
             - C(versions_info) or C(versions)
             - C(grid_load_balancer_endpoints_config_info) or C(private/gateway-configs)
             - C(grid_ha_groups_info) or C(private/ha-groups)
+            - C(grid_network_topology_info) or C(private/network-topology)
+            - C(grid_vlan_interfaces_info) or C(private/vlan-interfaces)
+            - C(grid_single_sign_on_info) or C(private/single-sign-on)
+            - C(grid_firewall_external_ports) or C(private/firewall-external-ports)
+            - C(grid_firewall_blocked_ports) or C(private/firewall-blocked-ports)
+            - C(grid_firewall_privileged_ips) or C(private/firewall-privileged-ips)
             - Can specify a list of values to include a larger subset.
         default: all
     parameters:
@@ -160,6 +166,12 @@ sg_info:
         "grid/versions": {...},
         "private/gateway-configs": {...},
         "private/ha-groups": {...},
+        "private/network-toplogy": {...},
+        "private/vlan-interfaces": {...},
+        "private/single-sign-on": {...},
+        "private/firewall-external-ports": {...},
+        "private/firewall-blocked-ports": {...},
+        "private/firewall-privileged-ips": {...}
     }
 """
 
@@ -256,6 +268,12 @@ class NetAppSgGatherInfo(object):
             'versions_info': 'versions',
             'grid_load_balancer_endpoints_config_info': 'private/gateway-configs',
             'grid_ha_groups_info': 'private/ha-groups',
+            'grid_network_topology_info': 'private/network-topology',
+            'grid_vlan_interfaces_info': 'private/vlan-interfaces',
+            'grid_single_sign_on_info': 'private/single-sign-on',
+            'grid_firewall_external_ports': 'private/firewall-external-ports',
+            'grid_firewall_blocked_ports': 'private/firewall-blocked-ports',
+            'grid_firewall_privileged_ips': 'private/firewall-privileged-ips'
         }
         # Add rest API names as there info version, also make sure we don't add a duplicate.
         subsets = []
@@ -386,6 +404,24 @@ class NetAppSgGatherInfo(object):
             'private/ha-groups': {
                 'api_call': 'api/v3/private/ha-groups'
             },
+            'private/network-topology': {
+                'api_call': 'api/v3/private/network-topology'
+            },
+            'private/vlan-interfaces': {
+                'api_call': 'api/v3/private/vlan-interfaces'
+            },
+            'private/single-sign-on': {
+                'api_call': 'api/v3/private/single-sign-on'
+            },
+            'private/firewall-external-ports': {
+                'api_call': 'api/v3/private/firewall-external-ports'
+            },
+            'private/firewall-blocked-ports': {
+                'api_call': 'api/v3/private/firewall-blocked-ports'
+            },
+            'private/firewall-privileged-ips': {
+                'api_call': 'api/v3/private/firewall-privileged-ips'
+            }
         }
 
         if 'all' in self.parameters['gather_subset']:
