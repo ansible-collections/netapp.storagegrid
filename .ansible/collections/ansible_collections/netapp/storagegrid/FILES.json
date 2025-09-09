@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "447f9c58c089b99b4769bc63678108a537b4f079bd9017bf82c14a985d253ddb",
+   "chksum_sha256": "f3375626b858da65625084b45de1fdcbd9cd029fe9dd70c02a4915de36e3ee58",
    "format": 1
   },
   {
@@ -239,6 +239,13 @@
    "format": 1
   },
   {
+   "name": "changelogs/fragments/DEVOPS-7889.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "769c1c3c18e6dfd9db0dc2ca1d214778b8ee7e6545ca753f8ec9f9e2df4d0118",
+   "format": 1
+  },
+  {
    "name": "changelogs/fragments/github-10.yaml",
    "ftype": "file",
    "chksum_type": "sha256",
@@ -347,7 +354,7 @@
    "name": "plugins/modules/na_sg_grid_alert_receiver.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "33132f0f813781bdddeba93a3de5653660726ed79cb054c9c6bdbe9121c879ef",
+   "chksum_sha256": "ce1ba5519baae9d099cefabfc0e451d5bf3d2e0540bf575ff142a7a3eb29c983",
    "format": 1
   },
   {

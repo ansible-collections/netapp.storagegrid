@@ -104,6 +104,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_regions - correct documentation section in the module for better understanding.
   - na_sg_grid_info - Fix issue where the module incorrectly reported tasks as changed.
   - na_sg_org_info - Fix issue where the module incorrectly reported tasks as changed.
+  - na_sg_grid_alert_receiver - correct example section in the module for better understanding.
 
 ## 21.15.0
 

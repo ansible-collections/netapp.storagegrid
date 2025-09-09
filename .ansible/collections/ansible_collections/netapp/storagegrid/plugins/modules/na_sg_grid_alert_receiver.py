@@ -90,7 +90,7 @@ options:
 
 EXAMPLES = """
 - name: Create alert receiver
-  netapp.storagegrid.na_sg_alert_receiver:
+  netapp.storagegrid.na_sg_grid_alert_receiver:
     api_url: "https://<storagegrid-endpoint-url>"
     auth_token: "storagegrid-auth-token"
     validate_certs: false
