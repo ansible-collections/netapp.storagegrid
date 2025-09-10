@@ -107,6 +107,8 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_info - Fix issue where the module incorrectly reported tasks as changed.
   - na_sg_org_info - Fix issue where the module incorrectly reported tasks as changed.
   - na_sg_grid_alert_receiver - correct example section in the module for better understanding.
+  - na_sg_grid_autosupport - fix issue with setting up `destinations` option in the module.
+  - na_sg_grid_autosupport - add support to handle error response from the API.
 
 ## 21.15.0
 

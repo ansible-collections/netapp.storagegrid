@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "8b183dd0149ac339a7e53906b440a8017e245a96ddbd1fc3a0030b2bce52e254",
+   "chksum_sha256": "83dd95abcecc8411b19681fcfcf76f6caa94a473b6c6b49e3f9b96d5c55000e2",
    "format": 1
   },
   {
@@ -253,6 +253,13 @@
    "format": 1
   },
   {
+   "name": "changelogs/fragments/DEVOPS-7890.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "080a44023c10d9b0654fed628f00c7a01369df00c4b602836954a80912a14302",
+   "format": 1
+  },
+  {
    "name": "changelogs/fragments/github-10.yaml",
    "ftype": "file",
    "chksum_type": "sha256",
@@ -375,7 +382,7 @@
    "name": "plugins/modules/na_sg_grid_autosupport.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "b3b05bdf7cc872c7ae3e63e14d74e77235762453826f8547c373174bb5398210",
+   "chksum_sha256": "937a10c0bf71c0e44511d0262d41f26696c18f3e19ddbb0cfea4da9230d90a98",
    "format": 1
   },
   {
