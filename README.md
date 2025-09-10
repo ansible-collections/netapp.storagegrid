@@ -91,6 +91,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### New Modules
   - na_sg_grid_recovery_package - downloading recovery package.
   - na_sg_grid_firewall - configure firewall settings on StorageGRID.
+  - na_sg_grid_metrics - grab metrics on StorageGRID.
 
 ### Minor Changes
   - na_sg_grid_gateway - new option `closed_on_untrusted_client_network`. Requires StorageGRID 11.8 or later.
