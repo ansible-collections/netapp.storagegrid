@@ -1,0 +1,2 @@
+minor_changes:
+  - na_sg_grid_audit_destination - new option `access_logs_send`, `access_logs_facility`, and `access_logs_severity` added to manage access log settings for syslog server.

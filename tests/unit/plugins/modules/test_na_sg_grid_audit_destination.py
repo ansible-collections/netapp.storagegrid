@@ -54,7 +54,10 @@ SRR = {
                         "auditLogsSeverity": 6,
                         "applicationLogsSend": True,
                         "applicationLogsFacility": -1,
-                        "applicationLogsSeverity": -1
+                        "applicationLogsSeverity": -1,
+                        "accessLogsSend": True,
+                        "accessLogsFacility": -1,
+                        "accessLogsSeverity": -1
                     },
                     "remoteSyslogServerATest": {
                         "enabled": True,
@@ -70,7 +73,10 @@ SRR = {
                         "auditLogsSeverity": 6,
                         "applicationLogsSend": True,
                         "applicationLogsFacility": -1,
-                        "applicationLogsSeverity": -1
+                        "applicationLogsSeverity": -1,
+                        "accessLogsSend": True,
+                        "accessLogsFacility": -1,
+                        "accessLogsSeverity": -1
                     }
                 },
             }
@@ -98,7 +104,10 @@ SRR = {
                         "auditLogsSeverity": 6,
                         "applicationLogsSend": True,
                         "applicationLogsFacility": -1,
-                        "applicationLogsSeverity": -1
+                        "applicationLogsSeverity": -1,
+                        "accessLogsSend": True,
+                        "accessLogsFacility": -1,
+                        "accessLogsSeverity": -1
                     },
                     "remoteSyslogServerATest": {
                         "enabled": True,
@@ -114,7 +123,10 @@ SRR = {
                         "auditLogsSeverity": 6,
                         "applicationLogsSend": True,
                         "applicationLogsFacility": -1,
-                        "applicationLogsSeverity": -1
+                        "applicationLogsSeverity": -1,
+                        "accessLogsSend": True,
+                        "accessLogsFacility": -1,
+                        "accessLogsSeverity": -1
                     }
                 },
             }
@@ -143,7 +155,10 @@ SRR = {
                             "auditLogsSeverity": 7,
                             "applicationLogsSend": True,
                             "applicationLogsFacility": -1,
-                            "applicationLogsSeverity": -1
+                            "applicationLogsSeverity": -1,
+                            "accessLogsSend": True,
+                            "accessLogsFacility": -1,
+                            "accessLogsSeverity": -1
                         },
                         "remoteSyslogServerATest": {
                             "enabled": True,
@@ -158,7 +173,10 @@ SRR = {
                             "auditLogsSeverity": -1,
                             "applicationLogsSend": True,
                             "applicationLogsFacility": -1,
-                            "applicationLogsSeverity": -1
+                            "applicationLogsSeverity": -1,
+                            "accessLogsSend": True,
+                            "accessLogsFacility": -1,
+                            "accessLogsSeverity": -1
                         }
                     },
                 }
@@ -188,7 +206,10 @@ SRR = {
                             "auditLogsSeverity": 7,
                             "applicationLogsSend": True,
                             "applicationLogsFacility": -1,
-                            "applicationLogsSeverity": -1
+                            "applicationLogsSeverity": -1,
+                            "accessLogsSend": True,
+                            "accessLogsFacility": -1,
+                            "accessLogsSeverity": -1
                         },
                         "remoteSyslogServerATest": {
                             "enabled": True,
@@ -204,7 +225,10 @@ SRR = {
                             "auditLogsSeverity": -1,
                             "applicationLogsSend": True,
                             "applicationLogsFacility": -1,
-                            "applicationLogsSeverity": -1
+                            "applicationLogsSeverity": -1,
+                            "accessLogsSend": True,
+                            "accessLogsFacility": -1,
+                            "accessLogsSeverity": -1
                         }
                     },
                 }
@@ -297,7 +321,10 @@ class TestMyModule(unittest.TestCase):
                         "audit_logs_severity": 6,
                         "application_logs_send": True,
                         "application_logs_facility": -1,
-                        "application_logs_severity": -1
+                        "application_logs_severity": -1,
+                        "access_logs_send": False,
+                        "access_logs_facility": -1,
+                        "access_logs_severity": -1
                     },
                     "remote_syslog_server_test": {
                         "enabled": True,
@@ -313,6 +340,9 @@ class TestMyModule(unittest.TestCase):
                         "application_logs_send": True,
                         "application_logs_facility": -1,
                         "application_logs_severity": -1,
+                        "access_logs_send": False,
+                        "access_logs_facility": -1,
+                        "access_logs_severity": -1
                     },
                 }
             }
@@ -343,6 +373,9 @@ class TestMyModule(unittest.TestCase):
                         "application_logs_send": True,
                         "application_logs_facility": -1,
                         "application_logs_severity": -1,
+                        "access_logs_send": True,
+                        "access_logs_facility": -1,
+                        "access_logs_severity": -1
                     },
                     "remote_syslog_server_test": {
                         "enabled": True,
@@ -358,6 +391,9 @@ class TestMyModule(unittest.TestCase):
                         "application_logs_send": True,
                         "application_logs_facility": -1,
                         "application_logs_severity": -1,
+                        "access_logs_send": True,
+                        "access_logs_facility": -1,
+                        "access_logs_severity": -1
                     },
                 },
             }
@@ -390,7 +426,10 @@ class TestMyModule(unittest.TestCase):
                             "audit_logs_severity": 7,
                             "application_logs_send": True,
                             "application_logs_facility": -1,
-                            "application_logs_severity": -1
+                            "application_logs_severity": -1,
+                            "access_logs_send": True,
+                            "access_logs_facility": -1,
+                            "access_logs_severity": -1
                         },
                         "remote_syslog_server_test": {
                             "enabled": True,
@@ -406,7 +445,10 @@ class TestMyModule(unittest.TestCase):
                             "audit_logs_severity": -1,
                             "application_logs_send": True,
                             "application_logs_facility": -1,
-                            "application_logs_severity": -1
+                            "application_logs_severity": -1,
+                            "access_logs_send": True,
+                            "access_logs_facility": -1,
+                            "access_logs_severity": -1
                         }
                     },
                 ],

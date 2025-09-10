@@ -146,6 +146,24 @@ options:
             - Syslog severity to use for application logs sent to external syslog server, or -1 to preserve the local severity.
             type: int
             default: -1
+          access_logs_send:
+            description:
+            - If true, send access logs to the external syslog server.
+            type: bool
+            default: True
+            version_added: 21.16.0
+          access_logs_facility:
+            description:
+            - Syslog facility to use for access logs sent to external syslog server, or -1 to preserve the local facility.
+            type: int
+            default: -1
+            version_added: 21.16.0
+          access_logs_severity:
+            description:
+            - Syslog severity to use for access logs sent to external syslog server, or -1 to preserve the local severity.
+            type: int
+            default: -1
+            version_added: 21.16.0
       remote_syslog_server_test:
         description:
         - Configuration for sending audit test messages to an external syslog server.
@@ -244,6 +262,24 @@ options:
             - Syslog severity to use for application logs sent to external syslog server, or -1 to preserve the local severity.
             type: int
             default: -1
+          access_logs_send:
+            description:
+            - If true, send access logs to the external syslog server.
+            type: bool
+            default: True
+            version_added: 21.16.0
+          access_logs_facility:
+            description:
+            - Syslog facility to use for access logs sent to external syslog server, or -1 to preserve the local facility.
+            type: int
+            default: -1
+            version_added: 21.16.0
+          access_logs_severity:
+            description:
+            - Syslog severity to use for access logs sent to external syslog server, or -1 to preserve the local severity.
+            type: int
+            default: -1
+            version_added: 21.16.0
   nodes:
     description:
     - Optional per-node configuration stanzas in the nodes array override the default configuration.
@@ -362,6 +398,24 @@ options:
             - Syslog severity to use for application logs sent to external syslog server, or -1 to preserve the local severity.
             type: int
             default: -1
+          access_logs_send:
+            description:
+            - If true, send access logs to the external syslog server.
+            type: bool
+            default: True
+            version_added: 21.16.0
+          access_logs_facility:
+            description:
+            - Syslog facility to use for access logs sent to external syslog server, or -1 to preserve the local facility.
+            type: int
+            default: -1
+            version_added: 21.16.0
+          access_logs_severity:
+            description:
+            - Syslog severity to use for access logs sent to external syslog server, or -1 to preserve the local severity.
+            type: int
+            default: -1
+            version_added: 21.16.0
       remote_syslog_server_test:
         description:
         - Configuration for sending audit test messages to an external syslog server.
@@ -460,11 +514,29 @@ options:
             - Syslog severity to use for application logs sent to external syslog server, or -1 to preserve the local severity.
             type: int
             default: -1
+          access_logs_send:
+            description:
+            - If true, send access logs to the external syslog server.
+            type: bool
+            default: True
+            version_added: 21.16.0
+          access_logs_facility:
+            description:
+            - Syslog facility to use for access logs sent to external syslog server, or -1 to preserve the local facility.
+            type: int
+            default: -1
+            version_added: 21.16.0
+          access_logs_severity:
+            description:
+            - Syslog severity to use for access logs sent to external syslog server, or -1 to preserve the local severity.
+            type: int
+            default: -1
+            version_added: 21.16.0
 """
 
 EXAMPLES = """
 - name: Configure audit destination defaults
-  na_sg_grid_audit_destination:
+  netapp.storagegrid.na_sg_grid_audit_destination:
     state: present
     api_url: "https://gmi.example.com"
     auth_token: "01234567-5678-9abc-78de-9fgabc123def"
@@ -486,9 +558,12 @@ EXAMPLES = """
         application_logs_send: true
         application_logs_facility: -1
         application_logs_severity: -1
+        access_logs_send: true
+        access_logs_facility: -1
+        access_logs_severity: -1
 
 - name: Configure audit destination for specific nodes
-  na_sg_grid_audit_destination:
+  netapp.storagegrid.na_sg_grid_audit_destination:
     state: present
     api_url: "https://gmi.example.com"
     auth_token: "01234567-5678-9abc-78de-9fgabc123def"
@@ -511,6 +586,9 @@ EXAMPLES = """
           application_logs_send: true
           application_logs_facility: -1
           application_logs_severity: -1
+          access_logs_send: true
+          access_logs_facility: -1
+          access_logs_severity: -1
 """
 
 RETURN = """
@@ -542,7 +620,10 @@ resp:
                 "auditLogsSeverity": 6,
                 "applicationLogsSend": true,
                 "applicationLogsFacility": -1,
-                "applicationLogsSeverity": -1
+                "applicationLogsSeverity": -1,
+                "accessLogsSend": true,
+                "accessLogsFacility": -1,
+                "accessLogsSeverity": -1
             },
             "remoteSyslogServerATest": {
                 "enabled": true,
@@ -563,7 +644,10 @@ resp:
                 "auditLogsSeverity": 6,
                 "applicationLogsSend": true,
                 "applicationLogsFacility": -1,
-                "applicationLogsSeverity": -1
+                "applicationLogsSeverity": -1,
+                "accessLogsSend": true,
+                "accessLogsFacility": -1,
+                "accessLogsSeverity": -1
             }
         },
         "nodes": {
@@ -590,7 +674,10 @@ resp:
                     "auditLogsSeverity": 6,
                     "applicationLogsSend": true,
                     "applicationLogsFacility": -1,
-                    "applicationLogsSeverity": -1
+                    "applicationLogsSeverity": -1,
+                    "accessLogsSend": true,
+                    "accessLogsFacility": -1,
+                    "accessLogsSeverity": -1
                 },
                 "remoteSyslogServerATest": {
                     "enabled": true,
@@ -611,7 +698,10 @@ resp:
                     "auditLogsSeverity": 6,
                     "applicationLogsSend": true,
                     "applicationLogsFacility": -1,
-                    "applicationLogsSeverity": -1
+                    "applicationLogsSeverity": -1,
+                    "accessLogsSend": true,
+                    "accessLogsFacility": -1,
+                    "accessLogsSeverity": -1
                 }
             }
         }
@@ -673,6 +763,9 @@ class SgAuditDestination:
                                 application_logs_send=dict(type="bool", default=True),
                                 application_logs_facility=dict(type="int", default=-1),
                                 application_logs_severity=dict(type="int", default=-1),
+                                access_logs_send=dict(type="bool", default=True),
+                                access_logs_facility=dict(type="int", default=-1),
+                                access_logs_severity=dict(type="int", default=-1),
                             ),
                         ),
                         remote_syslog_server_test=dict(
@@ -698,6 +791,9 @@ class SgAuditDestination:
                                 application_logs_send=dict(type="bool", default=True),
                                 application_logs_facility=dict(type="int", default=-1),
                                 application_logs_severity=dict(type="int", default=-1),
+                                access_logs_send=dict(type="bool", default=True),
+                                access_logs_facility=dict(type="int", default=-1),
+                                access_logs_severity=dict(type="int", default=-1),
                             ),
                         ),
                     ),
@@ -738,6 +834,9 @@ class SgAuditDestination:
                                 application_logs_send=dict(type="bool", default=True),
                                 application_logs_facility=dict(type="int", default=-1),
                                 application_logs_severity=dict(type="int", default=-1),
+                                access_logs_send=dict(type="bool", default=True),
+                                access_logs_facility=dict(type="int", default=-1),
+                                access_logs_severity=dict(type="int", default=-1),
                             ),
                         ),
                         remote_syslog_server_test=dict(
@@ -763,6 +862,9 @@ class SgAuditDestination:
                                 application_logs_send=dict(type="bool", default=True),
                                 application_logs_facility=dict(type="int", default=-1),
                                 application_logs_severity=dict(type="int", default=-1),
+                                access_logs_send=dict(type="bool", default=True),
+                                access_logs_facility=dict(type="int", default=-1),
+                                access_logs_severity=dict(type="int", default=-1),
                             ),
                         ),
                     ),
@@ -835,6 +937,9 @@ class SgAuditDestination:
             "applicationLogsSend": params.get("application_logs_send", True),
             "applicationLogsFacility": params.get("application_logs_facility", -1),
             "applicationLogsSeverity": params.get("application_logs_severity", -1),
+            "accessLogsSend": params.get("access_logs_send", True),
+            "accessLogsFacility": params.get("access_logs_facility", -1),
+            "accessLogsSeverity": params.get("access_logs_severity", -1),
         }
 
     def get_audit_log_destination_config(self):
