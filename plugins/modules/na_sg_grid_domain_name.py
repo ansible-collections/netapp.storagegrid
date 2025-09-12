@@ -43,7 +43,9 @@ options:
 
 EXAMPLES = """
 - name: Configure endpoint domain name
-  na_sg_grid_domain_name:
+  netapp.storagegrid.na_sg_grid_domain_name:
+    api_url: "https://<storagegrid-endpoint-url>"
+    auth_token: "storagegrid-auth-token"
     state: present
     validate_certs: false
     domain_name:
@@ -133,9 +135,8 @@ class SgDomainName:
             if not current_domain_name and self.data:
                 modify = True
             else:
-                for domain in current_domain_name:
-                    if domain not in self.data:
-                        modify = True
+                if set(self.data) != set(current_domain_name):
+                    modify = True
 
             if modify:
                 self.na_helper.changed = True

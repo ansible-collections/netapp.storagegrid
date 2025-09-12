@@ -109,6 +109,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_alert_receiver - correct example section in the module for better understanding.
   - na_sg_grid_autosupport - fix issue with setting up `destinations` option in the module.
   - na_sg_grid_autosupport - add support to handle error response from the API.
+  - na_sg_grid_domain_name - fixed issue where additional domain names was not detected as changed.
 
 ## 21.15.0
 

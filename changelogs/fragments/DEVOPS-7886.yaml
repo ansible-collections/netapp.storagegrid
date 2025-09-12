@@ -1,0 +1,2 @@
+bugfixes:
+  - na_sg_grid_domain_name - fixed issue where additional domain names was not detected as changed.
