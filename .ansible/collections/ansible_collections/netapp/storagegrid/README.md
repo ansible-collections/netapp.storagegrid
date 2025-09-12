@@ -94,6 +94,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_metrics - grab metrics on StorageGRID.
 
 ### Minor Changes
+  - na_sg_org_container - Enhanced the bucket policy.
   - na_sg_grid_gateway - new option `closed_on_untrusted_client_network`. Requires StorageGRID 11.8 or later.
   - na_sg_grid_gateway - parameter `default_service_type` allows option for `management`. Requires StorageGRID 11.8 or later.
   - na_sg_grid_info - added new endpoints in grid info module.

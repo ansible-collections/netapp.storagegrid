@@ -52,7 +52,7 @@ SRR = {
         None,
     ),
     "org_containers": (
-        {"data": [{"name": "testbucket", "creationTime": "2020-02-04T12:43:50.777Z", "region": "us-east-1"}]},
+        {"data": [{"name": "testbucket", "creationTime": "2020-02-04T12:43:50.777Z", "region": "us-east-1", "policy": {}}]},
         None,
     ),
     "org_container_record": (
@@ -88,6 +88,39 @@ SRR = {
     "consistency_updated": ({"data": {"consistency": "all"}}, None),
     "org_container_capacity_limit": ({"data": {"quotaObjectBytes": 100000}}, None),
     "org_container_capacity_limit_updated": ({"data": {"quotaObjectBytes": 200000}}, None),
+    "org_container_policy": (
+        {
+            "data": {
+                "policy": {
+                    "statement": [
+                        {
+                            "sid": "string",
+                            "effect": "Allow",
+                            "action": "s3:GetObject",
+                            "resource": [
+                                "arn:aws:s3:::testbucket",
+                                "arn:aws:s3:::testbucket/*"
+                            ],
+                            "condition": {
+                                "IpAddress": {"aws:SourceIp": "55.240.143.0/24"},
+                                "NotIpAddress": {"aws:SourceIp": "55.240.143.188"}
+                            },
+                            "principal": "*"
+                        }
+                    ]
+                }
+            }
+        },
+        None
+    ),
+    "org_container_policy_updated": (
+        {
+            "data": {
+                "policy": {}
+            }
+        },
+        None
+    ),
 }
 
 
@@ -213,6 +246,7 @@ class TestMyModule(unittest.TestCase):
         mock_request.side_effect = [
             SRR["version_116"],
             SRR["org_containers"],  # get
+            SRR["org_container_policy_updated"],
             SRR["end_of_sequence"],
         ]
         my_obj = org_container_module()
@@ -230,6 +264,7 @@ class TestMyModule(unittest.TestCase):
             SRR["version_116"],
             SRR["org_containers"],  # get
             SRR["org_container_record_update"],  # put
+            SRR["org_container_policy"],
             SRR["end_of_sequence"],
         ]
         my_obj = org_container_module()
@@ -244,6 +279,7 @@ class TestMyModule(unittest.TestCase):
         mock_request.side_effect = [
             SRR["version_116"],
             SRR["org_containers"],  # get
+            SRR["org_container_policy"],
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
@@ -336,6 +372,7 @@ class TestMyModule(unittest.TestCase):
             SRR["org_containers"],  # get
             SRR["org_container_versioning_disabled"],  # get
             SRR["org_container_versioning_enabled"],  # put
+            SRR["org_container_policy"],  # put
             SRR["end_of_sequence"],
         ]
         my_obj = org_container_module()
@@ -405,6 +442,41 @@ class TestMyModule(unittest.TestCase):
         assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_create_na_sg_org_container_with_policy_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["policy"] = {
+            "statement": [
+                {
+                    "sid": "string",
+                    "effect": "Allow",
+                    "action": "s3:GetObject",
+                    "resource": [
+                        "arn:aws:s3:::testbucket",
+                        "arn:aws:s3:::testbucket/*"
+                    ],
+                    "condition": {
+                        "IpAddress": {"aws:SourceIp": "55.240.143.0/24"},
+                        "NotIpAddress": {"aws:SourceIp": "55.240.143.188"}
+                    },
+                    "principal": "*"
+                }
+            ]
+        }
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_119"],
+            SRR["empty_good"],  # get
+            SRR["org_container_record"],  # post
+            SRR["org_container_policy"],  # post
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_create_na_sg_org_container_with_policy_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_update_na_sg_org_container_consistency_setting_pass(self, mock_request):
         args = self.set_args_create_na_sg_org_container()
         args["consistency"] = "all"
@@ -414,6 +486,7 @@ class TestMyModule(unittest.TestCase):
             SRR["org_containers"],  # get
             SRR["consistency"],  # put
             SRR["consistency_updated"],
+            SRR["org_container_policy"],
             SRR["end_of_sequence"],
         ]
         my_obj = org_container_module()
@@ -438,4 +511,22 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_org_container_capacity_limit_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_org_container_policy_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["policy"] = {}
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_119"],
+            SRR["org_containers"],  # get
+            SRR["org_container_policy"],  # get
+            SRR["org_container_policy_updated"],  # put
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_org_container_policy_pass: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]
