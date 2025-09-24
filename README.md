@@ -111,6 +111,8 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_autosupport - fix issue with setting up `destinations` option in the module.
   - na_sg_grid_autosupport - add support to handle error response from the API.
   - na_sg_grid_domain_name - fixed issue where additional domain names was not detected as changed.
+  - na_sg_grid_identity_federation - fix issue with check mode response.
+  - na_sg_org_identity_federation - fix issue with check mode response.
 
 ## 21.15.0
 

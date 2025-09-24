@@ -268,8 +268,11 @@ class SgOrgIdentityFederation:
         if error:
             self.module.fail_json(msg=error, payload=self.data)
 
-        if response is not None:
-            return response["data"]
+        if response:
+            if response.get("status_code") == 204:
+                return response
+            if response.get("status_code") == 200:
+                return response["data"]
         else:
             return None
 

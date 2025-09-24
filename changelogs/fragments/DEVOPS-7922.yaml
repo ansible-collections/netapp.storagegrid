@@ -1,0 +1,3 @@
+bugfixes:
+  - na_sg_grid_identity_federation - fix issue with check mode response.
+  - na_sg_org_identity_federation - fix issue with check mode response.

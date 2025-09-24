@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "cf5047654ace1019a6ae7c2d9a3f588401561a553d980f2f1550732b350a3846",
+   "chksum_sha256": "8c2d62cc09f3c1ff322c235fcbba7ac7f2f443a9594df24112ea5798b824f379",
    "format": 1
   },
   {
@@ -274,6 +274,13 @@
    "format": 1
   },
   {
+   "name": "changelogs/fragments/DEVOPS-7922.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "8d8747a4ef0cbab2928db53fcfd8603ca059f7f2d63efeb5c955b2a5ece1077d",
+   "format": 1
+  },
+  {
    "name": "changelogs/fragments/github-10.yaml",
    "ftype": "file",
    "chksum_type": "sha256",
@@ -473,7 +480,7 @@
    "name": "plugins/modules/na_sg_grid_identity_federation.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "a8c4949185d0d65cba3779489b365648a8210b8602c9d9a689d3c7ff3b9592a3",
+   "chksum_sha256": "3f833a50cfd3493379201b0433cd46eb22e4713eb009e280112d28335764dbf9",
    "format": 1
   },
   {
@@ -606,7 +613,7 @@
    "name": "plugins/modules/na_sg_org_identity_federation.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "184642a79a66393d574381ef1b7e818b18c3ec906eea0740b011db8b84439bb7",
+   "chksum_sha256": "7dbc91ad7da9204653e548e7762577a5c73ecc6c155ca3f8c14962f52c85fcb5",
    "format": 1
   },
   {
