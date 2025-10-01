@@ -313,7 +313,7 @@ class SgOrgBucket(object):
 
         response, error = self.rest_api.delete(api, None)
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
     def apply(self):
         """

@@ -371,7 +371,7 @@ class SgOrgContainer(object):
 
         response, error = self.rest_api.delete(api, None)
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
     def get_org_container_consistency(self):
         api = "api/v3/org/containers/%s/consistency" % self.parameters["name"]

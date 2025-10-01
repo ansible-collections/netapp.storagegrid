@@ -100,6 +100,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_info - added new endpoints in grid info module.
   - na_sg_org_info - added new endpoints in org info module.
   - na_sg_grid_audit_destination - new option `access_logs_send`, `access_logs_facility`, and `access_logs_severity` added to manage access log settings for syslog server.
+  - all modules - add support for failure responses to include additional error details for easier troubleshooting.
 
 ### Bug Fixes
   - na_sg_org_user_s3_key - fixed for incorrect handling of the `unique_user_name`.

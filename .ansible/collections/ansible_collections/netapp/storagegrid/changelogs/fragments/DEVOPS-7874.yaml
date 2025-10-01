@@ -1,0 +1,2 @@
+minor_changes:
+  - all modules - add support for failure responses to include additional error details for easier troubleshooting.

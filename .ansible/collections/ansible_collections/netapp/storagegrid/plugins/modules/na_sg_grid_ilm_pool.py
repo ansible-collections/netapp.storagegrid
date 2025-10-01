@@ -248,9 +248,8 @@ class ILM_pool(object):
         __LOGGING__.append("creating ILM pool with payload: %s" % self.data)
         api = "api/v4/private/ilm-pools"
         response, error = self.rest_api.post(api, self.data)
-        __LOGGING__.append("error: %s" % error)
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
         return response["data"]
 
     def delete_ilm_pool(self):
@@ -258,14 +257,14 @@ class ILM_pool(object):
         api = "api/v4/private/ilm-pools/%s" % self.id
         response, error = self.rest_api.delete(api, None)
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
 
     def update_ilm_pool(self):
         __LOGGING__.append("updating ILM pool with payload: %s" % self.data)
         api = "api/v4/private/ilm-pools/%s" % self.id
         response, error = self.rest_api.put(api, self.data)
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
         return response["data"]
 
     def apply(self):

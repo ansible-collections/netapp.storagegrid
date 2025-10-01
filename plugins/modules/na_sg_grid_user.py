@@ -193,7 +193,7 @@ class SgGridUser(object):
 
         if error:
             if response["code"] != 404:
-                self.module.fail_json(msg=error["text"])
+                self.module.fail_json(msg=error)
         else:
             return response["data"]
         return None
@@ -204,7 +204,7 @@ class SgGridUser(object):
         response, error = self.rest_api.post(api, self.data)
 
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
         return response["data"]
 
@@ -221,7 +221,7 @@ class SgGridUser(object):
 
         response, error = self.rest_api.put(api, self.data)
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
         return response["data"]
 
@@ -230,7 +230,7 @@ class SgGridUser(object):
         response, error = self.rest_api.post(api, self.pw_change)
 
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
     def apply(self):
         """

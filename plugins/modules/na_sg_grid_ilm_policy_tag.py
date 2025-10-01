@@ -172,9 +172,8 @@ class ILM_policy_tag(object):
         __LOGGING__.append("creating ILM policy tag with payload: %s" % (self.data))
         api = "api/v4/grid/ilm-policy-tags"
         response, error = self.rest_api.post(api, self.data)
-        __LOGGING__.append("error: %s" % (error))
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
         return response["data"]
 
     def delete_ILM_policy_tag(self):
@@ -182,14 +181,14 @@ class ILM_policy_tag(object):
         api = "api/v4/grid/ilm-policy-tags/%s" % (self.id)
         response, error = self.rest_api.delete(api, None)
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
 
     def update_ILM_policy_tag(self):
         __LOGGING__.append("updating ILM policy tag with payload: %s" % (self.data))
         api = "api/v4/grid/ilm-policy-tags/%s" % (self.id)
         response, error = self.rest_api.put(api, self.data)
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
         return response["data"]
 
     def apply(self):

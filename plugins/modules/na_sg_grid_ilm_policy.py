@@ -189,10 +189,9 @@ class ILM_policy(object):
         __LOGGING__.append("creating ILM policy with payload: %s" % (self.data))
         api = "api/v4/grid/ilm-policies"
         response, error = self.rest_api.post(api, self.data)
-        __LOGGING__.append("error: %s" % error)
 
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
 
         return response["data"]
 
@@ -202,7 +201,7 @@ class ILM_policy(object):
 
         response, error = self.rest_api.delete(api, None)
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
 
     def update_ilm_policy(self):
         __LOGGING__.append("updating ILM policy with payload: %s" % self.data)
@@ -210,7 +209,7 @@ class ILM_policy(object):
         response, error = self.rest_api.put(api, self.data)
 
         if error:
-            self.module.fail_json(msg=error["text"], log=__LOGGING__)
+            self.module.fail_json(msg=error, log=__LOGGING__)
 
         return response["data"]
 

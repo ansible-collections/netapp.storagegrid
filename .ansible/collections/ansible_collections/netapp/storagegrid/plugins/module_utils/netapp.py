@@ -102,6 +102,8 @@ class SGRestAPI(object):
             success_code = [200, 201, 202, 204]
             if response.status_code not in success_code:
                 error = json.get("message")
+                if json.get("errors"):
+                    error.update({"errors": json.get("errors")})
             else:
                 error = None
             return json, error

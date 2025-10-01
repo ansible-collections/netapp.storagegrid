@@ -192,7 +192,7 @@ class SgGridClientCertificate:
         response, error = self.rest_api.post(api, self.data)
 
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
         return response["data"]
 
@@ -209,7 +209,7 @@ class SgGridClientCertificate:
 
         response, error = self.rest_api.put(api, self.data)
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
         return response["data"]
 

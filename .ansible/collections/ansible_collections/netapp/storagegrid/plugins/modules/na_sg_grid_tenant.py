@@ -385,7 +385,7 @@ class SgGridTenantAccount(object):
         response, error = self.rest_api.post(api, self.pw_change)
 
         if error:
-            self.module.fail_json(msg=error["text"])
+            self.module.fail_json(msg=error)
 
     def apply(self):
         """
