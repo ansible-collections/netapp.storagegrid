@@ -101,6 +101,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_org_info - added new endpoints in org info module.
   - na_sg_grid_audit_destination - new option `access_logs_send`, `access_logs_facility`, and `access_logs_severity` added to manage access log settings for syslog server.
   - all modules - add support for failure responses to include additional error details for easier troubleshooting.
+  - na_sg_grid_group - new option `manage_alerts` and `storage_admin` added to management policy.
 
 ### Bug Fixes
   - na_sg_org_user_s3_key - fixed for incorrect handling of the `unique_user_name`.
@@ -114,6 +115,8 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_domain_name - fixed issue where additional domain names was not detected as changed.
   - na_sg_grid_identity_federation - fix issue with check mode response.
   - na_sg_org_identity_federation - fix issue with check mode response.
+  - na_sg_grid_group - fix issue where `activate_features` parameter was deprecated but still present in code.
+  - na_sg_grid_group - fix typo in parameter mapping for `alarm_acknowledgement` option.
 
 ## 21.15.0
 

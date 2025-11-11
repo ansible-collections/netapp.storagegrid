@@ -85,6 +85,8 @@ SRR = {
                         "metricsQuery": False,
                         "maintenance": True,
                         "ilm": True,
+                        "manageAlerts": True,
+                        "storageAdmin": True,
                     },
                 },
                 "id": "00000000-0000-0000-0000-000000000000",
@@ -253,6 +255,8 @@ class TestMyModule(unittest.TestCase):
         args["management_policy"]["tenant_accounts"] = True
         args["management_policy"]["metrics_query"] = False
         args["management_policy"]["ilm"] = False
+        args["management_policy"]["manage_alerts"] = True
+        args["management_policy"]["storage_admin"] = True
 
         set_module_args(args)
         my_obj = grid_group_module()

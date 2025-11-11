@@ -1,0 +1,5 @@
+minor_changes:
+  - na_sg_grid_group - new option `manage_alerts` and `storage_admin` added to management policy.
+bugfixes:
+  - na_sg_grid_group - fix issue where `activate_features` parameter was deprecated but still present in code.
+  - na_sg_grid_group - fix typo in parameter mapping for `alarm_acknowledgement` option.
