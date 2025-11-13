@@ -54,12 +54,24 @@ options:
     type: int
   username:
     description:
-    - Username for the SMTP server.
+    - Use C(smtp_username) instead.
+    - This parameter has been deprecated.
     type: str
   password:
     description:
+    - Use C(smtp_password) instead.
+    - This parameter has been deprecated.
+    type: str
+  smtp_username:
+    description:
+    - Username for the SMTP server.
+    type: str
+    version_added: 21.16.0
+  smtp_password:
+    description:
     - Password for the SMTP server.
     type: str
+    version_added: 21.16.0
   from_email:
     description:
     - Sender email address.
@@ -99,8 +111,8 @@ EXAMPLES = """
     enable: true
     smtp_host: "smtp.example.com"
     smtp_port: 25
-    username: "smtp-user"
-    password: "smtp-password"
+    smtp_username: "smtp-user"
+    smtp_password: "smtp-password"
     from_email: "user@example.com"
     to_emails:
       - "user@example.com"
@@ -167,6 +179,8 @@ class SgAlertReceiver:
                 smtp_port=dict(required=False, type="int"),
                 username=dict(required=False, type="str"),
                 password=dict(required=False, type="str", no_log=True),
+                smtp_username=dict(required=False, type="str"),
+                smtp_password=dict(required=False, type="str", no_log=True),
                 from_email=dict(required=False, type="str"),
                 to_emails=dict(required=False, type="list", elements="str"),
                 minimum_severity=dict(required=False, type="str", choices=["minor", "major", "critical"]),
@@ -206,6 +220,10 @@ class SgAlertReceiver:
             self.data["username"] = self.parameters["username"]
         if self.parameters.get("password"):
             self.data["password"] = self.parameters["password"]
+        if self.parameters.get("smtp_username"):
+            self.data["username"] = self.parameters["smtp_username"]
+        if self.parameters.get("smtp_password"):
+            self.data["password"] = self.parameters["smtp_password"]
         if self.parameters.get("ca_cert"):
             self.data["caCert"] = self.parameters.get("ca_cert")
         if self.parameters.get("client_cert"):

@@ -92,6 +92,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_recovery_package - downloading recovery package.
   - na_sg_grid_firewall - configure firewall settings on StorageGRID.
   - na_sg_grid_metrics - grab metrics on StorageGRID.
+  - na_sg_pge_info - gather information from a StorageGRID node Pre-Grid Environment (PGE).
 
 ### Minor Changes
   - na_sg_org_container - Enhanced the bucket policy.
@@ -117,6 +118,16 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_org_identity_federation - fix issue with check mode response.
   - na_sg_grid_group - fix issue where `activate_features` parameter was deprecated but still present in code.
   - na_sg_grid_group - fix typo in parameter mapping for `alarm_acknowledgement` option.
+
+### Minor Changes
+  - na_sg_org_container - user input for `capacity_limit` option changed from bytes to GB.
+  - na_sg_org_bucket - user input for `capacity_limit` option changed from bytes to GB.
+
+### Minor Changes
+  - na_sg_grid_alert_receiver - new option `smtp_username` and `smtp_password` added in place of `username` and `password`.
+
+### Minor Changes
+  - na_sg_org_group - new options `s3_console` to control S3 console access and `view_all_containers` to view settings for all buckets added, requires StorageGRID version 11.8 or later.
 
 ## 21.15.0
 

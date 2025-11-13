@@ -1,0 +1,2 @@
+minor_changes:
+  - na_sg_grid_alert_receiver - new option `smtp_username` and `smtp_password` added in place of `username` and `password`.

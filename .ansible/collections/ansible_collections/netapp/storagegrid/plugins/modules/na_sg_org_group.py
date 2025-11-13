@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# (c) 2020, NetApp Inc
+# (c) 2020-2025, NetApp Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """NetApp StorageGRID - Manage tenant Groups"""
@@ -72,6 +72,18 @@ options:
         description:
         - Provides full access to the Tenant Manager and the Tenant Management API.
         type: bool
+      s3_console:
+        description:
+        - Allows use of S3 Console to view and manage bucket objects (supported from SG 11.8 or later).
+        - It was experimental in earlier SG versions.
+        type: bool
+        version_added: '21.16.0'
+      view_all_containers:
+        description:
+        - Allows users to view all S3 buckets in the tenant account.
+        - Requires storageGRID 11.8 or later.
+        type: bool
+        version_added: '21.16.0'
   s3_policy:
     description:
     - StorageGRID S3 Group Policy.
@@ -88,10 +100,12 @@ EXAMPLES = """
     display_name: ansiblegroup1
     unique_name: group/ansiblegroup1
     management_policy:
-    manage_all_containers: true
-    manage_endpoints: true
-    manage_own_s3_credentials: false
-    root_access: false
+      manage_all_containers: true
+      manage_endpoints: true
+      manage_own_s3_credentials: false
+      root_access: false
+      s3_console: true
+      view_all_containers: true
     s3_policy: {"Statement":[{"Effect":"Deny", "Action":"s3:*", "Resource":"arn:aws:s3:::*"}]}
 """
 
@@ -107,7 +121,9 @@ resp:
                 "manageAllContainers": true,
                 "manageEndpoints": true,
                 "manageOwnS3Credentials": true,
-                "rootAccess": true
+                "rootAccess": true,
+                "manageOwnContainerObjects": true,
+                "viewAllContainers": true
             },
             "s3": {...},
             "swift": {...}
@@ -154,6 +170,8 @@ class SgOrgGroup(object):
                         manage_endpoints=dict(required=False, type="bool"),
                         manage_own_s3_credentials=dict(required=False, type="bool"),
                         root_access=dict(required=False, type="bool"),
+                        s3_console=dict(required=False, type="bool"),
+                        view_all_containers=dict(required=False, type="bool"),
                     ),
                 ),
                 s3_policy=dict(required=False, type="json"),
@@ -164,6 +182,8 @@ class SgOrgGroup(object):
             "manage_endpoints": "manageEndpoints",
             "manage_own_s3_credentials": "manageOwnS3Credentials",
             "root_access": "rootAccess",
+            "s3_console": "manageOwnContainerObjects",
+            "view_all_containers": "viewAllContainers",
         }
         self.module = AnsibleModule(
             argument_spec=self.argument_spec,
@@ -177,6 +197,9 @@ class SgOrgGroup(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version(api_root="org")
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
         self.data["displayName"] = self.parameters.get("display_name")
@@ -187,6 +210,8 @@ class SgOrgGroup(object):
         self.data["policies"] = {}
 
         if self.parameters.get("management_policy"):
+            if self.parameters["management_policy"]["view_all_containers"]:
+                self.rest_api.fail_if_not_sg_minimum_version("view_all_containers", 11, 8)
             self.data["policies"] = {
                 "management": dict(
                     (parameter_map[k], v) for (k, v) in self.parameters["management_policy"].items() if v

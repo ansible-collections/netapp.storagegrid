@@ -62,11 +62,11 @@ options:
         type: int
   capacity_limit:
     description:
-    - The maximum number of bytes available for this buckets's objects.
+    - The maximum number of GB available for this buckets's objects.
     - Represents a logical amount (object size), not a physical amount (size on disk).
     - Requires storageGRID 11.9 or later.
-    type: int
-    version_added: '21.15.0'
+    type: float
+    version_added: '21.16.0'
   s3_object_lock_enabled:
     description:
     - Enable S3 Object Lock on the bucket.
@@ -135,7 +135,7 @@ EXAMPLES = """
     validate_certs: false
     state: present
     name: ansiblebucket1
-    capacity_limit: 10000
+    capacity_limit: 1.5
 
 - name: create a s3 bucket with policy
   netapp.storagegrid.na_sg_org_container:
@@ -221,7 +221,7 @@ class SgOrgContainer(object):
                         retention_period_minutes=dict(required=False, type="int"),
                     ),
                 ),
-                capacity_limit=dict(required=False, type="int"),
+                capacity_limit=dict(required=False, type="float"),
                 s3_object_lock_enabled=dict(required=False, type="bool"),
                 bucket_versioning_enabled=dict(required=False, type="bool"),
                 consistency=dict(required=False, type="str", choices=["all", "strong-global", "strong-site", "read-after-new-write", "available"]),
@@ -281,7 +281,7 @@ class SgOrgContainer(object):
 
         if self.parameters.get("capacity_limit"):
             self.rest_api.fail_if_not_sg_minimum_version("Bucket capacity limit", 11, 9)
-            self.quota_object_bytes["quotaObjectBytes"] = self.parameters["capacity_limit"]
+            self.quota_object_bytes["quotaObjectBytes"] = int(self.parameters["capacity_limit"] * 1024 ** 3)
 
         if self.parameters.get("policy") is not None:
             self.rest_api.fail_if_not_sg_minimum_version("bucket policy", 11, 9)

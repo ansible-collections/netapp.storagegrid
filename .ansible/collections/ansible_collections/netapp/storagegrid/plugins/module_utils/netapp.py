@@ -214,3 +214,76 @@ class SGRestAPI(object):
             msg = "Error: " + self.requires_sg_version(module_or_option, "%d.%d" % (minimum_major, minimum_minor))
             msg += "  Found: %s.%s." % version
             self.module.fail_json(msg=msg)
+
+
+def na_storagegrid_pge_argument_spec():
+    """Argument spec for PGE modules"""
+    return dict(
+        api_url=dict(required=True, type="str"),
+        validate_certs=dict(required=False, type="bool", default=True),
+    )
+
+
+class PgeRestAPI(SGRestAPI):
+    """
+    StorageGRID PGE API wrapper class
+    """
+    def __init__(self, module, timeout=60):
+        self.module = module
+        self.api_url = self.module.params["api_url"]
+        self.verify = self.module.params["validate_certs"]
+        self.timeout = timeout
+        self.check_required_library()
+
+    def send_request(self, method, api, params=None, json=None, files=None):
+        """send http request for PGE endpoints without Authorization header"""
+        url = "%s/%s" % (self.api_url, api)
+        status_code = None
+        content = None
+        json_dict = None
+        json_error = None
+        error_details = None
+        headers = {
+            "Content-type": "application/json",
+            "Cache-Control": "no-cache",
+        }
+
+        def get_json(response):
+            """extract json, and error message if present"""
+            try:
+                json = response.json()
+
+            except ValueError:
+                return None, None
+            success_code = [200, 201, 202, 204]
+            if response.status_code not in success_code:
+                error = json.get("message")
+            else:
+                error = None
+            return json, error
+
+        try:
+            response = requests.request(
+                method,
+                url,
+                headers=headers,
+                timeout=self.timeout,
+                json=json,
+                verify=self.verify,
+                params=params,
+            )
+            status_code = response.status_code
+            # If the response was successful, no Exception will be raised
+            json_dict, json_error = get_json(response)
+        except requests.exceptions.HTTPError as err:
+            __, json_error = get_json(response)
+            if json_error is None:
+                error_details = str(err)
+        except requests.exceptions.ConnectionError as err:
+            error_details = str(err)
+        except Exception as err:
+            error_details = str(err)
+        if json_error is not None:
+            error_details = json_error
+
+        return json_dict, error_details

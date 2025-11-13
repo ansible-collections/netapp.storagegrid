@@ -1,4 +1,4 @@
-# (c) 2020, NetApp, Inc
+# (c) 2020-2025, NetApp, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """ unit tests NetApp StorageGRID Org Group Ansible module: na_sg_org_group"""
@@ -32,6 +32,8 @@ SRR = {
     "end_of_sequence": (None, "Unexpected call to send_request"),
     "generic_error": (None, "Expected error"),
     "delete_good": ({"code": 204}, None),
+    "version_118": ({"data": {"productVersion": "11.8.0-20230721.1338.d3969b3"}}, None),
+    "version_116": ({"data": {"productVersion": "11.6.0-20211120.0301.850531e"}}, None),
     "org_groups": (
         {
             "data": [
@@ -43,6 +45,8 @@ SRR = {
                             "manageAllContainers": True,
                             "manageEndpoints": True,
                             "manageOwnS3Credentials": True,
+                            "manageOwnContainerObjects": True,
+                            "viewAllContainers": True
                         },
                         "s3": {
                             "Statement": [
@@ -74,6 +78,7 @@ SRR = {
                         "manageAllContainers": True,
                         "manageEndpoints": True,
                         "manageOwnS3Credentials": True,
+                        "manageOwnContainerObjects": True
                     },
                     "s3": {
                         "Statement": [
@@ -105,6 +110,7 @@ SRR = {
                         "manageEndpoints": True,
                         "manageOwnS3Credentials": True,
                         # "rootAccess": False,
+                        # "manageOwnContainerObjects": False
                     },
                     "s3": {
                         "Statement": [
@@ -114,6 +120,29 @@ SRR = {
                                 "Resource": "arn:aws:s3:::mybucket/*",
                             }
                         ]
+                    },
+                },
+                "accountId": "12345678901234567890",
+                "id": "00000000-0000-0000-0000-000000000000",
+                "federated": False,
+                "groupURN": "urn:sgws:identity::12345678901234567890:group/testorggroup",
+            }
+        },
+        None,
+    ),
+    "org_group_record_update_view_all_containers": (
+        {
+            "data": {
+                "displayName": "TestOrgGroup",
+                "uniqueName": "group/testorggroup",
+                "read_only": True,
+                "policies": {
+                    "management": {
+                        "manageAllContainers": True,
+                        "manageEndpoints": True,
+                        "manageOwnS3Credentials": True,
+                        "manageOwnContainerObjects": True,
+                        "viewAllContainers": True
                     },
                 },
                 "accountId": "12345678901234567890",
@@ -201,6 +230,7 @@ class TestMyModule(unittest.TestCase):
                     "manage_endpoints": True,
                     "manage_own_s3_credentials": True,
                     "root_access": False,
+                    "s3_console": True
                 },
                 "s3_policy": {
                     "Statement": [
@@ -228,6 +258,7 @@ class TestMyModule(unittest.TestCase):
                     "manage_endpoints": True,
                     "manage_own_s3_credentials": True,
                     "root_access": False,
+                    "s3_console": True
                 },
                 "s3_policy": {
                     "Statement": [
@@ -278,8 +309,12 @@ class TestMyModule(unittest.TestCase):
             org_group_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_116"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             org_group_module()
@@ -299,12 +334,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_group())
-        my_obj = org_group_module()
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["not_found"],  # get
             SRR["org_group_record"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
@@ -313,11 +349,12 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_create_na_sg_org_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_group())
-        my_obj = org_group_module()
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["org_group_record"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = org_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_create_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
@@ -339,14 +376,16 @@ class TestMyModule(unittest.TestCase):
         )
 
         args["management_policy"]["manage_endpoints"] = False
+        args["management_policy"]["s3_console"] = False
 
         set_module_args(args)
-        my_obj = org_group_module()
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["org_group_record"],  # get
             SRR["org_group_record_update"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = org_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
@@ -355,13 +394,43 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_org_group_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_org_group())
-        my_obj = org_group_module()
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["org_group_record"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
+        my_obj = org_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_delete_na_sg_org_group_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_minimum_version_not_met_view_all_containers(self, mock_request):
+        args = self.set_args_create_na_sg_org_group()
+        args["management_policy"]["view_all_containers"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],  # get
+        ]
+        with pytest.raises(AnsibleFailJson) as exc:
+            org_group_module()
+        assert exc.value.args[0]["msg"] == "Error: view_all_containers requires StorageGRID 11.8 or later.  Found: 11.6."
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_org_group_view_all_containers(self, mock_request):
+        args = self.set_args_create_na_sg_org_group()
+        args["management_policy"]["view_all_containers"] = True
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_118"],
+            SRR["org_group_record"],  # get
+            SRR["org_group_record_update_view_all_containers"],  # put
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_group_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_org_group_view_all_containers: %s" % repr(exc.value.args[0]))
         assert exc.value.args[0]["changed"]

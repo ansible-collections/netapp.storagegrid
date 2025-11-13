@@ -41,6 +41,8 @@ SRR = {
                         "user@example.com"
                     ],
                     "minimumSeverity": "minor",
+                    "username": "admin",
+                    "password": "password",
                     "caCert": "-----BEGIN CERTIFICATE-----*******-----END CERTIFICATE-----",
                     "clientCert": "-----BEGIN CERTIFICATE-----*******-----END CERTIFICATE-----",
                     "clientKey": "-----BEGIN PRIVATE KEY-----*******-----END PRIVATE KEY-----",
@@ -61,6 +63,8 @@ SRR = {
                     "user@example.com"
                 ],
                 "minimumSeverity": "minor",
+                "username": "admin",
+                "password": "password",
                 "caCert": "-----BEGIN CERTIFICATE-----*******-----END CERTIFICATE-----",
                 "clientCert": "-----BEGIN CERTIFICATE-----*******-----END CERTIFICATE-----",
                 "clientKey": "-----BEGIN PRIVATE KEY-----*******-----END PRIVATE KEY-----",
@@ -180,6 +184,8 @@ class TestAlertReceiverModule(unittest.TestCase):
                 "state": "present",
                 "validate_certs": False,
                 "type": "email",
+                "smtp_username": "admin",
+                "smtp_password": "password",
                 "enable": True,
                 "smtp_host": "smtp.example.com",
                 "smtp_port": 25,

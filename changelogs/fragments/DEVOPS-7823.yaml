@@ -1,0 +1,2 @@
+minor_changes:
+  - na_sg_org_group - new options `s3_console` to control S3 console access and `view_all_containers` to view settings for all buckets added, requires StorageGRID version 11.8 or later.
