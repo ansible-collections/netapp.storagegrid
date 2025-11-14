@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "5fb781dc7a86d478193ebc73688f1207333a01e4ab84d7e916ec43fe913166c2",
+   "chksum_sha256": "46f281c4410878df60e779b507b767683f280293010ef56b156537786c61f8b9",
    "format": 1
   },
   {
@@ -354,7 +354,7 @@
    "name": "meta/runtime.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "34d594887786043f074cdd62deda19576ac0c2c6b9e3309b7310d54a93c96435",
+   "chksum_sha256": "0aa8f7ca0ec1ea868fc3c9ffb65c4a5c737bf2c6237f2906c3797decc19dc94c",
    "format": 1
   },
   {
@@ -389,7 +389,7 @@
    "name": "plugins/module_utils/netapp.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "03f871436bb1a62f41fc23d9fa3b4e177b8608a74b43e1fbc5b5403f887a647f",
+   "chksum_sha256": "cbeac7db8fd461a4df2ef5fbe2ab048722cca5f368434a91a522e29ef22c2c7a",
    "format": 1
   },
   {
@@ -551,6 +551,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "8e044f027db8f817e196ea5476817c609e9beaf4632ccd44a005d03b6a3847ac",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/na_sg_grid_login.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4e0c719259b36d5a4993f8dbaa0ab5b2c6fc96cdae9b71f376458c9de36c68c5",
    "format": 1
   },
   {
@@ -887,6 +894,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "8f91259b2eec17dfa26a7c768a42c8013dc7ca3f5ff2d6a2cf5df01a4c4df4cb",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/modules/test_na_sg_grid_login.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "f502f0b155f9186affca8922a1ae0f9ec20e0e428df9f00bf769f8f89d353337",
    "format": 1
   },
   {
