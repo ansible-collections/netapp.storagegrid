@@ -25,6 +25,7 @@ if sys.version_info < (3, 11):
 SRR = {
     # common responses
     "empty_good": ({"data": []}, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "not_found": (
         {"status": "error", "code": 404, "data": {}},
         {"key": "error.404"},
@@ -154,8 +155,12 @@ class TestMyModule(unittest.TestCase):
             org_s3_key_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             org_s3_key_module()
@@ -166,12 +171,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_user_s3_key_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_user_s3_keys())
-        my_obj = org_s3_key_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_s3_key"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_s3_key_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_user_s3_key_pass: %s" % repr(exc.value.args[0]))
@@ -182,12 +188,13 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_create_na_sg_org_user_s3_keys()
         args["access_key"] = "ABCDEFabcd1234567890"
         set_module_args(args)
-        my_obj = org_s3_key_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_s3_key"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = org_s3_key_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_create_na_sg_org_user_s3_key_pass: %s" % repr(exc.value.args[0]))
@@ -196,12 +203,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_org_user_s3_keys_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_org_user_s3_keys())
-        my_obj = org_s3_key_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_s3_key"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
+        my_obj = org_s3_key_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_delete_na_sg_org_user_s3_keys_pass: %s" % repr(exc.value.args[0]))

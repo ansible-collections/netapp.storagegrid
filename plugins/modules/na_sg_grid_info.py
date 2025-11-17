@@ -204,6 +204,9 @@ class NetAppSgGatherInfo(object):
         self.na_helper = NetAppModule()
         self.parameters = self.na_helper.set_parameters(self.module.params)
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
     def get_subset_info(self, gather_subset_info):
         """
@@ -294,133 +297,133 @@ class NetAppSgGatherInfo(object):
         # Defining gather_subset and appropriate api_call.
         get_sg_subset_info = {
             'grid/accounts': {
-                'api_call': 'api/v3/grid/accounts',
+                'api_call': 'api/%s/grid/accounts' % self.api_version,
             },
             'grid/alarms': {
-                'api_call': 'api/v3/grid/alarms',
+                'api_call': 'api/%s/grid/alarms' % self.api_version,
             },
             'grid/audit': {
-                'api_call': 'api/v3/grid/audit',
+                'api_call': 'api/%s/grid/audit' % self.api_version,
             },
             'grid/compliance-global': {
-                'api_call': 'api/v3/grid/compliance-global',
+                'api_call': 'api/%s/grid/compliance-global' % self.api_version,
             },
             'grid/config': {
-                'api_call': 'api/v3/grid/config',
+                'api_call': 'api/%s/grid/config' % self.api_version,
             },
             'grid/config/management': {
-                'api_call': 'api/v3/grid/config/management',
+                'api_call': 'api/%s/grid/config/management' % self.api_version,
             },
             'grid/config/product-version': {
-                'api_call': 'api/v3/grid/config/product-version',
+                'api_call': 'api/%s/grid/config/product-version' % self.api_version,
             },
             'grid/deactivated-features': {
-                'api_call': 'api/v3/grid/deactivated-features',
+                'api_call': 'api/%s/grid/deactivated-features' % self.api_version,
             },
             'grid/dns-servers': {
-                'api_call': 'api/v3/grid/dns-servers',
+                'api_call': 'api/%s/grid/dns-servers' % self.api_version,
             },
             'grid/domain-names': {
-                'api_call': 'api/v3/grid/domain-names',
+                'api_call': 'api/%s/grid/domain-names' % self.api_version,
             },
             'grid/ec-profiles': {
-                'api_call': 'api/v3/grid/ec-profiles',
+                'api_call': 'api/%s/grid/ec-profiles' % self.api_version,
             },
             'grid/expansion': {
-                'api_call': 'api/v3/grid/expansion',
+                'api_call': 'api/%s/grid/expansion' % self.api_version,
             },
             'grid/expansion/nodes': {
-                'api_call': 'api/v3/grid/expansion/nodes',
+                'api_call': 'api/%s/grid/expansion/nodes' % self.api_version,
             },
             'grid/expansion/sites': {
-                'api_call': 'api/v3/grid/expansion/sites',
+                'api_call': 'api/%s/grid/expansion/sites' % self.api_version,
             },
             'grid/grid-networks': {
-                'api_call': 'api/v3/grid/grid-networks',
+                'api_call': 'api/%s/grid/grid-networks' % self.api_version,
             },
             'grid/groups': {
-                'api_call': 'api/v3/grid/groups',
+                'api_call': 'api/%s/grid/groups' % self.api_version,
             },
             'grid/health': {
-                'api_call': 'api/v3/grid/health',
+                'api_call': 'api/%s/grid/health' % self.api_version,
             },
             'grid/health/topology': {
-                'api_call': 'api/v3/grid/health/topology',
+                'api_call': 'api/%s/grid/health/topology' % self.api_version,
             },
             'grid/identity-source': {
-                'api_call': 'api/v3/grid/identity-source',
+                'api_call': 'api/%s/grid/identity-source' % self.api_version,
             },
             'grid/ilm-criteria': {
-                'api_call': 'api/v3/grid/ilm-criteria',
+                'api_call': 'api/%s/grid/ilm-criteria' % self.api_version,
             },
             'grid/ilm-policies': {
-                'api_call': 'api/v3/grid/ilm-policies',
+                'api_call': 'api/%s/grid/ilm-policies' % self.api_version,
             },
             'grid/ilm-rules': {
-                'api_call': 'api/v3/grid/ilm-rules',
+                'api_call': 'api/%s/grid/ilm-rules' % self.api_version,
             },
             'grid/license': {
-                'api_call': 'api/v3/grid/license',
+                'api_call': 'api/%s/grid/license' % self.api_version,
             },
             'grid/management-certificate': {
-                'api_call': 'api/v3/grid/management-certificate',
+                'api_call': 'api/%s/grid/management-certificate' % self.api_version,
             },
             'grid/ntp-servers': {
-                'api_call': 'api/v3/grid/ntp-servers',
+                'api_call': 'api/%s/grid/ntp-servers' % self.api_version,
             },
             'grid/recovery/available-nodes': {
-                'api_call': 'api/v3/grid/recovery/available-nodes',
+                'api_call': 'api/%s/grid/recovery/available-nodes' % self.api_version,
             },
             'grid/recovery': {
-                'api_call': 'api/v3/grid/recovery',
+                'api_call': 'api/%s/grid/recovery' % self.api_version,
             },
             'grid/regions': {
-                'api_call': 'api/v3/grid/regions',
+                'api_call': 'api/%s/grid/regions' % self.api_version,
             },
             'grid/schemes': {
-                'api_call': 'api/v3/grid/schemes',
+                'api_call': 'api/%s/grid/schemes' % self.api_version,
             },
             'grid/snmp': {
-                'api_call': 'api/v3/grid/snmp',
+                'api_call': 'api/%s/grid/snmp' % self.api_version,
             },
             'grid/storage-api-certificate': {
-                'api_call': 'api/v3/grid/storage-api-certificate',
+                'api_call': 'api/%s/grid/storage-api-certificate' % self.api_version,
             },
             'grid/untrusted-client-network': {
-                'api_call': 'api/v3/grid/untrusted-client-network',
+                'api_call': 'api/%s/grid/untrusted-client-network' % self.api_version,
             },
             'grid/users': {
-                'api_call': 'api/v3/grid/users',
+                'api_call': 'api/%s/grid/users' % self.api_version,
             },
             'grid/users/root': {
-                'api_call': 'api/v3/grid/users/root',
+                'api_call': 'api/%s/grid/users/root' % self.api_version,
             },
-            'versions': {
-                'api_call': 'api/v3/versions',
+            'grid/versions': {
+                'api_call': 'api/%s/versions' % self.api_version,
             },
             'private/gateway-configs': {
-                'api_call': 'api/v3/private/gateway-configs'
+                'api_call': 'api/%s/private/gateway-configs' % self.api_version,
             },
             'private/ha-groups': {
-                'api_call': 'api/v3/private/ha-groups'
+                'api_call': 'api/%s/private/ha-groups' % self.api_version,
             },
             'private/network-topology': {
-                'api_call': 'api/v3/private/network-topology'
+                'api_call': 'api/%s/private/network-topology' % self.api_version
             },
             'private/vlan-interfaces': {
-                'api_call': 'api/v3/private/vlan-interfaces'
+                'api_call': 'api/%s/private/vlan-interfaces' % self.api_version
             },
             'private/single-sign-on': {
-                'api_call': 'api/v3/private/single-sign-on'
+                'api_call': 'api/%s/private/single-sign-on' % self.api_version
             },
             'private/firewall-external-ports': {
-                'api_call': 'api/v3/private/firewall-external-ports'
+                'api_call': 'api/%s/private/firewall-external-ports' % self.api_version
             },
             'private/firewall-blocked-ports': {
-                'api_call': 'api/v3/private/firewall-blocked-ports'
+                'api_call': 'api/%s/private/firewall-blocked-ports' % self.api_version
             },
             'private/firewall-privileged-ips': {
-                'api_call': 'api/v3/private/firewall-privileged-ips'
+                'api_call': 'api/%s/private/firewall-privileged-ips' % self.api_version
             }
         }
 

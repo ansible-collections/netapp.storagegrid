@@ -340,7 +340,8 @@ class SgSnmp:
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list
         self.data = {}
@@ -394,7 +395,7 @@ class SgSnmp:
 
     def get_snmp_config(self):
         """ Get SNMP configuration """
-        api = "api/v4/grid/snmp"
+        api = "api/%s/grid/snmp" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -404,7 +405,7 @@ class SgSnmp:
 
     def update_snmp_config(self):
         """ Update SNMP configuration """
-        api = "api/v4/grid/snmp"
+        api = "api/%s/grid/snmp" % self.api_version
         response, error = self.rest_api.put(api, self.data)
 
         if error:

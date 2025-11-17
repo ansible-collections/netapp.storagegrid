@@ -129,7 +129,8 @@ class EC_profile(object):
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Create body for creation request (POST with state present)
         self.data = {}
@@ -152,7 +153,7 @@ class EC_profile(object):
     def get_ec_profile(self):
         # Check if profile exists
         # Return info if found, or None
-        api = "api/v4/grid/ec-profiles?showDeactivated=true"
+        api = "api/%s/grid/ec-profiles?showDeactivated=true" % self.api_version
         response, error = self.rest_api.get(api)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
@@ -166,7 +167,7 @@ class EC_profile(object):
 
     def create_ec_profile(self):
         __LOGGING__.append("creating EC profile with payload: %s" % self.data)
-        api = "api/v4/private/ec-profiles"
+        api = "api/%s/private/ec-profiles" % self.api_version
         response, error = self.rest_api.post(api, self.data)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
@@ -174,14 +175,14 @@ class EC_profile(object):
 
     def deactivate_ec_profile(self):
         __LOGGING__.append("deactivating EC profile")
-        api = "api/v4/private/ec-profiles/%s/deactivate" % self.id
+        api = "api/%s/private/ec-profiles/%s/deactivate" % (self.rest_api, self.id)
         response, error = self.rest_api.post(api, None)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
 
     def update_ec_profile(self):
         __LOGGING__.append("updating EC profile with payload: %s" % self.data)
-        api = "api/v4/private/ec-profiles/%s" % self.id
+        api = "api/%s/private/ec-profiles/%s" % (self.rest_api, self.id)
         response, error = self.rest_api.put(api, self.data)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)

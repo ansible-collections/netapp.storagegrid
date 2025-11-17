@@ -202,6 +202,13 @@ class SGRestAPI(object):
             return self.sg_version["major"], self.sg_version["minor"]
         return -1, -1
 
+    def get_api_version(self):
+        """ Return 'v3' if SG version is less than 11.8, else return 'v4' """
+        if self.get_sg_version() < (11, 8):
+            return 'v3'
+        else:
+            return 'v4'
+
     def meets_sg_minimum_version(self, minimum_major, minimum_minor):
         return self.get_sg_version() >= (minimum_major, minimum_minor)
 

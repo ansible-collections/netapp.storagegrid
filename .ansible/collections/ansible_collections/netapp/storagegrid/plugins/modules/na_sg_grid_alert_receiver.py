@@ -200,6 +200,10 @@ class SgAlertReceiver:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
         self.data["type"] = self.parameters["type"]
@@ -233,7 +237,7 @@ class SgAlertReceiver:
 
     def get_alert_receiver(self):
         ''' Get alert receiver '''
-        api = "api/v3/grid/alert-receivers"
+        api = "api/%s/grid/alert-receivers" % self.api_version
         response, error = self.rest_api.get(api)
         if error:
             self.module.fail_json(msg=error)
@@ -246,7 +250,7 @@ class SgAlertReceiver:
 
     def create_alert_receiver(self):
         ''' Create alert receiver '''
-        api = "api/v3/grid/alert-receivers"
+        api = "api/%s/grid/alert-receivers" % self.api_version
         response, error = self.rest_api.post(api, self.data)
         if error:
             self.module.fail_json(msg=error)
@@ -255,14 +259,14 @@ class SgAlertReceiver:
 
     def delete_alert_receiver(self, alert_receiver_id):
         ''' Delete alert receiver '''
-        api = "api/v3/grid/alert-receivers/%s" % alert_receiver_id
+        api = "api/%s/grid/alert-receivers/%s" % (self.api_version, alert_receiver_id)
         response, error = self.rest_api.delete(api, self.data)
         if error:
             self.module.fail_json(msg=error)
 
     def update_alert_receiver(self, alert_receiver_id):
         ''' Update alert receiver '''
-        api = "api/v3/grid/alert-receivers/%s" % alert_receiver_id
+        api = "api/%s/grid/alert-receivers/%s" % (self.api_version, alert_receiver_id)
         response, error = self.rest_api.put(api, self.data)
         if error:
             self.module.fail_json(msg=error)

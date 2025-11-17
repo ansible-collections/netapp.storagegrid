@@ -270,6 +270,10 @@ class SgGridTrafficClasses:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
 
@@ -281,7 +285,7 @@ class SgGridTrafficClasses:
     def get_traffic_class_policy_id(self):
         # Check if Traffic Classification Policy exists
         # Return policy ID if found, or None
-        api = "api/v3/grid/traffic-classes/policies"
+        api = "api/%s/grid/traffic-classes/policies" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -290,7 +294,7 @@ class SgGridTrafficClasses:
         return next((item["id"] for item in response.get("data") if item["name"] == self.parameters["name"]), None)
 
     def get_traffic_class_policy(self, policy_id):
-        api = "api/v3/grid/traffic-classes/policies/%s" % policy_id
+        api = "api/%s/grid/traffic-classes/policies/%s" % (self.api_version, policy_id)
         response, error = self.rest_api.get(api)
 
         if error:
@@ -299,7 +303,7 @@ class SgGridTrafficClasses:
         return response["data"]
 
     def create_traffic_class_policy(self):
-        api = "api/v3/grid/traffic-classes/policies"
+        api = "api/%s/grid/traffic-classes/policies" % self.api_version
         # self.module.fail_json(msg=self.data)
         response, error = self.rest_api.post(api, self.data)
 
@@ -309,14 +313,14 @@ class SgGridTrafficClasses:
         return response["data"]
 
     def delete_traffic_class_policy(self, policy_id):
-        api = "api/v3/grid/traffic-classes/policies/%s" % policy_id
+        api = "api/%s/grid/traffic-classes/policies/%s" % (self.api_version, policy_id)
         dummy, error = self.rest_api.delete(api, self.data)
 
         if error:
             self.module.fail_json(msg=error)
 
     def update_traffic_class_policy(self, policy_id):
-        api = "api/v3/grid/traffic-classes/policies/%s" % policy_id
+        api = "api/%s/grid/traffic-classes/policies/%s" % (self.api_version, policy_id)
         response, error = self.rest_api.put(api, self.data)
 
         if error:

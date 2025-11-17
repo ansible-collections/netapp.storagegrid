@@ -199,6 +199,7 @@ class SgOrgGroup(object):
         self.rest_api = SGRestAPI(self.module)
         # Get API version
         self.rest_api.get_sg_product_version(api_root="org")
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list
         self.data = {}
@@ -237,7 +238,7 @@ class SgOrgGroup(object):
 
     def get_org_group(self, unique_name):
         # Use the unique name to check if the group exists
-        api = "api/v3/org/groups/%s" % unique_name
+        api = "api/%s/org/groups/%s" % (self.api_version, unique_name)
         response, error = self.rest_api.get(api)
 
         if error:
@@ -248,7 +249,7 @@ class SgOrgGroup(object):
         return None
 
     def create_org_group(self):
-        api = "api/v3/org/groups"
+        api = "api/%s/org/groups" % self.api_version
 
         response, error = self.rest_api.post(api, self.data)
 
@@ -258,7 +259,7 @@ class SgOrgGroup(object):
         return response["data"]
 
     def delete_org_group(self, group_id):
-        api = "api/v3/org/groups/" + group_id
+        api = "api/%s/org/groups/%s" % (self.api_version, group_id)
 
         self.data = None
         response, error = self.rest_api.delete(api, self.data)
@@ -266,7 +267,7 @@ class SgOrgGroup(object):
             self.module.fail_json(msg=error)
 
     def update_org_group(self, group_id):
-        api = "api/v3/org/groups/" + group_id
+        api = "api/%s/org/groups/%s" % (self.api_version, group_id)
 
         response, error = self.rest_api.put(api, self.data)
         if error:

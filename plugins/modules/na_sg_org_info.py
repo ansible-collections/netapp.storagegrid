@@ -150,6 +150,9 @@ class NetAppSgGatherInfo(object):
         self.na_helper = NetAppModule()
         self.parameters = self.na_helper.set_parameters(self.module.params)
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version(api_root="org")
+        self.api_version = self.rest_api.get_api_version()
 
     def get_subset_info(self, gather_subset_info):
         """
@@ -213,52 +216,52 @@ class NetAppSgGatherInfo(object):
         # Defining gather_subset and appropriate api_call
         get_sg_subset_info = {
             'org/compliance-global': {
-                'api_call': 'api/v3/org/compliance-global',
+                'api_call': 'api/%s/org/compliance-global' % self.api_version,
             },
             'org/config': {
-                'api_call': 'api/v3/org/config',
+                'api_call': 'api/%s/org/config' % self.api_version,
             },
             'org/config/product-version': {
-                'api_call': 'api/v3/org/config/product-version',
+                'api_call': 'api/%s/org/config/product-version' % self.api_version,
             },
             'org/containers': {
-                'api_call': 'api/v3/org/containers',
+                'api_call': 'api/%s/org/containers' % self.api_version,
             },
             'org/deactivated-features': {
-                'api_call': 'api/v3/org/deactivated-features',
+                'api_call': 'api/%s/org/deactivated-features' % self.api_version,
             },
             'org/endpoints': {
-                'api_call': 'api/v3/org/endpoints',
+                'api_call': 'api/%s/org/endpoints' % self.api_version,
             },
             'org/groups': {
-                'api_call': 'api/v3/org/groups',
+                'api_call': 'api/%s/org/groups' % self.api_version,
             },
             'org/identity-source': {
-                'api_call': 'api/v3/org/identity-source',
+                'api_call': 'api/%s/org/identity-source' % self.api_version,
             },
             'org/regions': {
-                'api_call': 'api/v3/org/regions',
+                'api_call': 'api/%s/org/regions' % self.api_version,
             },
             'org/users/current-user/s3-access-keys': {
-                'api_call': 'api/v3/org/users/current-user/s3-access-keys',
+                'api_call': 'api/%s/org/users/current-user/s3-access-keys' % self.api_version,
             },
             'org/usage': {
-                'api_call': 'api/v3/org/usage',
+                'api_call': 'api/%s/org/usage' % self.api_version,
             },
             'org/users': {
-                'api_call': 'api/v3/org/users',
+                'api_call': 'api/%s/org/users' % self.api_version,
             },
             'org/users/root': {
-                'api_call': 'api/v3/org/users/root',
+                'api_call': 'api/%s/org/users/root' % self.api_version,
             },
             'versions': {
-                'api_call': 'api/v3/versions',
+                'api_call': 'api/%s/versions' % self.api_version,
             },
             'org/grid-federation-connections': {
-                'api_call': 'api/v3/org/grid-federation-connections',
+                'api_call': 'api/%s/org/grid-federation-connections' % self.api_version,
             },
             'org/ilm-policy-tags': {
-                'api_call': 'api/v3/org/ilm-policy-tags',
+                'api_call': 'api/%s/org/ilm-policy-tags' % self.api_version,
             },
         }
 

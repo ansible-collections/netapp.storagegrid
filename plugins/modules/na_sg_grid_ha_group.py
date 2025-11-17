@@ -226,6 +226,10 @@ class SgGridHaGroup:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
 
@@ -240,7 +244,7 @@ class SgGridHaGroup:
     def build_node_interface_list(self):
         node_interfaces = []
 
-        api = "api/v3/grid/node-health"
+        api = "api/%s/grid/node-health" % self.api_version
         nodes, error = self.rest_api.get(api)
 
         if error:
@@ -261,7 +265,7 @@ class SgGridHaGroup:
     def get_ha_group_id(self):
         # Check if HA Group exists
         # Return HA Group info if found, or None
-        api = "api/v3/private/ha-groups"
+        api = "api/%s/private/ha-groups" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -270,7 +274,7 @@ class SgGridHaGroup:
         return next((item["id"] for item in response.get("data") if item["name"] == self.parameters["name"]), None)
 
     def get_ha_group(self, ha_group_id):
-        api = "api/v3/private/ha-groups/%s" % ha_group_id
+        api = "api/%s/private/ha-groups/%s" % (self.api_version, ha_group_id)
         response, error = self.rest_api.get(api)
 
         if error:
@@ -279,7 +283,7 @@ class SgGridHaGroup:
         return response["data"]
 
     def create_ha_group(self):
-        api = "api/v3/private/ha-groups"
+        api = "api/%s/private/ha-groups" % self.api_version
         response, error = self.rest_api.post(api, self.data)
 
         if error:
@@ -288,14 +292,14 @@ class SgGridHaGroup:
         return response["data"]
 
     def delete_ha_group(self, ha_group_id):
-        api = "api/v3/private/ha-groups/%s" % ha_group_id
+        api = "api/%s/private/ha-groups/%s" % (self.api_version, ha_group_id)
         dummy, error = self.rest_api.delete(api, self.data)
 
         if error:
             self.module.fail_json(msg=error)
 
     def update_ha_group(self, ha_group_id):
-        api = "api/v3/private/ha-groups/%s" % ha_group_id
+        api = "api/%s/private/ha-groups/%s" % (self.api_version, ha_group_id)
         response, error = self.rest_api.put(api, self.data)
 
         if error:

@@ -25,6 +25,7 @@ if sys.version_info < (3, 11):
 SRR = {
     # common responses
     "end_of_sequence": (None, "Unexpected call to send_request"),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "generic_error": (None, "Expected error"),
     "check_mode_good": (None, None),
     "identity_federation_unset": (
@@ -261,8 +262,12 @@ class TestMyModule(unittest.TestCase):
             org_identity_federation_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             org_identity_federation_module()
@@ -273,12 +278,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_set_na_sg_org_identity_federation_pass(self, mock_request):
         set_module_args(self.set_args_set_na_sg_org_identity_federation())
-        my_obj = org_identity_federation_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["identity_federation_unset"],  # get
             SRR["identity_federation"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_identity_federation_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_set_na_sg_org_identity_federation_pass: %s" % repr(exc.value.args[0]))
@@ -290,11 +296,12 @@ class TestMyModule(unittest.TestCase):
         # remove password
         del args["password"]
         set_module_args(args)
-        my_obj = org_identity_federation_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["identity_federation"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = org_identity_federation_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_set_na_sg_org_identity_federation_pass: %s" % repr(exc.value.args[0]))
@@ -303,12 +310,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_set_na_sg_org_identity_federation_tls_pass(self, mock_request):
         set_module_args(self.set_args_set_na_sg_org_identity_federation_tls())
-        my_obj = org_identity_federation_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["identity_federation_unset"],  # get
             SRR["identity_federation_tls"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_identity_federation_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_set_na_sg_org_identity_federation_pass: %s" % repr(exc.value.args[0]))
@@ -317,12 +325,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_remove_na_sg_org_identity_federation_pass(self, mock_request):
         set_module_args(self.set_args_remove_na_sg_org_identity_federation())
-        my_obj = org_identity_federation_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["identity_federation"],  # get
             SRR["identity_federation_disable"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_identity_federation_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_remove_na_sg_org_identity_federation_pass: %s" % repr(exc.value.args[0]))
@@ -333,13 +342,14 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_check_mode_na_sg_org_identity_federation_pass(self, mock_request):
         set_module_args(self.set_args_set_na_sg_org_identity_federation())
-        my_obj = org_identity_federation_module()
-        my_obj.module.check_mode = True
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["identity_federation_unset"],  # get
             SRR["check_mode_good"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_identity_federation_module()
+        my_obj.module.check_mode = True
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_check_mode_na_sg_org_identity_federation_pass: %s" % repr(exc.value.args[0]))

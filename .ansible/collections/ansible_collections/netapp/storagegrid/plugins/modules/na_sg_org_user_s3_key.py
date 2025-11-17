@@ -112,13 +112,17 @@ class SgOrgUserS3Key(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version(api_root="org")
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
         self.data["expires"] = self.parameters.get("expires")
 
     def get_org_user_id(self, unique_user_name):
         # Use the unique name to check if the user exists
-        api = "api/v3/org/users/%s" % unique_user_name
+        api = "api/%s/org/users/%s" % (self.api_version, unique_user_name)
         response, error = self.rest_api.get(api)
         if error:
             if response["code"] != 404:
@@ -129,10 +133,11 @@ class SgOrgUserS3Key(object):
 
     def get_org_user_s3_key(self, user_id, access_key):
         # Use the unique name to check if the user exists
-        api = "api/v3/org/users/current-user/s3-access-keys/%s" % access_key
+        api = "api/%s/org/users/current-user/s3-access-keys/%s" % (self.api_version, access_key)
 
         if user_id:
-            api = "api/v3/org/users/%s/s3-access-keys/%s" % (
+            api = "api/%s/org/users/%s/s3-access-keys/%s" % (
+                self.api_version,
                 user_id,
                 access_key,
             )
@@ -146,10 +151,10 @@ class SgOrgUserS3Key(object):
         return None
 
     def create_org_user_s3_key(self, user_id):
-        api = "api/v3/org/users/current-user/s3-access-keys"
+        api = "api/%s/org/users/current-user/s3-access-keys" % self.api_version
 
         if user_id:
-            api = "api/v3/org/users/%s/s3-access-keys" % user_id
+            api = "api/%s/org/users/%s/s3-access-keys" % (self.api_version, user_id)
 
         response, error = self.rest_api.post(api, self.data)
 
@@ -159,10 +164,11 @@ class SgOrgUserS3Key(object):
         return response["data"]
 
     def delete_org_user_s3_key(self, user_id, access_key):
-        api = "api/v3/org/users/current-user/s3-access-keys"
+        api = "api/%s/org/users/current-user/s3-access-keys" % self.api_version
 
         if user_id:
-            api = "api/v3/org/users/%s/s3-access-keys/%s" % (
+            api = "api/%s/org/users/%s/s3-access-keys/%s" % (
+                self.api_version,
                 user_id,
                 access_key,
             )

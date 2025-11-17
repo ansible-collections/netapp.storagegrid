@@ -397,7 +397,8 @@ class ILM_rule(object):
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Create body for creation request (POST with state present)
         self.data = {}
@@ -431,7 +432,7 @@ class ILM_rule(object):
     def get_ilm_rule(self):
         # Check if rule exists
         # Return info if found, or None
-        api = "api/v4/grid/ilm-rules"
+        api = "api/%s/grid/ilm-rules" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -447,7 +448,7 @@ class ILM_rule(object):
 
     def create_ilm_rule(self):
         __LOGGING__.append("creating ILM rule with payload: %s" % (self.data))
-        api = "api/v4/grid/ilm-rules"
+        api = "api/%s/grid/ilm-rules" % self.api_version
         response, error = self.rest_api.post(api, self.data)
 
         if error:
@@ -457,7 +458,7 @@ class ILM_rule(object):
 
     def delete_ilm_rule(self):
         __LOGGING__.append("deleting ILM rule")
-        api = "api/v4/grid/ilm-rules/%s" % (self.id)
+        api = "api/%s/grid/ilm-rules/%s" % (self.api_version, self.id)
 
         response, error = self.rest_api.delete(api, None)
         if error:
@@ -465,7 +466,7 @@ class ILM_rule(object):
 
     def update_ilm_rule(self):
         __LOGGING__.append("updating ILM rule with payload: %s" % (self.data))
-        api = "api/v4/grid/ilm-rules/%s" % (self.id)
+        api = "api/%s/grid/ilm-rules/%s" % (self.api_version, self.id)
         response, error = self.rest_api.put(api, self.data)
 
         if error:

@@ -97,13 +97,17 @@ class SgGridDns(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = self.parameters["dns_servers"]
 
     def get_grid_dns(self):
         # Check if tenant account exists
         # Return tenant account info if found, or None
-        api = "api/v3/grid/dns-servers"
+        api = "api/%s/grid/dns-servers" % self.api_version
 
         response, error = self.rest_api.get(api)
 
@@ -113,7 +117,7 @@ class SgGridDns(object):
         return response["data"]
 
     def update_grid_dns(self):
-        api = "api/v3/grid/dns-servers"
+        api = "api/%s/grid/dns-servers" % self.api_version
 
         response, error = self.rest_api.put(api, self.data)
         if error:

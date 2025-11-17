@@ -134,7 +134,8 @@ class SgHotfix:
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list
         self.data = {}
@@ -147,7 +148,7 @@ class SgHotfix:
 
     def get_hotfix_details(self):
         """ Retrieve the status of the current software update procedure """
-        api = "api/v4/private/software-update"
+        api = "api/%s/private/software-update" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -157,7 +158,7 @@ class SgHotfix:
 
     def start_apply_hotfix(self):
         """ Runs the software update procedure """
-        api = "api/v4/private/software-update/start"
+        api = "api/%s/private/software-update/start" % self.api_version
         response, error = self.rest_api.post(api, self.data)
 
         if error:
@@ -165,7 +166,7 @@ class SgHotfix:
 
     def get_hotfix_node_details(self):
         """ Retrieve the list of node details """
-        api = "api/v4/private/software-update/nodes"
+        api = "api/%s/private/software-update/nodes" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -175,7 +176,7 @@ class SgHotfix:
 
     def update_hotfix_node_queue(self, node_id):
         """ Update the node queue schedule for the software update """
-        api = "api/v4/private/software-update/queue"
+        api = "api/%s/private/software-update/queue" % self.api_version
         body = [node_id]
         response, error = self.rest_api.post(api, body)
 
@@ -184,7 +185,7 @@ class SgHotfix:
 
     def remove_hotfix_node_queue(self, node_id):
         """ Remove the node from the hotfix queue """
-        api = "api/v4/private/software-update/queue"
+        api = "api/%s/private/software-update/queue" % self.api_version
         body = [node_id]
         response, error = self.rest_api.delete(api, body)
 
@@ -193,7 +194,7 @@ class SgHotfix:
 
     def upload_hotfix_software_update_file(self, file_path):
         """ Upload the software update file """
-        api = "api/v4/tools/upload-software-update"
+        api = "api/%s/tools/upload-software-update" % self.api_version
         with open(file_path, "rb") as file:
             file_name = file_path.split('/')[-1]
             files = {

@@ -277,6 +277,7 @@ class TestMyModule(unittest.TestCase):
     def test_module_pass_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["node_health"],  # get
         ]
         with pytest.raises(AnsibleExitJson) as exc:
@@ -290,6 +291,7 @@ class TestMyModule(unittest.TestCase):
     def test_create_na_sg_grid_ha_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_ha_group())
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["node_health"],  # get
             SRR["empty_good"],  # get
             SRR["ha_group_record"],  # post
@@ -306,6 +308,7 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_create_na_sg_grid_ha_group()
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["node_health"],  # get
             SRR["ha_groups"],  # get
             SRR["ha_group_record"],  # get
@@ -324,6 +327,7 @@ class TestMyModule(unittest.TestCase):
         args["virtual_ips"] = ["192.168.50.5", "192.168.50.6"]
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["node_health"],  # get
             SRR["ha_groups"],  # get
             SRR["ha_group_record"],  # get
@@ -343,6 +347,7 @@ class TestMyModule(unittest.TestCase):
         args["name"] = "ansible-ha-group-rename"
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["node_health"],  # get
             SRR["ha_group_record"],  # get
             SRR["ha_group_record_rename"],  # post
@@ -359,6 +364,7 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_delete_na_sg_grid_ha_group()
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["ha_groups"],  # get
             SRR["ha_group_record"],  # get
             SRR["delete_good"],  # delete
@@ -376,6 +382,7 @@ class TestMyModule(unittest.TestCase):
         args["interfaces"] = [{"node": "FakeNode", "interface": "eth0"}]
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_116"],
             SRR["node_health"],  # get
         ]
         with pytest.raises(AnsibleFailJson) as exc:

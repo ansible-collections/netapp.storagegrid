@@ -255,6 +255,7 @@ class TestMyModule(unittest.TestCase):
     def test_create_na_sg_grid_traffic_class_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_traffic_class())
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["empty_good"],  # get
             SRR["traffic_class_record"],  # post
             SRR["end_of_sequence"],
@@ -270,6 +271,7 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_create_na_sg_grid_traffic_class()
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["traffic_classes"],  # get
             SRR["traffic_class_record"],  # get
             SRR["end_of_sequence"],
@@ -287,6 +289,7 @@ class TestMyModule(unittest.TestCase):
         args["limits"] = [{"type": "aggregateBandwidthIn", "value": 888888}]
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["traffic_classes"],  # get
             SRR["traffic_class_record"],  # get
             SRR["traffic_class_record_updated"],  # put
@@ -305,6 +308,7 @@ class TestMyModule(unittest.TestCase):
         args["name"] = "ansible-test-traffic-class-rename"
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["traffic_class_record"],  # get
             SRR["traffic_class_record_rename"],  # put
             SRR["end_of_sequence"],
@@ -320,6 +324,7 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_delete_na_sg_grid_traffic_class()
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["traffic_classes"],  # get
             SRR["traffic_class_record"],  # get
             SRR["delete_good"],  # delete

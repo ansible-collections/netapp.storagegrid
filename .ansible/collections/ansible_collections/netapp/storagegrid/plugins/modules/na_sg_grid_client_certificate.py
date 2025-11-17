@@ -151,6 +151,10 @@ class SgGridClientCertificate:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
 
@@ -164,7 +168,7 @@ class SgGridClientCertificate:
     def get_grid_client_certificate_id(self):
         # Check if certificate with name exists
         # Return certificate ID if found, or None
-        api = "api/v3/grid/client-certificates"
+        api = "api/%s/grid/client-certificates" % self.api_version
 
         response, error = self.rest_api.get(api)
 
@@ -177,7 +181,7 @@ class SgGridClientCertificate:
         return None
 
     def get_grid_client_certificate(self, cert_id):
-        api = "api/v3/grid/client-certificates/%s" % cert_id
+        api = "api/%s/grid/client-certificates/%s" % (self.api_version, cert_id)
         account, error = self.rest_api.get(api)
 
         if error:
@@ -187,7 +191,7 @@ class SgGridClientCertificate:
         return None
 
     def create_grid_client_certificate(self):
-        api = "api/v3/grid/client-certificates"
+        api = "api/%s/grid/client-certificates" % self.api_version
 
         response, error = self.rest_api.post(api, self.data)
 
@@ -197,7 +201,7 @@ class SgGridClientCertificate:
         return response["data"]
 
     def delete_grid_client_certificate(self, cert_id):
-        api = "api/v3/grid/client-certificates/" + cert_id
+        api = "api/%s/grid/client-certificates/%s" % (self.rest_api, cert_id)
 
         self.data = None
         response, error = self.rest_api.delete(api, self.data)
@@ -205,7 +209,7 @@ class SgGridClientCertificate:
             self.module.fail_json(msg=error)
 
     def update_grid_client_certificate(self, cert_id):
-        api = "api/v3/grid/client-certificates/" + cert_id
+        api = "api/%s/grid/client-certificates/%s" % (self.api_version, cert_id)
 
         response, error = self.rest_api.put(api, self.data)
         if error:

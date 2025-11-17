@@ -98,7 +98,8 @@ class SgDomainName:
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list
         self.data = []
@@ -106,7 +107,7 @@ class SgDomainName:
 
     def get_domain_name(self):
         """ Get endpoint domain name """
-        api = "api/v4/grid/domain-names"
+        api = "api/%s/grid/domain-names" % self.api_version
         response, error = self.rest_api.get(api)
 
         if not response or 'data' not in response:
@@ -116,7 +117,7 @@ class SgDomainName:
 
     def update_domain_name(self):
         """ Update endpoint domain name """
-        api = "api/v4/grid/domain-names"
+        api = "api/%s/grid/domain-names" % self.api_version
         response, error = self.rest_api.put(api, self.data)
 
         if error:

@@ -208,7 +208,8 @@ class ILM_pool(object):
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Create body for creation request (POST with state present)
         self.data = {}
@@ -231,7 +232,7 @@ class ILM_pool(object):
     def get_ilm_pools(self):
         # Check if profile exists
         # Return info if found, or None
-        api = "api/v4/private/ilm-pools"
+        api = "api/%s/private/ilm-pools" % self.api_version
         response, error = self.rest_api.get(api)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
@@ -246,7 +247,7 @@ class ILM_pool(object):
 
     def create_ilm_pool(self):
         __LOGGING__.append("creating ILM pool with payload: %s" % self.data)
-        api = "api/v4/private/ilm-pools"
+        api = "api/%s/private/ilm-pools" % self.api_version
         response, error = self.rest_api.post(api, self.data)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
@@ -254,14 +255,14 @@ class ILM_pool(object):
 
     def delete_ilm_pool(self):
         __LOGGING__.append("deactivating ILM pool")
-        api = "api/v4/private/ilm-pools/%s" % self.id
+        api = "api/%s/private/ilm-pools/%s" % (self.api_version, self.id)
         response, error = self.rest_api.delete(api, None)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
 
     def update_ilm_pool(self):
         __LOGGING__.append("updating ILM pool with payload: %s" % self.data)
-        api = "api/v4/private/ilm-pools/%s" % self.id
+        api = "api/%s/private/ilm-pools/%s" % (self.api_version, self.id)
         response, error = self.rest_api.put(api, self.data)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)

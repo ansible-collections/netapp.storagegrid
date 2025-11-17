@@ -95,12 +95,16 @@ class SgGridRegions(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = self.parameters["regions"]
 
     def get_grid_regions(self):
         """ Get the current grid regions """
-        api = "api/v3/grid/regions"
+        api = "api/%s/grid/regions" % self.api_version
 
         response, error = self.rest_api.get(api)
 
@@ -111,7 +115,7 @@ class SgGridRegions(object):
 
     def update_grid_regions(self):
         """ Update the grid regions """
-        api = "api/v3/grid/regions"
+        api = "api/%s/grid/regions" % self.api_version
 
         response, error = self.rest_api.put(api, self.data)
         if error:

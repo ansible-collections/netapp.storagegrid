@@ -133,6 +133,10 @@ class SgGridCertificate:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
 
@@ -144,7 +148,7 @@ class SgGridCertificate:
         self.module.fail_json
 
     def get_grid_certificate(self, cert_type):
-        api = "api/v3/grid/%s" % cert_type
+        api = "api/%s/grid/%s" % (self.api_version, cert_type)
 
         response, error = self.rest_api.get(api)
 
@@ -154,7 +158,7 @@ class SgGridCertificate:
         return response["data"]
 
     def update_grid_certificate(self, cert_type):
-        api = "api/v3/grid/%s/update" % cert_type
+        api = "api/%s/grid/%s/update" % (self.api_version, cert_type)
 
         response, error = self.rest_api.post(api, self.data)
         if error:

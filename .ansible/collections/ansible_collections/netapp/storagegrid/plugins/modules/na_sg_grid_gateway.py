@@ -320,6 +320,7 @@ class SgGridGateway:
         self.rest_api = SGRestAPI(self.module)
         # Get API version
         self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list
 
@@ -374,7 +375,7 @@ class SgGridGateway:
     def build_ha_group_list(self):
         ha_group_ids = []
 
-        api = "api/v3/private/ha-groups"
+        api = "api/%s/private/ha-groups" % self.api_version
         ha_groups, error = self.rest_api.get(api)
         if error:
             self.module.fail_json(msg=error)
@@ -393,7 +394,7 @@ class SgGridGateway:
     def build_node_interface_list(self):
         node_interfaces = []
 
-        api = "api/v3/grid/node-health"
+        api = "api/%s/grid/node-health" % self.api_version
         nodes, error = self.rest_api.get(api)
 
         if error:
@@ -412,7 +413,7 @@ class SgGridGateway:
         return node_interfaces
 
     def get_grid_gateway_config(self, gateway_id):
-        api = "api/v3/private/gateway-configs/%s" % gateway_id
+        api = "api/%s/private/gateway-configs/%s" % (self.api_version, gateway_id)
         response, error = self.rest_api.get(api)
 
         if error:
@@ -424,7 +425,7 @@ class SgGridGateway:
         return gateway, gateway_config
 
     def get_grid_gateway_server_config(self, gateway_id):
-        api = "api/v3/private/gateway-configs/%s/server-config" % gateway_id
+        api = "api/%s/private/gateway-configs/%s/server-config" % (self.api_version, gateway_id)
         response, error = self.rest_api.get(api)
 
         if error:
@@ -438,7 +439,7 @@ class SgGridGateway:
         gateway = {}
         gateway_config = {}
 
-        api = "api/v3/private/gateway-configs"
+        api = "api/%s/private/gateway-configs" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -459,7 +460,7 @@ class SgGridGateway:
         return gateway, gateway_config
 
     def create_grid_gateway(self):
-        api = "api/v3/private/gateway-configs"
+        api = "api/%s/private/gateway-configs" % self.api_version
         response, error = self.rest_api.post(api, self.data_gateway)
 
         if error:
@@ -468,7 +469,7 @@ class SgGridGateway:
         return response["data"]
 
     def delete_grid_gateway(self, gateway_id):
-        api = "api/v3/private/gateway-configs/" + gateway_id
+        api = "api/%s/private/gateway-configs/%s" % (self.api_version, gateway_id)
         self.data = None
         response, error = self.rest_api.delete(api, self.data)
 
@@ -476,7 +477,7 @@ class SgGridGateway:
             self.module.fail_json(msg=error)
 
     def update_grid_gateway(self, gateway_id):
-        api = "api/v3/private/gateway-configs/%s" % gateway_id
+        api = "api/%s/private/gateway-configs/%s" % (self.api_version, gateway_id)
         response, error = self.rest_api.put(api, self.data_gateway)
 
         if error:
@@ -485,7 +486,7 @@ class SgGridGateway:
         return response["data"]
 
     def update_grid_gateway_server(self, gateway_id):
-        api = "api/v3/private/gateway-configs/%s/server-config" % gateway_id
+        api = "api/%s/private/gateway-configs/%s/server-config" % (self.api_version, gateway_id)
         response, error = self.rest_api.put(api, self.data_server)
 
         if error:

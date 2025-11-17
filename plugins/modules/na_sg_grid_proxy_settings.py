@@ -135,6 +135,10 @@ class SgGridProxySetting(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
         self.storage_data = {}
@@ -154,7 +158,7 @@ class SgGridProxySetting(object):
     def get_admin_proxy(self):
         # Check if tenant account exists
         # Return tenant account info if found, or None
-        api = "api/v4/private/admin-proxy"
+        api = "api/%s/private/admin-proxy" % self.api_version
 
         response, error = self.rest_api.get(api)
         if error:
@@ -163,7 +167,7 @@ class SgGridProxySetting(object):
         return response["data"]
 
     def update_admin_proxy(self):
-        api = "api/v4/private/admin-proxy"
+        api = "api/%s/private/admin-proxy" % self.api_version
         response, error = self.rest_api.put(api, self.data)
         if error:
             self.module.fail_json(msg=error)
@@ -172,7 +176,7 @@ class SgGridProxySetting(object):
     def get_storage_proxy(self):
         # Check if tenant account exists
         # Return tenant account info if found, or None
-        api = "api/v4/private/storage-proxy"
+        api = "api/%s/private/storage-proxy" % self.api_version
 
         response, error = self.rest_api.get(api)
         if error:
@@ -181,7 +185,7 @@ class SgGridProxySetting(object):
         return response["data"]
 
     def update_storage_proxy(self):
-        api = "api/v4/private/storage-proxy"
+        api = "api/%s/private/storage-proxy" % self.api_version
         response, error = self.rest_api.put(api, self.storage_data)
         if error:
             self.module.fail_json(msg=error)

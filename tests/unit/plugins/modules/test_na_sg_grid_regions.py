@@ -25,6 +25,7 @@ if sys.version_info < (3, 11):
 SRR = {
     # common responses
     "empty_good": ({"data": []}, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "not_found": (
         {"status": "error", "code": 404, "data": {}},
         {"key": "error.404"},
@@ -131,8 +132,12 @@ class TestMyModule(unittest.TestCase):
             grid_regions_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             grid_regions_module()
@@ -143,12 +148,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_set_na_sg_grid_regions_pass(self, mock_request):
         set_module_args(self.set_args_set_na_sg_grid_regions())
-        my_obj = grid_regions_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["default_regions"],  # get
             SRR["regions"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_regions_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_set_na_sg_grid_regions_pass: %s" % repr(exc.value.args[0]))
@@ -157,11 +163,12 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_set_na_sg_grid_regions_pass(self, mock_request):
         set_module_args(self.set_args_set_na_sg_grid_regions())
-        my_obj = grid_regions_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["regions"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_regions_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_set_na_sg_grid_regions_pass: %s" % repr(exc.value.args[0]))
@@ -170,12 +177,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_remove_na_sg_grid_regions_pass(self, mock_request):
         set_module_args(self.set_args_remove_na_sg_grid_regions())
-        my_obj = grid_regions_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["regions"],  # get
             SRR["default_regions"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_regions_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_remove_na_sg_grid_regions_pass: %s" % repr(exc.value.args[0]))

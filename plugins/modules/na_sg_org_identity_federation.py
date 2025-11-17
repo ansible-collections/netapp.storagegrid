@@ -226,6 +226,10 @@ class SgOrgIdentityFederation:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version(api_root="org")
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
 
@@ -247,7 +251,7 @@ class SgOrgIdentityFederation:
             self.data["enableLDAPS"] = False
 
     def get_org_identity_source(self):
-        api = "api/v3/org/identity-source"
+        api = "api/%s/org/identity-source" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -257,7 +261,7 @@ class SgOrgIdentityFederation:
         return None
 
     def update_identity_federation(self, test=False):
-        api = "api/v3/org/identity-source"
+        api = "api/%s/org/identity-source" % self.api_version
 
         params = {}
 

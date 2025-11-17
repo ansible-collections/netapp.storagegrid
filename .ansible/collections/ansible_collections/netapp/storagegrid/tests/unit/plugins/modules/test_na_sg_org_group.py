@@ -25,6 +25,7 @@ if sys.version_info < (3, 11):
 SRR = {
     # common responses
     "empty_good": ({"data": []}, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "not_found": (
         {"status": "error", "code": 404, "data": {}},
         {"key": "error.404"},

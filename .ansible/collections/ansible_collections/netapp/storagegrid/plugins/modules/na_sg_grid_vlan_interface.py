@@ -151,7 +151,8 @@ class SgVLANInterface:
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list
         self.data = {}
@@ -169,7 +170,7 @@ class SgVLANInterface:
 
     def get_vlan_interfaces(self):
         """ Get vlan interfaces """
-        api = "api/v4/private/vlan-interfaces"
+        api = "api/%s/private/vlan-interfaces" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -185,14 +186,14 @@ class SgVLANInterface:
 
     def delete_vlan_interfaces(self):
         """ Delete vlan interface """
-        api = "api/v4/private/vlan-interfaces/%s" % self.id
+        api = "api/%s/private/vlan-interfaces/%s" % (self.api_version, self.id)
         response, error = self.rest_api.delete(api, self.data)
         if error:
             self.module.fail_json(msg=error)
 
     def create_vlan_interface(self):
         """ create vlan interface """
-        api = "api/v4/private/vlan-interfaces"
+        api = "api/%s/private/vlan-interfaces" % self.api_version
         response, error = self.rest_api.post(api, self.data)
 
         if error:
@@ -202,7 +203,7 @@ class SgVLANInterface:
 
     def update_vlan_interfaces(self):
         """ Update vlan interface """
-        api = "api/v4/private/vlan-interfaces/%s" % self.id
+        api = "api/%s/private/vlan-interfaces/%s" % (self.api_version, self.id)
         response, error = self.rest_api.put(api, self.data)
 
         if error:

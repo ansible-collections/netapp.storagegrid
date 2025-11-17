@@ -132,7 +132,8 @@ class ILM_policy_tag(object):
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
         # Get API version
-        self.rest_api.get_sg_product_version(api_root="grid")
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Create body for creation request (POST with state present)
         self.data = {}
@@ -155,7 +156,7 @@ class ILM_policy_tag(object):
     def get_ILM_policy_tags(self):
         # Check if policy tag exists
         # Return info if found, or None
-        api = "api/v4/grid/ilm-policy-tags"
+        api = "api/%s/grid/ilm-policy-tags" % self.api_version
         response, error = self.rest_api.get(api)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
@@ -170,7 +171,7 @@ class ILM_policy_tag(object):
 
     def create_ILM_policy_tag(self):
         __LOGGING__.append("creating ILM policy tag with payload: %s" % (self.data))
-        api = "api/v4/grid/ilm-policy-tags"
+        api = "api/%s/grid/ilm-policy-tags" % self.api_version
         response, error = self.rest_api.post(api, self.data)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
@@ -178,14 +179,14 @@ class ILM_policy_tag(object):
 
     def delete_ILM_policy_tag(self):
         __LOGGING__.append("deleting ILM policy tag")
-        api = "api/v4/grid/ilm-policy-tags/%s" % (self.id)
+        api = "api/%s/grid/ilm-policy-tags/%s" % (self.api_version, self.id)
         response, error = self.rest_api.delete(api, None)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
 
     def update_ILM_policy_tag(self):
         __LOGGING__.append("updating ILM policy tag with payload: %s" % (self.data))
-        api = "api/v4/grid/ilm-policy-tags/%s" % (self.id)
+        api = "api/%s/grid/ilm-policy-tags/%s" % (self.api_version, self.id)
         response, error = self.rest_api.put(api, self.data)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)

@@ -103,6 +103,10 @@ class SgGridNtp(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = self.parameters["ntp_servers"]
         self.passphrase = self.parameters["passphrase"]
@@ -111,7 +115,7 @@ class SgGridNtp(object):
     def get_grid_ntp(self):
         # Check if tenant account exists
         # Return tenant account info if found, or None
-        api = "api/v3/grid/ntp-servers"
+        api = "api/%s/grid/ntp-servers" % self.api_version
 
         response, error = self.rest_api.get(api)
 
@@ -121,7 +125,7 @@ class SgGridNtp(object):
         return response["data"]
 
     def update_grid_ntp(self):
-        api = "api/v3/grid/ntp-servers/update"
+        api = "api/%s/grid/ntp-servers/update" % self.api_version
 
         response, error = self.rest_api.post(api, self.ntp_input)
 

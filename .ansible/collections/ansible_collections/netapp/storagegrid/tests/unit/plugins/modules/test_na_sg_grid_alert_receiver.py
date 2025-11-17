@@ -229,6 +229,7 @@ class TestAlertReceiverModule(unittest.TestCase):
     def test_create_na_sg_grid_alert_receiver_pass(self, mock_request):
         set_module_args(self.set_args_create_alert_receiver())
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["empty_good"],  # Check if alert receiver exists
             SRR["api_response_creation_succeeded"],  # Create new alert receiver
             SRR["end_of_sequence"],
@@ -243,6 +244,7 @@ class TestAlertReceiverModule(unittest.TestCase):
     def test_idempotent_create_na_sg_grid_alert_receiver_pass(self, mock_request):
         set_module_args(self.set_args_create_alert_receiver())
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["api_response_creation_succeeded"],
             SRR["api_response_existing_alert_receiver"],  # Alert receiver already exists
             SRR["end_of_sequence"],
@@ -260,6 +262,7 @@ class TestAlertReceiverModule(unittest.TestCase):
         args["minimum_severity"] = "major"
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["api_response_creation_succeeded"],  # get
             SRR["api_response_existing_alert_receiver"],  # get
             SRR["api_response_alert_receiver_updated"],  # put
@@ -275,6 +278,7 @@ class TestAlertReceiverModule(unittest.TestCase):
     def test_delete_na_sg_grid_alert_receiver_pass(self, mock_request):
         set_module_args(self.set_args_delete_alert_receiver())
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["api_response_creation_succeeded"],  # get
             SRR["api_response_existing_alert_receiver"],  # Alert receiver exists.
             SRR["delete_good"],  # Successfully deleted.

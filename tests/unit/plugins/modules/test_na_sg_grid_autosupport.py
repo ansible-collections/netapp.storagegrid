@@ -190,7 +190,7 @@ class TestMyModule(unittest.TestCase):
         args["transport"] = "HTTPS"
         set_module_args(args)
         mock_request.side_effect = [
-            # SRR["version_114"],
+            SRR["version_114"],
             SRR["api_response_existing_autosupport"],  # get
             SRR["api_response_existing_autosupport_updated"],  # put
             SRR["end_of_sequence"],
@@ -205,6 +205,7 @@ class TestMyModule(unittest.TestCase):
     def test_idempotent_update_na_sg_grid_autosupport_pass(self, mock_request):
         set_module_args(self.set_args_update_na_sg_grid_autosupport_pass_check())
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["version_114"],
             SRR["api_response_existing_autosupport"],  # get
             SRR["end_of_sequence"],

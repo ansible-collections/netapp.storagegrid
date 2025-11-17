@@ -33,6 +33,7 @@ SRR = {
     "generic_error": (None, "Expected error"),
     "delete_good": (None, None),
     "update_good": (None, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "cert_unset": ({"data": {"serverCertificateEncoded": None, "caBundleEncoded": None}}, None),
     "storage_api_cert": (
         {
@@ -266,8 +267,12 @@ class TestMyModule(unittest.TestCase):
             grid_certificate_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_pass_when_required_args_present(self):
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_pass_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             grid_certificate_module()
@@ -278,13 +283,14 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_set_na_sg_grid_storage_api_certificate_pass(self, mock_request):
         set_module_args(self.set_args_set_na_sg_grid_storage_api_certificate())
-        my_obj = grid_certificate_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["cert_unset"],  # get
             SRR["update_good"],  # post
             SRR["storage_api_cert"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_certificate_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_set_na_sg_grid_storage_api_certificate_pass: %s" % repr(exc.value.args[0]))
@@ -293,11 +299,12 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_set_na_sg_grid_storage_api_certificate_pass(self, mock_request):
         set_module_args(self.set_args_set_na_sg_grid_storage_api_certificate())
-        my_obj = grid_certificate_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["storage_api_cert"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_certificate_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_set_na_sg_grid_storage_api_certificate_pass: %s" % repr(exc.value.args[0]))
@@ -310,13 +317,14 @@ class TestMyModule(unittest.TestCase):
         args["private_key"] = ""
 
         set_module_args(args)
-        my_obj = grid_certificate_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["storage_api_cert"],  # get
             SRR["update_good"],  # put
             SRR["storage_api_cert_update"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_certificate_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_grid_storage_api_certificate_pass: %s" % repr(exc.value.args[0]))
@@ -325,13 +333,14 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_storage_api_certificate_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_grid_storage_api_certificate())
-        my_obj = grid_certificate_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["storage_api_cert"],  # get
             SRR["delete_good"],  # delete
             SRR["cert_unset"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_certificate_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_delete_na_sg_storage_api_certificate_pass: %s" % repr(exc.value.args[0]))

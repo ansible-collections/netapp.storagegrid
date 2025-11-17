@@ -178,6 +178,10 @@ class SgAutosupport:
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
 
@@ -202,7 +206,7 @@ class SgAutosupport:
 
     def get_autosupport(self):
         """ Get autosupport configuration """
-        api = "api/v4/private/autosupport"
+        api = "api/%s/private/autosupport" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -212,7 +216,7 @@ class SgAutosupport:
 
     def update_autosupport(self):
         """ Update autosupport configuration """
-        api = "api/v4/private/autosupport"
+        api = "api/%s/private/autosupport" % self.api_version
         response, error = self.rest_api.put(api, self.data)
 
         if not response or 'data' not in response:

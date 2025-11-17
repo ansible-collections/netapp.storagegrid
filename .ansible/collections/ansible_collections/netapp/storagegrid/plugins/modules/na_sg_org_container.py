@@ -247,6 +247,7 @@ class SgOrgContainer(object):
         self.rest_api = SGRestAPI(self.module)
         # Get API version
         self.rest_api.get_sg_product_version(api_root="org")
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list.
 
@@ -292,7 +293,7 @@ class SgOrgContainer(object):
         params = {"include": "compliance,region"}
         if self.rest_api.meets_sg_minimum_version(11, 9):
             params["include"] += ",quotaObjectBytes"
-        response, error = self.rest_api.get("api/v3/org/containers", params=params)
+        response, error = self.rest_api.get("api/%s/org/containers" % self.api_version, params=params)
 
         if error:
             self.module.fail_json(msg=error)
@@ -305,7 +306,7 @@ class SgOrgContainer(object):
 
     def create_org_container(self):
         ''' Create org container '''
-        api = "api/v3/org/containers"
+        api = "api/%s/org/containers" % self.api_version
 
         response, error = self.rest_api.post(api, self.data)
 
@@ -316,7 +317,7 @@ class SgOrgContainer(object):
 
     def get_org_container_versioning(self):
         ''' Get org container versioning details '''
-        api = "api/v3/org/containers/%s/versioning" % self.parameters["name"]
+        api = "api/%s/org/containers/%s/versioning" % (self.api_version, self.parameters["name"])
         response, error = self.rest_api.get(api)
 
         if error:
@@ -326,7 +327,7 @@ class SgOrgContainer(object):
 
     def update_org_container_versioning(self):
         ''' Update org container versioning '''
-        api = "api/v3/org/containers/%s/versioning" % self.parameters["name"]
+        api = "api/%s/org/containers/%s/versioning" % (self.api_version, self.parameters["name"])
 
         response, error = self.rest_api.put(api, self.data_versioning)
         if error:
@@ -336,7 +337,7 @@ class SgOrgContainer(object):
 
     def fail_if_global_object_lock_disabled(self):
         ''' Fail if global object lock is disabled '''
-        api = "api/v3/org/compliance-global"
+        api = "api/%s/org/compliance-global" % self.api_version
 
         response, error = self.rest_api.get(api)
         if error:
@@ -347,7 +348,7 @@ class SgOrgContainer(object):
 
     def update_org_container_compliance(self):
         ''' Update org container compliance '''
-        api = "api/v3/org/containers/%s/compliance" % self.parameters["name"]
+        api = "api/%s/org/containers/%s/compliance" % (self.api_version, self.parameters["name"])
 
         response, error = self.rest_api.put(api, self.data["compliance"])
         if error:
@@ -357,7 +358,7 @@ class SgOrgContainer(object):
 
     def update_org_container_quota_object_bytes(self):
         ''' Update org container quota object bytes '''
-        api = "api/v3/org/containers/%s/quota-object-bytes" % self.parameters["name"]
+        api = "api/%s/org/containers/%s/quota-object-bytes" % (self.api_version, self.parameters["name"])
 
         response, error = self.rest_api.put(api, self.quota_object_bytes)
         if error:
@@ -367,14 +368,14 @@ class SgOrgContainer(object):
 
     def delete_org_container(self):
         ''' Delete org container '''
-        api = "api/v3/org/containers/%s" % self.parameters["name"]
+        api = "api/%s/org/containers/%s" % (self.api_version, self.parameters["name"])
 
         response, error = self.rest_api.delete(api, None)
         if error:
             self.module.fail_json(msg=error)
 
     def get_org_container_consistency(self):
-        api = "api/v3/org/containers/%s/consistency" % self.parameters["name"]
+        api = "api/%s/org/containers/%s/consistency" % (self.api_version, self.parameters["name"])
         response, error = self.rest_api.get(api)
 
         if error:
@@ -383,7 +384,7 @@ class SgOrgContainer(object):
         return response["data"]
 
     def update_org_container_consistency(self):
-        api = "api/v3/org/containers/%s/consistency" % self.parameters["name"]
+        api = "api/%s/org/containers/%s/consistency" % (self.api_version, self.parameters["name"])
 
         response, error = self.rest_api.put(api, self.consistency_setting)
         if error:

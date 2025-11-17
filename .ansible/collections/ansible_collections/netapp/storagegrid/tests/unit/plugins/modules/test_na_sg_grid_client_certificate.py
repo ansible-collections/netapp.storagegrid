@@ -232,6 +232,9 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_module_pass_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             grid_client_certificate_module()
@@ -243,6 +246,7 @@ class TestMyModule(unittest.TestCase):
     def test_create_na_sg_grid_client_certificate_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_client_certificate())
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["empty_good"],  # get
             SRR["client_cert_record"],  # post
             SRR["end_of_sequence"],
@@ -258,6 +262,7 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_create_na_sg_grid_client_certificate()
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["client_certificates"],  # get
             SRR["client_cert_record"],  # get
             SRR["end_of_sequence"],
@@ -279,6 +284,7 @@ class TestMyModule(unittest.TestCase):
         )
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["client_certificates"],  # get
             SRR["client_cert_record"],  # get
             SRR["client_cert_record_updated"],  # put
@@ -297,6 +303,7 @@ class TestMyModule(unittest.TestCase):
         args["display_name"] = "testcert1-rename"
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["client_cert_record"],  # get
             SRR["client_cert_record_rename"],  # put
             SRR["end_of_sequence"],
@@ -312,6 +319,7 @@ class TestMyModule(unittest.TestCase):
         args = self.set_args_delete_na_sg_grid_client_certificate()
         set_module_args(args)
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["client_certificates"],  # get
             SRR["client_cert_record"],  # get
             SRR["delete_good"],  # delete

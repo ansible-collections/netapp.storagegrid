@@ -159,6 +159,7 @@ class TestMyModule(unittest.TestCase):
         set_module_args(args)
         mock_request.side_effect = [
             SRR["version_114"],
+            SRR["version_114"],
             SRR["api_response_existing_proxy"],  # get
             SRR["api_response_existing_proxy"],  # get
             SRR["api_response_existing_proxy_updated"],  # put
@@ -174,6 +175,7 @@ class TestMyModule(unittest.TestCase):
     def test_idempotent_update_na_sg_grid_proxy_setting_pass(self, mock_request):
         set_module_args(self.set_args_update_na_sg_grid_proxy_pass_check())
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["version_114"],
             SRR["api_response_existing_proxy"],  # get
             SRR["end_of_sequence"],

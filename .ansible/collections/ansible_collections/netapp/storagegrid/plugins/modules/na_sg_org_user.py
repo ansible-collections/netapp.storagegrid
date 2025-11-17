@@ -146,6 +146,10 @@ class SgOrgUser(object):
         self.parameters = self.na_helper.set_parameters(self.module.params)
         # Calling generic SG rest_api class
         self.rest_api = SGRestAPI(self.module)
+        # Get API version
+        self.rest_api.get_sg_product_version(api_root="org")
+        self.api_version = self.rest_api.get_api_version()
+
         # Checking for the parameters passed and create new parameters list
         self.data = {}
         self.data["memberOf"] = []
@@ -175,7 +179,7 @@ class SgOrgUser(object):
     def get_org_groups(self):
         # Get list of groups
         # Retrun mapping of uniqueName to ids if found, or None
-        api = "api/v3/org/groups?limit=350"
+        api = "api/%s/org/groups?limit=350" % self.api_version
         response, error = self.rest_api.get(api)
 
         if error:
@@ -194,7 +198,7 @@ class SgOrgUser(object):
 
     def get_org_user(self, unique_name):
         # Use the unique name to check if the user exists
-        api = "api/v3/org/users/%s" % unique_name
+        api = "api/%s/org/users/%s" % (self.api_version, unique_name)
         response, error = self.rest_api.get(api)
 
         if error:
@@ -205,7 +209,7 @@ class SgOrgUser(object):
         return None
 
     def create_org_user(self):
-        api = "api/v3/org/users"
+        api = "api/%s/org/users" % self.api_version
 
         response, error = self.rest_api.post(api, self.data)
 
@@ -215,7 +219,7 @@ class SgOrgUser(object):
         return response["data"]
 
     def delete_org_user(self, user_id):
-        api = "api/v3/org/users/" + user_id
+        api = "api/%s/org/users/%s" % (self.api_version, user_id)
 
         self.data = None
         response, error = self.rest_api.delete(api, self.data)
@@ -223,7 +227,7 @@ class SgOrgUser(object):
             self.module.fail_json(msg=error)
 
     def update_org_user(self, user_id):
-        api = "api/v3/org/users/" + user_id
+        api = "api/%s/org/users/%s" % (self.api_version, user_id)
 
         response, error = self.rest_api.put(api, self.data)
         if error:
@@ -232,7 +236,7 @@ class SgOrgUser(object):
         return response["data"]
 
     def set_org_user_password(self, unique_name):
-        api = "api/v3/org/users/%s/change-password" % unique_name
+        api = "api/%s/org/users/%s/change-password" % (self.api_version, unique_name)
         response, error = self.rest_api.post(api, self.pw_change)
 
         if error:

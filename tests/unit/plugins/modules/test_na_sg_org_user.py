@@ -25,6 +25,7 @@ if sys.version_info < (3, 11):
 SRR = {
     # common responses
     "empty_good": ({"data": []}, None),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "not_found": (
         {"status": "error", "code": 404, "data": {}},
         {"key": "error.404"},
@@ -229,8 +230,12 @@ class TestMyModule(unittest.TestCase):
             org_user_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             org_user_module()
@@ -264,12 +269,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_user_no_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_user_no_group())
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["not_found"],  # get
             SRR["org_user_record_no_group"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_user_no_group_pass: %s" % repr(exc.value.args[0]))
@@ -278,13 +284,14 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_user_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_user())
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["not_found"],  # get
             SRR["org_groups"],  # get
             SRR["org_user_record"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_user_pass: %s" % repr(exc.value.args[0]))
@@ -293,12 +300,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_create_na_sg_org_user_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_user())
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_groups"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_create_na_sg_org_user_pass: %s" % repr(exc.value.args[0]))
@@ -310,13 +318,14 @@ class TestMyModule(unittest.TestCase):
         args["member_of"] = ["group/testorggroup1", "group/testorggroup2"]
 
         set_module_args(args)
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_groups"],  # get
             SRR["org_user_record_update"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_org_user_pass: %s" % repr(exc.value.args[0]))
@@ -328,13 +337,14 @@ class TestMyModule(unittest.TestCase):
         args["member_of"] = ["group/testorggroup1", "group/testorggroup2"]
 
         set_module_args(args)
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record_no_group"],  # get
             SRR["org_groups"],  # get
             SRR["org_user_record_update"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_org_user_add_group_pass: %s" % repr(exc.value.args[0]))
@@ -343,13 +353,14 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_org_user_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_org_user())
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_groups"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_delete_na_sg_org_user_pass: %s" % repr(exc.value.args[0]))
@@ -359,14 +370,15 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_org_user_and_set_password_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_user_with_password())
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["not_found"],  # get
             SRR["org_groups"],  # get
             SRR["org_user_record"],  # post
             SRR["pw_change_good"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_org_user_and_set_password_pass: %s" % repr(exc.value.args[0]))
@@ -376,12 +388,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_create_na_sg_org_user_and_set_password_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_org_user_with_password())
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_groups"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_create_na_sg_org_user_and_set_password_pass: %s" % repr(exc.value.args[0]))
@@ -395,14 +408,15 @@ class TestMyModule(unittest.TestCase):
         args["update_password"] = "always"
 
         set_module_args(args)
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_groups"],  # get
             SRR["org_user_record_update"],  # put
             SRR["pw_change_good"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_org_user_and_set_password_pass: %s" % repr(exc.value.args[0]))
@@ -416,13 +430,14 @@ class TestMyModule(unittest.TestCase):
         args["update_password"] = "always"
 
         set_module_args(args)
-        my_obj = org_user_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["org_user_record"],  # get
             SRR["org_groups"],  # get
             SRR["pw_change_good"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = org_user_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_set_na_sg_org_user_password_pass: %s" % repr(exc.value.args[0]))
@@ -437,5 +452,9 @@ class TestMyModule(unittest.TestCase):
             args["unique_name"] = "federated-user/abc123"
             args["update_password"] = "always"
             set_module_args(args)
+            mock_request.side_effect = [
+                SRR["version_114"],
+                SRR["version_114"],
+            ]
             org_user_module()
         print("Info: test_fail_set_federated_user_password: %s" % repr(exc.value.args[0]))

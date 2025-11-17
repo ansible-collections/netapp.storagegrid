@@ -262,6 +262,7 @@ class SgGridTenantAccount(object):
         self.rest_api = SGRestAPI(self.module)
         # Get API version
         self.rest_api.get_sg_product_version()
+        self.api_version = self.rest_api.get_api_version()
 
         # Checking for the parameters passed and create new parameters list
         self.data = {}
@@ -316,7 +317,7 @@ class SgGridTenantAccount(object):
     def get_tenant_account_id(self):
         # Check if tenant account exists
         # Return tenant account info if found, or None
-        api = "api/v3/grid/accounts"
+        api = "api/%s/grid/accounts" % self.api_version
         params = {"limit": 20}
         params["marker"] = ""
 
@@ -338,7 +339,7 @@ class SgGridTenantAccount(object):
         return None
 
     def get_tenant_account(self, account_id):
-        api = "api/v3/grid/accounts/%s" % account_id
+        api = "api/%s/grid/accounts/%s" % (self.api_version, account_id)
         account, error = self.rest_api.get(api)
 
         if error:
@@ -348,7 +349,7 @@ class SgGridTenantAccount(object):
         return None
 
     def create_tenant_account(self):
-        api = "api/v3/grid/accounts"
+        api = "api/%s/grid/accounts" % self.api_version
 
         response, error = self.rest_api.post(api, self.data)
 
@@ -358,7 +359,7 @@ class SgGridTenantAccount(object):
         return response["data"]
 
     def delete_tenant_account(self, account_id):
-        api = "api/v3/grid/accounts/" + account_id
+        api = "api/%s/grid/accounts/%s" % (self.api_version, account_id)
 
         self.data = None
         response, error = self.rest_api.delete(api, self.data)
@@ -366,7 +367,7 @@ class SgGridTenantAccount(object):
             self.module.fail_json(msg=error)
 
     def update_tenant_account(self, account_id):
-        api = "api/v3/grid/accounts/" + account_id
+        api = "api/%s/grid/accounts/%s" % (self.api_version, account_id)
 
         if "password" in self.data:
             del self.data["password"]
@@ -381,7 +382,7 @@ class SgGridTenantAccount(object):
         return response["data"]
 
     def set_tenant_root_password(self, account_id):
-        api = "api/v3/grid/accounts/%s/change-password" % account_id
+        api = "api/%s/grid/accounts/%s/change-password" % (self.api_version, account_id)
         response, error = self.rest_api.post(api, self.pw_change)
 
         if error:

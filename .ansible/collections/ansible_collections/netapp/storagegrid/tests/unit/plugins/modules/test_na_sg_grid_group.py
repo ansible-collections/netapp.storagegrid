@@ -29,6 +29,7 @@ SRR = {
         {"status": "error", "code": 404, "data": {}},
         {"key": "error.404"},
     ),
+    "version_114": ({"data": {"productVersion": "11.4.0-20200721.1338.d3969b3"}}, None),
     "end_of_sequence": (None, "Unexpected call to send_request"),
     "generic_error": (None, "Expected error"),
     "delete_good": ({"code": 204}, None),
@@ -204,8 +205,12 @@ class TestMyModule(unittest.TestCase):
             grid_group_module()
         print("Info: test_module_fail_when_required_args_missing: %s" % exc.value.args[0]["msg"])
 
-    def test_module_fail_when_required_args_present(self):
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_module_fail_when_required_args_present(self, mock_request):
         """required arguments are reported as errors"""
+        mock_request.side_effect = [
+            SRR["version_114"],
+        ]
         with pytest.raises(AnsibleExitJson) as exc:
             set_module_args(self.set_default_args_pass_check())
             grid_group_module()
@@ -225,12 +230,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_create_na_sg_grid_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_group())
-        my_obj = grid_group_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["not_found"],  # get
             SRR["grid_group_record"],  # post
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_grid_group_pass: %s" % repr(exc.value.args[0]))
@@ -239,11 +245,12 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_idempotent_create_na_sg_grid_group_pass(self, mock_request):
         set_module_args(self.set_args_create_na_sg_grid_group())
-        my_obj = grid_group_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["grid_group_record"],  # get
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_idempotent_create_na_sg_grid_group_pass: %s" % repr(exc.value.args[0]))
@@ -259,12 +266,13 @@ class TestMyModule(unittest.TestCase):
         args["management_policy"]["storage_admin"] = True
 
         set_module_args(args)
-        my_obj = grid_group_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["grid_group_record"],  # get
             SRR["grid_group_record_update"],  # put
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_update_na_sg_grid_group_pass: %s" % repr(exc.value.args[0]))
@@ -273,12 +281,13 @@ class TestMyModule(unittest.TestCase):
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_delete_na_sg_grid_group_pass(self, mock_request):
         set_module_args(self.set_args_delete_na_sg_grid_group())
-        my_obj = grid_group_module()
         mock_request.side_effect = [
+            SRR["version_114"],
             SRR["grid_group_record"],  # get
             SRR["delete_good"],  # delete
             SRR["end_of_sequence"],
         ]
+        my_obj = grid_group_module()
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_delete_na_sg_grid_group_pass: %s" % repr(exc.value.args[0]))

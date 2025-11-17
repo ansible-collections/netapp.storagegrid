@@ -104,6 +104,10 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_audit_destination - new option `access_logs_send`, `access_logs_facility`, and `access_logs_severity` added to manage access log settings for syslog server.
   - all modules - add support for failure responses to include additional error details for easier troubleshooting.
   - na_sg_grid_group - new option `manage_alerts` and `storage_admin` added to management policy.
+  - na_sg_org_container - user input for `capacity_limit` option changed from bytes to GB.
+  - na_sg_org_bucket - user input for `capacity_limit` option changed from bytes to GB.
+  - na_sg_grid_alert_receiver - new option `smtp_username` and `smtp_password` added in place of `username` and `password`.
+  - na_sg_org_group - new options `s3_console` to control S3 console access and `view_all_containers` to view settings for all buckets added, requires StorageGRID version 11.8 or later.
 
 ### Bug Fixes
   - na_sg_org_user_s3_key - fixed for incorrect handling of the `unique_user_name`.
@@ -119,16 +123,6 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_org_identity_federation - fix issue with check mode response.
   - na_sg_grid_group - fix issue where `activate_features` parameter was deprecated but still present in code.
   - na_sg_grid_group - fix typo in parameter mapping for `alarm_acknowledgement` option.
-
-### Minor Changes
-  - na_sg_org_container - user input for `capacity_limit` option changed from bytes to GB.
-  - na_sg_org_bucket - user input for `capacity_limit` option changed from bytes to GB.
-
-### Minor Changes
-  - na_sg_grid_alert_receiver - new option `smtp_username` and `smtp_password` added in place of `username` and `password`.
-
-### Minor Changes
-  - na_sg_org_group - new options `s3_console` to control S3 console access and `view_all_containers` to view settings for all buckets added, requires StorageGRID version 11.8 or later.
 
 ## 21.15.0
 
