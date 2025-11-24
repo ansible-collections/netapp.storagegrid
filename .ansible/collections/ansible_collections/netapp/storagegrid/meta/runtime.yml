@@ -31,6 +31,7 @@ action_groups:
     - na_sg_grid_snmp
     - na_sg_grid_tenant
     - na_sg_grid_traffic_classes
+    - na_sg_grid_untrusted_client_network
     - na_sg_grid_user
     - na_sg_grid_vlan_interface
     - na_sg_org_bucket

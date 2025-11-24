@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "9f7666799c4d45af70db3ea2da02af5ee00833074ac857cce9869a35dc9611e5",
+   "chksum_sha256": "e81bcb9833d4d583551e51d99e912dd602faeaaf99a3713a2199dd77f8166c19",
    "format": 1
   },
   {
@@ -354,7 +354,7 @@
    "name": "meta/runtime.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "0aa8f7ca0ec1ea868fc3c9ffb65c4a5c737bf2c6237f2906c3797decc19dc94c",
+   "chksum_sha256": "98bd12f0c9ba10cb711ff558a9af57a2d3a092f43afb3b1156c27857c1f1f708",
    "format": 1
   },
   {
@@ -614,6 +614,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "8f857a3c561e0fd7906194a53731a0c73cdc26214a16896bf036165efbc145f3",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/na_sg_grid_untrusted_client_network.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "4f69b89361a7e79af0a73ae53d0e0720ff3e012b6134d012e5d65bbf09bac945",
    "format": 1
   },
   {
@@ -957,6 +964,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "ecf981256d14625e609490c5d07b07a68f483472930417f274c47ca09b361cbc",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/modules/test_na_sg_grid_untrusted_client_network.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6a4a2957cbb3b4797eb0361a2702ea4db11a15ed2c194b35ba2605ccb94e1639",
    "format": 1
   },
   {

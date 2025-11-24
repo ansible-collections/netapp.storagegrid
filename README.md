@@ -94,6 +94,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_metrics - grab metrics on StorageGRID.
   - na_sg_pge_info - gather information from a StorageGRID node Pre-Grid Environment (PGE).
   - na_sg_grid_login - generate authentication token to login into grid/tenant account on StorageGRID.
+  - na_sg_grid_untrusted_client_network - manage untrusted client network on StorageGRID.
 
 ### Minor Changes
   - na_sg_org_container - Enhanced the bucket policy.
