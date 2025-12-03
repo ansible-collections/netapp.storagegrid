@@ -550,7 +550,7 @@
    "name": "plugins/modules/na_sg_grid_info.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "6217ac7eb3335a3ce468958081aed08592a8003428a20b8b89f4c2086d77a56f",
+   "chksum_sha256": "c882a207dfd38c786580ec1357266c61085e6febeae3feb38f0ca3437be0d33e",
    "format": 1
   },
   {
@@ -900,7 +900,7 @@
    "name": "tests/unit/plugins/modules/test_na_sg_grid_info.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "1071bf93eff543a3227590f878e96950bf493b4ad33904ad909aaaa0a42fa869",
+   "chksum_sha256": "5cfbd323b0c4ace6f18b153aa907db00b97c91756468f2c9404e815142e5c13d",
    "format": 1
   },
   {

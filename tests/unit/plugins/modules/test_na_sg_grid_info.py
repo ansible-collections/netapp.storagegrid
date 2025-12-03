@@ -83,7 +83,10 @@ SRR = {
     'grid_health_topology': ({'data': {}}, None),
     'grid_identity_source': ({'data': {}}, None),
     'grid_ilm_criteria': ({'data': []}, None),
+    'grid_ilm_grade_site': ({'data': {}}, None),
+    'grid_ilm_grades': ({'data': []}, None),
     'grid_ilm_policies': ({'data': []}, None),
+    'grid_ilm_pools': ({'data': []}, None),
     'grid_ilm_rules': ({'data': []}, None),
     'grid_license': ({'data': []}, None),
     'grid_management_certificate': ({'data': {}}, None),
@@ -373,7 +376,10 @@ class TestMyModule(unittest.TestCase):
             'grid/health/topology',
             'grid/identity-source',
             'grid/ilm-criteria',
+            'grid/ilm-grade-site',
+            'grid/ilm-grades',
             'grid/ilm-policies',
+            'grid/ilm-pools',
             'grid/ilm-rules',
             'grid/license',
             'grid/management-certificate',
@@ -388,14 +394,14 @@ class TestMyModule(unittest.TestCase):
             'grid/users',
             'grid/users/root',
             'grid/versions',
-            'private/gateway-configs',
-            'private/ha-groups',
-            'private/network-topology',
-            'private/vlan-interfaces',
-            'private/single-sign-on',
-            'private/firewall-external-ports',
-            'private/firewall-blocked-ports',
-            'private/firewall-privileged-ips',
+            'grid/gateway-configs',
+            'grid/ha-groups',
+            'grid/network-topology',
+            'grid/vlan-interfaces',
+            'grid/single-sign-on',
+            'grid/firewall-external-ports',
+            'grid/firewall-blocked-ports',
+            'grid/firewall-privileged-ips',
         ]
         mock_request.side_effect = [
             SRR['version_114'],
@@ -419,7 +425,10 @@ class TestMyModule(unittest.TestCase):
             SRR['grid_health_topology'],
             SRR['grid_identity_source'],
             SRR['grid_ilm_criteria'],
+            SRR['grid_ilm_grade_site'],
+            SRR['grid_ilm_grades'],
             SRR['grid_ilm_policies'],
+            SRR['grid_ilm_pools'],
             SRR['grid_ilm_rules'],
             SRR['grid_license'],
             SRR['grid_management_certificate'],
@@ -484,7 +493,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_lb_endpoints_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_lb_endpoints_info())
-        gather_subset = ['private/gateway-configs']
+        gather_subset = ['grid/gateway-configs']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_load_balancer_endpoints_config'],
@@ -499,7 +508,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_ha_groups_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_ha_group_info())
-        gather_subset = ['private/ha-groups']
+        gather_subset = ['grid/ha-groups']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_ha_groups'],
@@ -514,7 +523,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_network_topology_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_network_topology_info())
-        gather_subset = ['private/network-topology']
+        gather_subset = ['grid/network-topology']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_network_topology'],
@@ -529,7 +538,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_vlan_interfaces_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_vlan_interfaces_info())
-        gather_subset = ['private/vlan-interfaces']
+        gather_subset = ['grid/vlan-interfaces']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_vlan_interfaces'],
@@ -544,7 +553,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_single_sign_on_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_single_sign_on_info())
-        gather_subset = ['private/single-sign-on']
+        gather_subset = ['grid/single-sign-on']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_single_sign_on'],
@@ -559,7 +568,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_firewall_external_ports_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_firewall_external_ports_info())
-        gather_subset = ['private/firewall-external-ports']
+        gather_subset = ['grid/firewall-external-ports']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_firewall_external_ports'],
@@ -574,7 +583,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_firewall_blocked_ports_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_firewall_blocked_ports_info())
-        gather_subset = ['private/firewall-blocked-ports']
+        gather_subset = ['grid/firewall-blocked-ports']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_firewall_blocked_ports'],
@@ -589,7 +598,7 @@ class TestMyModule(unittest.TestCase):
     @patch('ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request')
     def test_get_na_sg_grid_info_firewall_privileged_ips_pass(self, mock_request):
         set_module_args(self.set_args_run_sg_gather_facts_for_firewall_privileged_ips_info())
-        gather_subset = ['private/firewall-privileged-ips']
+        gather_subset = ['grid/firewall-privileged-ips']
         mock_request.side_effect = [
             SRR['version_114'],
             SRR['grid_firewall_privileged_ips'],

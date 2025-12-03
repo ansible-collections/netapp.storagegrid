@@ -46,35 +46,38 @@ options:
             - C(grid_expansion_info) or C(grid/expansion)
             - C(grid_expansion_nodes_info) or C(grid/expansion/nodes)
             - C(grid_expansion_sites_info) or C(grid/expansion/sites)
+            - C(grid_firewall_blocked_ports) or C(grid/firewall-blocked-ports)
+            - C(grid_firewall_external_ports) or C(grid/firewall-external-ports)
+            - C(grid_firewall_privileged_ips) or C(grid/firewall-privileged-ips)
             - C(grid_grid_networks_info) or C(grid/grid-networks)
             - C(grid_groups_info) or C(grid/groups)
+            - C(grid_ha_groups_info) or C(grid/ha-groups)
             - C(grid_health_info) or C(grid/health)
             - C(grid_health_topology_info) or C(grid/health/topology)
             - C(grid_identity_source_info) or C(grid/identity-source)
             - C(grid_ilm_criteria_info) or C(grid/ilm-criteria)
+            - C(grid_ilm_grade_site_info) or C(grid/ilm-grade-site)
+            - C(grid_ilm_grades_info) or C(grid/ilm-grades)
             - C(grid_ilm_policies_info) or C(grid/ilm-policies)
             - C(grid_ilm_rules_info) or C(grid/ilm-rules)
+            - C(grid_ilm_storage_pools_info) or C(grid/ilm-pools)
             - C(grid_license_info) or C(grid/license)
+            - C(grid_load_balancer_endpoints_config_info) or C(grid/gateway-configs)
             - C(grid_management_certificate_info) or C(grid/management-certificate)
+            - C(grid_network_topology_info) or C(grid/network-topology)
             - C(grid_ntp_servers_info) or C(grid/ntp-servers)
             - C(grid_recovery_available_nodes_info) or C(grid/recovery/available-nodes)
             - C(grid_recovery_info) or C(grid/recovery)
             - C(grid_regions_info) or C(grid/regions)
             - C(grid_schemes_info) or C(grid/schemes)
+            - C(grid_single_sign_on_info) or C(grid/single-sign-on)
             - C(grid_snmp_info) or C(grid/snmp)
             - C(grid_storage_api_certificate_info) or C(grid/storage-api-certificate)
             - C(grid_untrusted_client_network_info) or C(grid/untrusted-client-network)
             - C(grid_users_info) or C(grid/users)
             - C(grid_users_root_info) or C(grid/users/root)
+            - C(grid_vlan_interfaces_info) or C(grid/vlan-interfaces)
             - C(versions_info) or C(versions)
-            - C(grid_load_balancer_endpoints_config_info) or C(private/gateway-configs)
-            - C(grid_ha_groups_info) or C(private/ha-groups)
-            - C(grid_network_topology_info) or C(private/network-topology)
-            - C(grid_vlan_interfaces_info) or C(private/vlan-interfaces)
-            - C(grid_single_sign_on_info) or C(private/single-sign-on)
-            - C(grid_firewall_external_ports) or C(private/firewall-external-ports)
-            - C(grid_firewall_blocked_ports) or C(private/firewall-blocked-ports)
-            - C(grid_firewall_privileged_ips) or C(private/firewall-privileged-ips)
             - Can specify a list of values to include a larger subset.
         default: all
     parameters:
@@ -143,35 +146,38 @@ sg_info:
         "grid/expansion": {...},
         "grid/expansion/nodes": {...},
         "grid/expansion/sites": {...},
+        "grid/firewall-blocked-ports": {...},
+        "grid/firewall-external-ports": {...},
+        "grid/firewall-privileged-ips": {...},
         "grid/networks": {...},
+        "grid/gateway-configs": {...},
         "grid/groups": {...},
+        "grid/ha-groups": {...},
         "grid/health": {...},
         "grid/health/topology": {...},
         "grid/identity-source": {...},
         "grid/ilm-criteria": {...},
+        "grid/ilm-grade-site": {...},
+        "grid/ilm-grades": {...},
         "grid/ilm-policies": {...},
+        "grid/ilm-pools": {...},
         "grid/ilm-rules": {...},
         "grid/license": {...},
         "grid/management-certificate": {...},
+        "grid/network-toplogy": {...},
         "grid/ntp-servers": {...},
         "grid/recovery/available-nodes": {...},
         "grid/recovery": {...},
         "grid/regions": {...},
         "grid/schemes": {...},
+        "grid/single-sign-on": {...},
         "grid/snmp": {...},
         "grid/storage-api-certificate": {...},
         "grid/untrusted-client-network": {...},
         "grid/users": {...},
         "grid/users/root": {...},
-        "grid/versions": {...},
-        "private/gateway-configs": {...},
-        "private/ha-groups": {...},
-        "private/network-toplogy": {...},
-        "private/vlan-interfaces": {...},
-        "private/single-sign-on": {...},
-        "private/firewall-external-ports": {...},
-        "private/firewall-blocked-ports": {...},
-        "private/firewall-privileged-ips": {...}
+        "grid/vlan-interfaces": {...},
+        "grid/versions": {...}
     }
 """
 
@@ -248,35 +254,38 @@ class NetAppSgGatherInfo(object):
             'grid_expansion_info': 'grid/expansion',
             'grid_expansion_nodes_info': 'grid/expansion/nodes',
             'grid_expansion_sites_info': 'grid/expansion/sites',
+            'grid_firewall_blocked_ports': 'grid/firewall-blocked-ports',
+            'grid_firewall_external_ports': 'grid/firewall-external-ports',
+            'grid_firewall_privileged_ips': 'grid/firewall-privileged-ips',
             'grid_grid_networks_info': 'grid/grid-networks',
             'grid_groups_info': 'grid/groups',
+            'grid_ha_groups_info': 'grid/ha-groups',
             'grid_health_info': 'grid/health',
             'grid_health_topology_info': 'grid/health/topology',
             'grid_identity_source_info': 'grid/identity-source',
             'grid_ilm_criteria_info': 'grid/ilm-criteria',
+            'grid_ilm_grade_site_info': 'grid/ilm-grade-site',
+            'grid_ilm_grades_info': 'grid/ilm-grades',
             'grid_ilm_policies_info': 'grid/ilm-policies',
+            'grid_ilm_storage_pools_info': 'grid/ilm-pools',
             'grid_ilm_rules_info': 'grid/ilm-rules',
+            'grid_load_balancer_endpoints_config_info': 'grid/gateway-configs',
             'grid_license_info': 'grid/license',
             'grid_management_certificate_info': 'grid/management-certificate',
+            'grid_network_topology_info': 'grid/network-topology',
             'grid_ntp_servers_info': 'grid/ntp-servers',
             'grid_recovery_available_nodes_info': 'grid/recovery/available-nodes',
             'grid_recovery_info': 'grid/recovery',
             'grid_regions_info': 'grid/regions',
+            'grid_single_sign_on_info': 'grid/single-sign-on',
             'grid_schemes_info': 'grid/schemes',
             'grid_snmp_info': 'grid/snmp',
             'grid_storage_api_certificate_info': 'grid/storage-api-certificate',
             'grid_untrusted_client_network_info': 'grid/untrusted-client-network',
             'grid_users_info': 'grid/users',
             'grid_users_root_info': 'grid/users/root',
-            'versions_info': 'versions',
-            'grid_load_balancer_endpoints_config_info': 'private/gateway-configs',
-            'grid_ha_groups_info': 'private/ha-groups',
-            'grid_network_topology_info': 'private/network-topology',
-            'grid_vlan_interfaces_info': 'private/vlan-interfaces',
-            'grid_single_sign_on_info': 'private/single-sign-on',
-            'grid_firewall_external_ports': 'private/firewall-external-ports',
-            'grid_firewall_blocked_ports': 'private/firewall-blocked-ports',
-            'grid_firewall_privileged_ips': 'private/firewall-privileged-ips'
+            'grid_vlan_interfaces_info': 'grid/vlan-interfaces',
+            'versions_info': 'versions'
         }
         # Add rest API names as there info version, also make sure we don't add a duplicate.
         subsets = []
@@ -338,11 +347,26 @@ class NetAppSgGatherInfo(object):
             'grid/expansion/sites': {
                 'api_call': 'api/%s/grid/expansion/sites' % self.api_version,
             },
+            'grid/firewall-blocked-ports': {
+                'api_call': 'api/%s/private/firewall-blocked-ports' % self.api_version
+            },
+            'grid/firewall-external-ports': {
+                'api_call': 'api/%s/private/firewall-external-ports' % self.api_version
+            },
+            'grid/firewall-privileged-ips': {
+                'api_call': 'api/%s/private/firewall-privileged-ips' % self.api_version
+            },
+            'grid/gateway-configs': {
+                'api_call': 'api/%s/private/gateway-configs' % self.api_version,
+            },
             'grid/grid-networks': {
                 'api_call': 'api/%s/grid/grid-networks' % self.api_version,
             },
             'grid/groups': {
                 'api_call': 'api/%s/grid/groups' % self.api_version,
+            },
+            'grid/ha-groups': {
+                'api_call': 'api/%s/private/ha-groups' % self.api_version,
             },
             'grid/health': {
                 'api_call': 'api/%s/grid/health' % self.api_version,
@@ -356,8 +380,17 @@ class NetAppSgGatherInfo(object):
             'grid/ilm-criteria': {
                 'api_call': 'api/%s/grid/ilm-criteria' % self.api_version,
             },
+            'grid/ilm-grade-site': {
+                'api_call': 'api/%s/private/ilm-grade-site' % self.api_version,
+            },
+            'grid/ilm-grades': {
+                'api_call': 'api/%s/private/ilm-grades' % self.api_version,
+            },
             'grid/ilm-policies': {
                 'api_call': 'api/%s/grid/ilm-policies' % self.api_version,
+            },
+            'grid/ilm-pools': {
+                'api_call': 'api/%s/private/ilm-pools' % self.api_version,
             },
             'grid/ilm-rules': {
                 'api_call': 'api/%s/grid/ilm-rules' % self.api_version,
@@ -367,6 +400,9 @@ class NetAppSgGatherInfo(object):
             },
             'grid/management-certificate': {
                 'api_call': 'api/%s/grid/management-certificate' % self.api_version,
+            },
+            'grid/network-topology': {
+                'api_call': 'api/%s/private/network-topology' % self.api_version
             },
             'grid/ntp-servers': {
                 'api_call': 'api/%s/grid/ntp-servers' % self.api_version,
@@ -379,6 +415,9 @@ class NetAppSgGatherInfo(object):
             },
             'grid/regions': {
                 'api_call': 'api/%s/grid/regions' % self.api_version,
+            },
+            'grid/single-sign-on': {
+                'api_call': 'api/%s/private/single-sign-on' % self.api_version
             },
             'grid/schemes': {
                 'api_call': 'api/%s/grid/schemes' % self.api_version,
@@ -398,32 +437,11 @@ class NetAppSgGatherInfo(object):
             'grid/users/root': {
                 'api_call': 'api/%s/grid/users/root' % self.api_version,
             },
-            'grid/versions': {
-                'api_call': 'api/%s/versions' % self.api_version,
-            },
-            'private/gateway-configs': {
-                'api_call': 'api/%s/private/gateway-configs' % self.api_version,
-            },
-            'private/ha-groups': {
-                'api_call': 'api/%s/private/ha-groups' % self.api_version,
-            },
-            'private/network-topology': {
-                'api_call': 'api/%s/private/network-topology' % self.api_version
-            },
-            'private/vlan-interfaces': {
+            'grid/vlan-interfaces': {
                 'api_call': 'api/%s/private/vlan-interfaces' % self.api_version
             },
-            'private/single-sign-on': {
-                'api_call': 'api/%s/private/single-sign-on' % self.api_version
-            },
-            'private/firewall-external-ports': {
-                'api_call': 'api/%s/private/firewall-external-ports' % self.api_version
-            },
-            'private/firewall-blocked-ports': {
-                'api_call': 'api/%s/private/firewall-blocked-ports' % self.api_version
-            },
-            'private/firewall-privileged-ips': {
-                'api_call': 'api/%s/private/firewall-privileged-ips' % self.api_version
+            'grid/versions': {
+                'api_call': 'api/%s/versions' % self.api_version,
             }
         }
 
