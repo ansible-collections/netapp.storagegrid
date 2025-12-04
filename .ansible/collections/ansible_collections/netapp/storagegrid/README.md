@@ -9,7 +9,7 @@
 
  NetApp StorageGRID Collection
 
- Copyright (c) 2020 NetApp, Inc. All rights reserved.
+ Copyright (c) 2025 NetApp, Inc. All rights reserved.
  Specifications subject to change without notice.
 
 =============================================================
@@ -30,22 +30,18 @@ collections:
 
 # Usage
 
-Each of the StorageGRID modules require an `auth_token` parameter to be specified. This can be obtained by executing a `uri` task against the StorageGRID Authorization API endpoint and registering the output as the first item in a Playbook.
+All StorageGRID modules in this collection require an `auth_token` parameter for authentication.
+You can obtain an `auth_token` by running the `na_sg_grid_login` module as the first task in your playbook and registering its output. The token can be accessed as `auth.na_sa_token`(assuming you register the result as `auth`).
 
-If you are performing a Tenant operation, ensure that the `accountId` parameter is also specified in the URI body and set to the Tenant Account ID. For example, `"accountId": "01234567890123456789"`
+If you are performing a Tenant operation, ensure that the `tenant_id` parameter is also specified in the task and set to the Tenant Account ID. For example, `"tenant_id": "01234567890123456789"`
 
 ```yaml
-- name: Get Grid Authorization token
-  uri:
-    url: "https://sgadmin.example.com/api/v3/authorize"
-    method: POST
-    body: {
-      "username": "root",
-      "password": "storagegrid123",
-      "cookie": false,
-      "csrfToken": false
-    }
-    body_format: json
+- name: Get Tenant Authorization token
+  netapp.storagegrid.na_sg_grid_login:
+    hostname: https://sgadmin.example.com
+    username: admin
+    password: admin123
+    tenant_id: 01234567890123456789
     validate_certs: false
   register: auth
 ```
@@ -56,7 +52,7 @@ Subsequent tasks can leverage the registered auth token.
 - name: Create a StorageGRID Tenant Account
   netapp.storagegrid.na_sg_grid_account:
     api_url: "https://sgadmin.example.com"
-    auth_token: "{{ auth.json.data }}"
+    auth_token: "{{ auth.na_sa_token }}"
     validate_certs: false
     state: present
     name: AnsibleTenant
