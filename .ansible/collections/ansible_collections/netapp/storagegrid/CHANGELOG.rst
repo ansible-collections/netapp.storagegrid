@@ -5,6 +5,54 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.16.0
+========
+
+Minor Changes
+-------------
+
+- all modules - add support for failure responses to include additional error details for easier troubleshooting.
+- na_sg_grid_alert_receiver - new option `smtp_username` and `smtp_password` added in place of `username` and `password`.
+- na_sg_grid_audit_destination - new option `access_logs_send`, `access_logs_facility`, and `access_logs_severity` added to manage access log settings for syslog server.
+- na_sg_grid_gateway - new option `closed_on_untrusted_client_network`. Requires StorageGRID 11.8 or later.
+- na_sg_grid_gateway - parameter `default_service_type` allows option for `management`. Requires StorageGRID 11.8 or later.
+- na_sg_grid_group - new option `manage_alerts` and `storage_admin` added to management policy.
+- na_sg_grid_info - Added new endpoints for the grid info.
+- na_sg_org_bucket - user input for `capacity_limit` option changed from bytes to GB.
+- na_sg_org_container - Enhanced the bucket policy.
+- na_sg_org_container - user input for `capacity_limit` option changed from bytes to GB.
+- na_sg_org_group - new options `s3_console` to control S3 console access and `view_all_containers` to view settings for all buckets added, requires StorageGRID version 11.8 or later.
+- na_sg_org_info - Added new endpoints for the org info.
+
+Bugfixes
+--------
+
+- na_sg_grid_alert_receiver - correct example section in the module for better understanding.
+- na_sg_grid_autosupport - add support to handle error response from the API.
+- na_sg_grid_autosupport - fix issue with setting up `destinations` option in the module.
+- na_sg_grid_domain_name - fixed issue where additional domain names was not detected as changed.
+- na_sg_grid_group - fix issue where `activate_features` parameter was deprecated but still present in code.
+- na_sg_grid_group - fix typo in parameter mapping for `alarm_acknowledgement` option.
+- na_sg_grid_ha_group - correct documentation section in the module for better understanding.
+- na_sg_grid_identity_federation - fix issue with check mode response.
+- na_sg_grid_info - Fix issue where the module incorrectly reported tasks as changed.
+- na_sg_grid_regions - correct documentation section in the module for better understanding.
+- na_sg_org_identity_federation - fix issue with check mode response.
+- na_sg_org_info - Fix issue where the module incorrectly reported tasks as changed.
+- na_sg_org_user_s3_key - unique_user_name is fixed as in the documents
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_firewall - NetApp StorageGRID manage node firewall.
+- netapp.storagegrid.na_sg_grid_login - Login to StorageGRID grid/tenant.
+- netapp.storagegrid.na_sg_grid_metrics - NetApp StorageGRID grab metrics.
+- netapp.storagegrid.na_sg_grid_recovery_package - Retrieve the recovery package from StorageGRID
+- netapp.storagegrid.na_sg_grid_ssh_security - Configure ssh security on StorageGRID.
+- netapp.storagegrid.na_sg_grid_untrusted_client_network - Configure untrusted Client Network on StorageGRID.
+- netapp.storagegrid.na_sg_org_cloud_mirror_replication - Manage Cloud Mirror Replication on StorageGRID.
+- netapp.storagegrid.na_sg_pge_info - NetApp StorageGRID node PGE information gatherer.
+
 v21.15.0
 ========
 
