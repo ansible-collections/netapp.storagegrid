@@ -36,6 +36,7 @@ action_groups:
     - na_sg_grid_user
     - na_sg_grid_vlan_interface
     - na_sg_org_bucket
+    - na_sg_org_cloud_mirror_replication
     - na_sg_org_container
     - na_sg_org_group
     - na_sg_org_identity_federation

@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "a08c2ce20a77f53393281d297ff40957e4bd5c41fac60e0debdf6560edb783c1",
+   "chksum_sha256": "7ee3196ffe9daa709062913f402a8c309c9368697fdc16e21f24d44980a9c998",
    "format": 1
   },
   {
@@ -354,7 +354,7 @@
    "name": "meta/runtime.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "e98e978776759d8d1bd81add13d43a845ae1f18012a555ab25b7efd997f8ad9e",
+   "chksum_sha256": "99c75e6f5f03a2a1bc97dc00301ddcb512833324e8393e21df5d72eb197a040b",
    "format": 1
   },
   {
@@ -649,6 +649,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "8b3df22042103f15422c1c44edd43901a9b7539c216ece7923aa45bff8fb2eda",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/na_sg_org_cloud_mirror_replication.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e5f5bf1308e296d36c66882d961b8d42b73db6cc4af6ff066eeeab92ca584fa5",
    "format": 1
   },
   {
@@ -1006,6 +1013,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "05fb2884e2d4002ffbc2af936c83a261ada04253cff2b8ac73c5ed0971db08a2",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/modules/test_na_sg_org_cloud_mirror_replication.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "0738ce6d4a24c10d8390b38bb2c1d65b75111b1d7038810fb6fe11e34a4733eb",
    "format": 1
   },
   {

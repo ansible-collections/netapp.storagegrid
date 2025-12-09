@@ -92,6 +92,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_login - generate authentication token to login into grid/tenant account on StorageGRID.
   - na_sg_grid_untrusted_client_network - manage untrusted client network on StorageGRID.
   - na_sg_grid_ssh_security - configure ssh security setting, requires storageGRID 12.0 or later.
+  - na_sg_org_cloud_mirror_replication - set the replication configuration for an S3 bucket on StorageGRID.
 
 ### Minor Changes
   - na_sg_org_container - Enhanced the bucket policy.
