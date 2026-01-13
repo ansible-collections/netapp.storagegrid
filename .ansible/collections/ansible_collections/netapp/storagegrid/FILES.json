@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "7ee3196ffe9daa709062913f402a8c309c9368697fdc16e21f24d44980a9c998",
+   "chksum_sha256": "44ae36bdb00bf6a56d6e04228814dfa4134ce1c682c17146cce8908c97561eca",
    "format": 1
   },
   {
@@ -354,7 +354,7 @@
    "name": "meta/runtime.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "99c75e6f5f03a2a1bc97dc00301ddcb512833324e8393e21df5d72eb197a040b",
+   "chksum_sha256": "88434a89a122437fc9696c4d8dc4e1ea085ad6e4d2ceee12bf08b7bc4038e878",
    "format": 1
   },
   {
@@ -389,7 +389,7 @@
    "name": "plugins/module_utils/netapp.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "daaf262612771406fd7eb735c720c1f1b6454605f89390214a04cf1bd51c83ed",
+   "chksum_sha256": "e896c08831084cf93f482622692434ccb48099b41cfb68e53429471625697fee",
    "format": 1
   },
   {
@@ -593,6 +593,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "0b22f9c1577f5ceeed617fa2b878ac5f3f466455ab585a73903272472f6c8785",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/na_sg_grid_self_signed_certificate.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "16c5c3073404f3d5642eed1f9f88d1b1fbb1c120416c301b25d971df588a90a1",
    "format": 1
   },
   {
@@ -957,6 +964,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "cb28dee23abd107c478d4a91af6d2da861f54fb43aeab776e280af50ad00875a",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/modules/test_na_sg_grid_self_signed_certificate.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e745f9b7a9c8122297c3132e7991e0cb744719a9ce2f0b558ec61895d6ef3836",
    "format": 1
   },
   {

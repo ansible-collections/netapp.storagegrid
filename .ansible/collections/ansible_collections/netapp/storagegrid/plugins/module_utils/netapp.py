@@ -32,7 +32,7 @@ __metaclass__ = type
 
 from ansible.module_utils.basic import missing_required_lib
 
-COLLECTION_VERSION = "21.16.0"
+COLLECTION_VERSION = "21.17.0"
 
 try:
     import requests

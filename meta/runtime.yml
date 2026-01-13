@@ -28,6 +28,7 @@ action_groups:
     - na_sg_grid_metrics
     - na_sg_grid_regions
     - na_sg_grid_recovery_package
+    - na_sg_grid_self_signed_certificate
     - na_sg_grid_snmp
     - na_sg_grid_ssh_security
     - na_sg_grid_tenant

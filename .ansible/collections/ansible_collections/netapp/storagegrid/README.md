@@ -82,6 +82,11 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 # Release Notes
 
+## 21.17.0
+
+### New Modules
+  - na_sg_grid_self_signed_certificate - generate self signed certificate on StorageGRID.
+
 ## 21.16.0
 
 ### New Modules

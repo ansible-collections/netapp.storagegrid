@@ -1,6 +1,6 @@
 namespace: "netapp"
 name: "storagegrid"
-version: "21.16.0"
+version: "21.17.0"
 readme: README.md
 authors:
     - "NetApp Ansible Team <ng-ansibleteam@netapp.com>"
