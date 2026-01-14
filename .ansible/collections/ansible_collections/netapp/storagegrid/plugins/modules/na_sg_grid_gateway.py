@@ -145,7 +145,8 @@ EXAMPLES = """
   netapp.storagegrid.na_sg_grid_gateway:
     api_url: "https://<storagegrid-endpoint-url>"
     auth_token: "storagegrid-auth-token"
-    displayName: "FabricPool Endpoint"
+    state: present
+    display_name: "FabricPool Endpoint"
     port: 10443
     secure: true
     enable_ipv4: true
@@ -177,7 +178,8 @@ EXAMPLES = """
   netapp.storagegrid.na_sg_grid_gateway:
     api_url: "https://<storagegrid-endpoint-url>"
     auth_token: "storagegrid-auth-token"
-    displayName: "App Endpoint 1"
+    state: present
+    display_name: "App Endpoint 1"
     port: 10501
     secure: false
     enable_ipv4: true
@@ -191,7 +193,8 @@ EXAMPLES = """
   netapp.storagegrid.na_sg_grid_gateway:
     api_url: "https://<storagegrid-endpoint-url>"
     auth_token: "storagegrid-auth-token"
-    displayName: "App Endpoint 2"
+    state: present
+    display_name: "App Endpoint 2"
     port: 10502
     secure: false
     enable_ipv4: true
@@ -209,7 +212,8 @@ EXAMPLES = """
   netapp.storagegrid.na_sg_grid_gateway:
     api_url: "https://<storagegrid-endpoint-url>"
     auth_token: "storagegrid-auth-token"
-    displayName: "App Endpoint 2"
+    state: absent
+    display_name: "App Endpoint 2"
     port: 10502
     default_service_type: "s3"
     validate_certs: false

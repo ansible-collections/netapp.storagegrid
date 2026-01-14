@@ -87,6 +87,9 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### New Modules
   - na_sg_grid_self_signed_certificate - generate self signed certificate on StorageGRID.
 
+### Bug Fixes
+  - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
+
 ## 21.16.0
 
 ### New Modules

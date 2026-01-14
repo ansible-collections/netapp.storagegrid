@@ -1,0 +1,2 @@
+bugfixes:
+  - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
