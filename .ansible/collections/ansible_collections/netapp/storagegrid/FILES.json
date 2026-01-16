@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "47e8e83bc1b372abdb2279f71b5a66c2f138817db90142ad8c7a62c67e626da2",
+   "chksum_sha256": "90952b1cd6297b1b418b9775823cadc9eac958e5b3acf74843d08c6f79a3d2bb",
    "format": 1
   },
   {
@@ -480,7 +480,7 @@
    "name": "plugins/modules/na_sg_grid_ec_profile.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "706f3c35408fa3a9a6f4bf2d82dda7df5a8c23138eb1054f6a3f2623fbccf875",
+   "chksum_sha256": "a710023c9581e8a6310b442cd94245ffab040c51c33978d8925a09bfdf402db8",
    "format": 1
   },
   {

@@ -89,6 +89,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 
 ### Bug Fixes
   - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
+  - na_sg_grid_ec_profile - fix issue preventing EC Profiles from being updated or deleted.
 
 ## 21.16.0
 

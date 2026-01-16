@@ -175,14 +175,14 @@ class EC_profile(object):
 
     def deactivate_ec_profile(self):
         __LOGGING__.append("deactivating EC profile")
-        api = "api/%s/private/ec-profiles/%s/deactivate" % (self.rest_api, self.id)
+        api = "api/%s/private/ec-profiles/%s/deactivate" % (self.api_version, self.id)
         response, error = self.rest_api.post(api, None)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
 
     def update_ec_profile(self):
         __LOGGING__.append("updating EC profile with payload: %s" % self.data)
-        api = "api/%s/private/ec-profiles/%s" % (self.rest_api, self.id)
+        api = "api/%s/private/ec-profiles/%s" % (self.api_version, self.id)
         response, error = self.rest_api.put(api, self.data)
         if error:
             self.module.fail_json(msg=error, log=__LOGGING__)
