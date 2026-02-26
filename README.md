@@ -90,6 +90,16 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### Bug Fixes
   - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
   - na_sg_grid_ec_profile - fix issue preventing EC Profiles from being updated or deleted.
+  - na_sg_org_container - fix issue where bucket policy was not being handled correctly.
+
+### Minor Changes
+  - na_sg_grid_login - added `api_url` as an alias for the `hostname` parameter to improve usability.
+
+### Minor Changes
+  - na_sg_grid_info - retrieve information for autosupport, proxy, node-health and syslog on StorageGRID.
+
+### Minor Changes
+  - all modules - add support for `api_url` to be specified with or without `https://` prefix.
 
 ## 21.16.0
 

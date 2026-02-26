@@ -1,0 +1,2 @@
+minor_changes:
+  - all modules - add support for `api_url` to be specified with or without "https://" prefix.

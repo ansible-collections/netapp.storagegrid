@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "90952b1cd6297b1b418b9775823cadc9eac958e5b3acf74843d08c6f79a3d2bb",
+   "chksum_sha256": "c1cc5532aa954e8f7078df1acd6b2a50a5ee112541a33eeaa886516cd8beefb8",
    "format": 1
   },
   {
@@ -316,10 +316,38 @@
    "format": 1
   },
   {
+   "name": "changelogs/fragments/DEVOPS-8147.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "c3ba1ffffca175ee8f7e942b936230d29326dd69a76796dae703814884d79bc0",
+   "format": 1
+  },
+  {
    "name": "changelogs/fragments/DEVOPS-8172.yaml",
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "29549ce8e52048a2c3805d08daa63723fbf0721ed134201109a65ca36d5482dd",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/DEVOPS-8270.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6bc9ab24e980f1faad5715c4031fcb3571369042010ffba3b118580282509a3f",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/DEVOPS-8323.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "d9de5c09cb303bce1c28c9a6091eff8cc984187b3025ba0ffd3afcd64255f622",
+   "format": 1
+  },
+  {
+   "name": "changelogs/fragments/DEVOPS-8336.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "bdb8a520ff22ea16d6689281a79373f3ddbe4d73f918dfacf6434f464f26b107",
    "format": 1
   },
   {
@@ -396,7 +424,7 @@
    "name": "plugins/module_utils/netapp.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "e896c08831084cf93f482622692434ccb48099b41cfb68e53429471625697fee",
+   "chksum_sha256": "32d2a8f01092220506bbe0ab24753c86f3a981c787fa87d1ecda90d3e5b8a7e2",
    "format": 1
   },
   {
@@ -557,14 +585,14 @@
    "name": "plugins/modules/na_sg_grid_info.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "c882a207dfd38c786580ec1357266c61085e6febeae3feb38f0ca3437be0d33e",
+   "chksum_sha256": "2823edb44589f2e2d97db0545b6900cc3d485280c78a9a44c62df0268977cc08",
    "format": 1
   },
   {
    "name": "plugins/modules/na_sg_grid_login.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "4e0c719259b36d5a4993f8dbaa0ab5b2c6fc96cdae9b71f376458c9de36c68c5",
+   "chksum_sha256": "c695ed9e197f40d00f5a880592b03582f0a1221cd5c1dda5b2d52f43c37bc02c",
    "format": 1
   },
   {
@@ -676,7 +704,7 @@
    "name": "plugins/modules/na_sg_org_container.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "061738922a5548000b17ddbbf0276dd328355eb3ea2bce22f4f1ccac3d67fbc1",
+   "chksum_sha256": "c80da7089d2ca4bd38f2f3bb87c87133468dc4e4f6f8fd8b022e1fe92f8ec847",
    "format": 1
   },
   {
@@ -928,14 +956,14 @@
    "name": "tests/unit/plugins/modules/test_na_sg_grid_info.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "5cfbd323b0c4ace6f18b153aa907db00b97c91756468f2c9404e815142e5c13d",
+   "chksum_sha256": "e05c432ca7c514189cf0c2470b18d99185bd17dfd27b5f9b4eafd0970d9141f0",
    "format": 1
   },
   {
    "name": "tests/unit/plugins/modules/test_na_sg_grid_login.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "f502f0b155f9186affca8922a1ae0f9ec20e0e428df9f00bf769f8f89d353337",
+   "chksum_sha256": "e3d0c4f1b030f79c0cbc5997f0928f0a0af0d7fa0fbbcfd4ef2f8e72803035ba",
    "format": 1
   },
   {

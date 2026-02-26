@@ -33,8 +33,11 @@ options:
             - Either the info name or the REST API can be given.
             - Possible values for this argument include
             - C(grid_accounts_info) or C(grid/accounts)
+            - C(grid_admin_proxy_info) or C(grid/admin-proxy)
             - C(grid_alarms_info) or C(grid/alarms)
             - C(grid_audit_info) or C(grid/audit)
+            - C(grid_audit_destinations_info) or C(grid/audit-destinations)
+            - C(grid_autosupport_info) or C(grid/autosupport)
             - C(grid_compliance_global_info) or C(grid/compliance-global)
             - C(grid_config_info) or C(grid/config)
             - C(grid_config_management_info) or C(grid/config/management)
@@ -65,6 +68,7 @@ options:
             - C(grid_load_balancer_endpoints_config_info) or C(grid/gateway-configs)
             - C(grid_management_certificate_info) or C(grid/management-certificate)
             - C(grid_network_topology_info) or C(grid/network-topology)
+            - C(grid_node_health_info) or C(grid/node-health)
             - C(grid_ntp_servers_info) or C(grid/ntp-servers)
             - C(grid_recovery_available_nodes_info) or C(grid/recovery/available-nodes)
             - C(grid_recovery_info) or C(grid/recovery)
@@ -73,6 +77,7 @@ options:
             - C(grid_single_sign_on_info) or C(grid/single-sign-on)
             - C(grid_snmp_info) or C(grid/snmp)
             - C(grid_storage_api_certificate_info) or C(grid/storage-api-certificate)
+            - C(grid_storage_proxy_info) or C(grid/storage-proxy)
             - C(grid_untrusted_client_network_info) or C(grid/untrusted-client-network)
             - C(grid_users_info) or C(grid/users)
             - C(grid_users_root_info) or C(grid/users/root)
@@ -133,8 +138,11 @@ sg_info:
     type: dict
     sample: {
         "grid/accounts": {...},
+        "grid/admin-proxy": {...},
         "grid/alarms": {...},
         "grid/audit": {...},
+        "grid/audit-destinations": {...},
+        "grid/autosupport": {...},
         "grid/compliance-global": {...},
         "grid/config": {...},
         "grid/config/management": {...},
@@ -165,6 +173,7 @@ sg_info:
         "grid/license": {...},
         "grid/management-certificate": {...},
         "grid/network-toplogy": {...},
+        "grid/node-health": {...},
         "grid/ntp-servers": {...},
         "grid/recovery/available-nodes": {...},
         "grid/recovery": {...},
@@ -173,6 +182,7 @@ sg_info:
         "grid/single-sign-on": {...},
         "grid/snmp": {...},
         "grid/storage-api-certificate": {...},
+        "grid/storage-proxy": {...},
         "grid/untrusted-client-network": {...},
         "grid/users": {...},
         "grid/users/root": {...},
@@ -241,8 +251,11 @@ class NetAppSgGatherInfo(object):
         """ Convert an info to the REST API """
         info_to_rest_mapping = {
             'grid_accounts_info': 'grid/accounts',
+            'grid_admin_proxy_info': 'grid/admin-proxy',
             'grid_alarms_info': 'grid/alarms',
             'grid_audit_info': 'grid/audit',
+            'grid_audit_destinations_info': 'grid/audit-destinations',
+            'grid_autosupport_info': 'grid/autosupport',
             'grid_compliance_global_info': 'grid/compliance-global',
             'grid_config_info': 'grid/config',
             'grid_config_management_info': 'grid/config/management',
@@ -273,6 +286,7 @@ class NetAppSgGatherInfo(object):
             'grid_license_info': 'grid/license',
             'grid_management_certificate_info': 'grid/management-certificate',
             'grid_network_topology_info': 'grid/network-topology',
+            'grid_node_health_info': 'grid/node-health',
             'grid_ntp_servers_info': 'grid/ntp-servers',
             'grid_recovery_available_nodes_info': 'grid/recovery/available-nodes',
             'grid_recovery_info': 'grid/recovery',
@@ -281,6 +295,7 @@ class NetAppSgGatherInfo(object):
             'grid_schemes_info': 'grid/schemes',
             'grid_snmp_info': 'grid/snmp',
             'grid_storage_api_certificate_info': 'grid/storage-api-certificate',
+            'grid_storage_proxy_info': 'grid/storage-proxy',
             'grid_untrusted_client_network_info': 'grid/untrusted-client-network',
             'grid_users_info': 'grid/users',
             'grid_users_root_info': 'grid/users/root',
@@ -308,11 +323,20 @@ class NetAppSgGatherInfo(object):
             'grid/accounts': {
                 'api_call': 'api/%s/grid/accounts' % self.api_version,
             },
+            'grid/admin-proxy': {
+                'api_call': 'api/%s/private/admin-proxy' % self.api_version,
+            },
             'grid/alarms': {
                 'api_call': 'api/%s/grid/alarms' % self.api_version,
             },
             'grid/audit': {
                 'api_call': 'api/%s/grid/audit' % self.api_version,
+            },
+            'grid/audit-destinations': {
+                'api_call': 'api/%s/private/audit-destinations' % self.api_version,
+            },
+            'grid/autosupport': {
+                'api_call': 'api/%s/private/autosupport' % self.api_version,
             },
             'grid/compliance-global': {
                 'api_call': 'api/%s/grid/compliance-global' % self.api_version,
@@ -404,6 +428,9 @@ class NetAppSgGatherInfo(object):
             'grid/network-topology': {
                 'api_call': 'api/%s/private/network-topology' % self.api_version
             },
+            'grid/node-health': {
+                'api_call': 'api/%s/grid/node-health' % self.api_version,
+            },
             'grid/ntp-servers': {
                 'api_call': 'api/%s/grid/ntp-servers' % self.api_version,
             },
@@ -427,6 +454,9 @@ class NetAppSgGatherInfo(object):
             },
             'grid/storage-api-certificate': {
                 'api_call': 'api/%s/grid/storage-api-certificate' % self.api_version,
+            },
+            'grid/storage-proxy': {
+                'api_call': 'api/%s/private/storage-proxy' % self.api_version,
             },
             'grid/untrusted-client-network': {
                 'api_call': 'api/%s/grid/untrusted-client-network' % self.api_version,

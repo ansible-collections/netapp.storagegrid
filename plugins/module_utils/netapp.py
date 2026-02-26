@@ -70,6 +70,8 @@ class SGRestAPI(object):
         self.module = module
         self.auth_token = self.module.params["auth_token"]
         self.api_url = self.module.params["api_url"]
+        if not self.api_url.startswith("https://"):
+            self.api_url = "https://" + self.api_url
         self.verify = self.module.params["validate_certs"]
         self.timeout = timeout
         self.check_required_library()

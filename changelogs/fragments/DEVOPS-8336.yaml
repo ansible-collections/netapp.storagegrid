@@ -1,0 +1,2 @@
+minor_changes:
+  - na_sg_grid_info - retrieve information for autosupport, proxy, node-health and syslog on StorageGRID.

@@ -1,0 +1,2 @@
+minor_changes:
+  - na_sg_grid_login - added `api_url` as an alias for the `hostname` parameter to improve usability.
