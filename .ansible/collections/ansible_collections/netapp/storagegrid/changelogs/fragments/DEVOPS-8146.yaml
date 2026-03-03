@@ -1,0 +1,2 @@
+bugfixes:
+  - na_sg_grid_login - set module state to ok after generating auth token.

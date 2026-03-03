@@ -140,7 +140,7 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_grid_login_pass: %s" % repr(exc.value.args[0]))
-        assert exc.value.args[0]["changed"]
+        assert not exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGAuthGenRestAPI.send_request")
     def test_create_na_sg_grid_login_with_api_url_as_alias_pass(self, mock_request):
@@ -155,4 +155,4 @@ class TestMyModule(unittest.TestCase):
         with pytest.raises(AnsibleExitJson) as exc:
             my_obj.apply()
         print("Info: test_create_na_sg_grid_login_with_api_url_as_alias_pass: %s" % repr(exc.value.args[0]))
-        assert exc.value.args[0]["changed"]
+        assert not exc.value.args[0]["changed"]

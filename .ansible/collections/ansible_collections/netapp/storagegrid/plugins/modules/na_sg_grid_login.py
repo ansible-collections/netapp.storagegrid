@@ -137,7 +137,6 @@ class SgLogin(object):
 
         resp_data = self.generate_auth_token()
         result_message = "authentication token generated successfully."
-        self.na_helper.changed = True
 
         self.module.exit_json(changed=self.na_helper.changed, msg=result_message, na_sa_token=resp_data)
 
