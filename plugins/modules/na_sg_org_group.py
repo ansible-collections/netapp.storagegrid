@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# (c) 2020-2025, NetApp Inc
+# (c) 2020-2026, NetApp Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """NetApp StorageGRID - Manage tenant Groups"""
@@ -222,10 +222,13 @@ class SgOrgGroup(object):
             self.data["policies"]["management"] = None
 
         if self.parameters.get("s3_policy"):
-            try:
-                self.data["policies"]["s3"] = json.loads(self.parameters["s3_policy"])
-            except ValueError:
-                self.module.fail_json(msg="Failed to decode s3_policy. Invalid JSON.")
+            if json.loads(self.parameters["s3_policy"]) in (None, {}):
+                self.data["policies"]["s3"] = None
+            else:
+                try:
+                    self.data["policies"]["s3"] = json.loads(self.parameters["s3_policy"])
+                except ValueError:
+                    self.module.fail_json(msg="Failed to decode s3_policy. Invalid JSON.")
 
         self.re_local_group = re.compile("^group/")
         self.re_fed_group = re.compile("^federated-group/")
@@ -285,12 +288,13 @@ class SgOrgGroup(object):
 
         if cd_action is None and self.parameters["state"] == "present":
             # let's see if we need to update parameters
+            existing_policies = org_group.get("policies") or {}
 
             if self.parameters.get("management_policy"):
-                if org_group.get("policies") is None or org_group.get("policies", {}).get("management") != self.data["policies"]["management"]:
+                if existing_policies.get("management") != self.data["policies"]["management"]:
                     self.na_helper.changed = True
-            if self.parameters.get("s3_policy"):
-                if org_group.get("policies") is None or org_group.get("policies", {}).get("s3") != self.data["policies"]["s3"]:
+            if self.parameters.get("s3_policy") is not None:
+                if existing_policies.get("s3") != self.data["policies"]["s3"]:
                     self.na_helper.changed = True
             if self.parameters.get("read_only") is not None and self.parameters.get("read_only") != org_group["managementReadOnly"]:
                 self.na_helper.changed = True

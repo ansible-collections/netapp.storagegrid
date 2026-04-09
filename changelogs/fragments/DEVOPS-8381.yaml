@@ -1,0 +1,2 @@
+bugfixes:
+  - na_sg_org_group - fix idempotency issue when managing S3 bucket policies.
