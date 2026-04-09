@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "2ec6e743697bfc6f760042af48015f623f0df49f85f516f6543d44140dee182b",
+   "chksum_sha256": "55109ddb6c95c2bf7255640d8ee38bfb4ec520012e4cd1e2a39881d6655cd2c4",
    "format": 1
   },
   {
@@ -396,7 +396,7 @@
    "name": "meta/runtime.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "88434a89a122437fc9696c4d8dc4e1ea085ad6e4d2ceee12bf08b7bc4038e878",
+   "chksum_sha256": "71520355995674cd634bf2d1b424f5ea6ece3bdbadaa30c5751a2d0f0bc9adf1",
    "format": 1
   },
   {
@@ -431,7 +431,7 @@
    "name": "plugins/module_utils/netapp.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "32d2a8f01092220506bbe0ab24753c86f3a981c787fa87d1ecda90d3e5b8a7e2",
+   "chksum_sha256": "855ba93962c73c75b15c6a70231afc3ebfa1d5e3dde0235baa7d9a9cd0edce2e",
    "format": 1
   },
   {
@@ -747,6 +747,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "5e221c4703f309d324a81c7e0de93e20ec31851148852c82638d454f428ac444",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/na_sg_pge_config.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "00e48a3aef344c7552878566ab4ef5812e478aeaa46056b8659daf6af3b3f32a",
    "format": 1
   },
   {
@@ -1118,6 +1125,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "4d9c9d71cd0c3d2d2c3ee364a7f3c6404e7a4f814461ecfc740efb41eb1901de",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/modules/test_na_sg_pge_config.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "9428b854273e774bff79d45bc2f6bf0cd37cbec4ee721481f8a1d93c41ca1dd7",
    "format": 1
   },
   {
