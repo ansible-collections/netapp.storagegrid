@@ -87,6 +87,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### New Modules
   - na_sg_grid_self_signed_certificate - generate self signed certificate on StorageGRID.
   - na_sg_pge_config - update configuration for StorageGRID Appliance.
+  - na_sg_pge_setup - configure initial system setup for StorageGRID Appliance.
 
 ### Bug Fixes
   - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.

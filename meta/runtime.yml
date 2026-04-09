@@ -46,3 +46,4 @@ action_groups:
     - na_sg_org_user_s3_key
     - na_sg_pge_config
     - na_sg_pge_info
+    - na_sg_pge_setup
