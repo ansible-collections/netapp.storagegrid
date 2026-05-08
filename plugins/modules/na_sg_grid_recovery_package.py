@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# (c) 2025, NetApp Inc
+# (c) 2025-2026, NetApp Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """NetApp StorageGRID - Recovery Packages"""
@@ -37,6 +37,11 @@ options:
     description:
     - the password used during maintenance procedures to make changes to the grid topology.
     type: str
+  dest:
+    description:
+    - The directory path where the recovery package will be saved.
+    type: str
+    version_added: 21.17.0
 """
 
 EXAMPLES = """
@@ -47,6 +52,7 @@ EXAMPLES = """
     validate_certs: false
     state: present
     passphrase: "{{ storagegrid_passphrase }}"
+    dest: "/downloads"
 """
 
 RETURN = """
@@ -59,6 +65,7 @@ resp:
     }
 """
 
+import os
 import re
 import ansible_collections.netapp.storagegrid.plugins.module_utils.netapp as netapp_utils
 from ansible.module_utils.basic import AnsibleModule
@@ -81,12 +88,13 @@ class SgGridRecoveryPackage:
             dict(
                 state=dict(required=False, type="str", choices=["present", "absent"], default="present"),
                 passphrase=dict(type='str', required=False, no_log=True),
+                dest=dict(type='str', required=False),
             )
         )
 
         self.module = AnsibleModule(
             argument_spec=self.argument_spec,
-            required_if=[("state", "present", ["passphrase"])],
+            required_if=[("state", "present", ["passphrase", "dest"])],
             supports_check_mode=True,
         )
 
@@ -120,10 +128,15 @@ class SgGridRecoveryPackage:
         if match:
             file_name = match.group(1)
 
-        with open(file_name, "wb") as f:
+        dest = self.parameters["dest"]
+        if not os.path.isdir(dest):
+            self.module.fail_json(msg="Destination directory '%s' does not exist." % dest)
+        file_path = os.path.join(dest, file_name)
+
+        with open(file_path, "wb") as f:
             f.write(response.content)
 
-        return {"file_saved", file_name}, None
+        return {"file_saved": file_path}
 
     def apply(self):
         """

@@ -1,0 +1,2 @@
+bugfixes:
+  - na_sg_grid_recovery_package - fix issue with downloading to the destination directory for recovery package.

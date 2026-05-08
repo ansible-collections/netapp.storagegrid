@@ -1,4 +1,4 @@
-# (c) 2025, NetApp, Inc
+# (c) 2025-2026, NetApp, Inc
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """ unit tests NetApp StorageGRID Recovery Package Ansible module: na_sg_grid_recovery_package """
@@ -16,7 +16,6 @@ from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 from unittest.mock import Mock
 import tempfile
-import os
 from ansible_collections.netapp.storagegrid.plugins.modules.na_sg_grid_recovery_package import (
     SgGridRecoveryPackage as recovery_package_module,
 )
@@ -27,7 +26,7 @@ mock_response = Mock()
 mock_response.content = b"dummy zip content"
 tmp_dir = tempfile.gettempdir()
 mock_response.headers = {
-    "Content-Disposition": f'attachment; filename="{os.path.join(tmp_dir, "tp_reco.zip")}"',
+    "Content-Disposition": 'attachment; filename="tp_reco.zip"',
     "content-type": "application/zip"
 }
 mock_response.status_code = 200
@@ -96,6 +95,7 @@ class TestRecoveryPackageModule(unittest.TestCase):
                 "state": "present",
                 "validate_certs": False,
                 "passphrase": "test_passphrase",
+                "dest": tmp_dir,
             }
         )
 
@@ -107,6 +107,7 @@ class TestRecoveryPackageModule(unittest.TestCase):
                 "state": "present",
                 "validate_certs": False,
                 "passphrase": "test_passphrase",
+                "dest": tmp_dir,
             }
         )
 

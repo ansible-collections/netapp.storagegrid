@@ -95,6 +95,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_login - set module state to ok after generating auth token.
   - na_sg_org_container - fix issue where bucket policy was not being handled correctly.
   - na_sg_org_group - fix idempotency issue when managing S3 bucket policies.
+  - na_sg_grid_recovery_package - fix issue with downloading to the destination directory for recovery package.
 
 ### Minor Changes
   - na_sg_grid_login - added `api_url` as an alias for the `hostname` parameter to improve usability.
