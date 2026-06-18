@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "6407127fc30e8996c9cc44ac2ca0bb1da339ce7babf9a285815d5d68f15793af",
+   "chksum_sha256": "86a2b6f9be4a21f191f81cd2686be665179263931d904ad56f3836aebfe38a4f",
    "format": 1
   },
   {
@@ -316,6 +316,13 @@
    "format": 1
   },
   {
+   "name": "changelogs/fragments/DEVOPS-8047.yaml",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "6d6ef119c3afbb732afc863bf5e7a3bcb8c1d92ad21fa55972cb7a93f89f4479",
+   "format": 1
+  },
+  {
    "name": "changelogs/fragments/DEVOPS-8146.yaml",
    "ftype": "file",
    "chksum_type": "sha256",
@@ -410,7 +417,7 @@
    "name": "meta/runtime.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "106c5bcfc3e7bae7782c12ae78b94db0a8fe11c82664293bf7fb5ab000b6fb26",
+   "chksum_sha256": "ff5386cf70ab07446068cfe7e0f476c0746d86359c638f55524d6dcba159b444",
    "format": 1
   },
   {
@@ -673,6 +680,13 @@
    "format": 1
   },
   {
+   "name": "plugins/modules/na_sg_grid_sso.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "a06412522ccf1ec08c83ab4da8a5a2bb42f25c4525baca49b652a8b0d3e0207d",
+   "format": 1
+  },
+  {
    "name": "plugins/modules/na_sg_grid_tenant.py",
    "ftype": "file",
    "chksum_type": "sha256",
@@ -725,7 +739,7 @@
    "name": "plugins/modules/na_sg_org_container.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "c80da7089d2ca4bd38f2f3bb87c87133468dc4e4f6f8fd8b022e1fe92f8ec847",
+   "chksum_sha256": "987c9454840303b42e5df127c6215c2259b46ee12f0b8826ad42a18941f85927",
    "format": 1
   },
   {
@@ -1058,6 +1072,13 @@
    "format": 1
   },
   {
+   "name": "tests/unit/plugins/modules/test_na_sg_grid_sso.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "e92f999cedbda3125e4beafc42ffc2d15fd3cc3c3c7aedde2f1ddcc11062e8ed",
+   "format": 1
+  },
+  {
    "name": "tests/unit/plugins/modules/test_na_sg_grid_tenant.py",
    "ftype": "file",
    "chksum_type": "sha256",
@@ -1110,7 +1131,7 @@
    "name": "tests/unit/plugins/modules/test_na_sg_org_container.py",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "3b9475c0c62fc34435f56d2a661f980066c3f94c36289978019c8c5c435d7dc9",
+   "chksum_sha256": "9c991b7e12934ee3dc81ff65a47a4e309c5330f061bc82c5ef4e576db90a34aa",
    "format": 1
   },
   {

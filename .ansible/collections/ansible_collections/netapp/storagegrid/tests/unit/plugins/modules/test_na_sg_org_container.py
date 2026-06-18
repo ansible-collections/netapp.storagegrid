@@ -382,6 +382,25 @@ class TestMyModule(unittest.TestCase):
         assert exc.value.args[0]["changed"]
 
     @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
+    def test_update_na_sg_org_container_suspend_versioning_pass(self, mock_request):
+        args = self.set_args_create_na_sg_org_container()
+        args["bucket_versioning_enabled"] = False
+        set_module_args(args)
+        mock_request.side_effect = [
+            SRR["version_116"],
+            SRR["org_containers"],  # get
+            SRR["org_container_versioning_enabled"],  # get
+            SRR["org_container_versioning_suspended"],  # put
+            SRR["org_container_policy"],  # put
+            SRR["end_of_sequence"],
+        ]
+        my_obj = org_container_module()
+        with pytest.raises(AnsibleExitJson) as exc:
+            my_obj.apply()
+        print("Info: test_update_na_sg_org_container_suspend_versioning_pass: %s" % repr(exc.value.args[0]))
+        assert exc.value.args[0]["changed"]
+
+    @patch("ansible_collections.netapp.storagegrid.plugins.module_utils.netapp.SGRestAPI.send_request")
     def test_module_fail_minimum_version_not_met_versioning(self, mock_request):
         args = self.set_args_create_na_sg_org_container()
         args["consistency"] = "available"

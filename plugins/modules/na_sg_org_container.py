@@ -76,6 +76,7 @@ options:
   bucket_versioning_enabled:
     description:
     - Enable versioning on the bucket.
+    - Only enabled or suspended could be state of versioning to set after enabling it.
     - This API requires StorageGRID 11.6 or greater.
     type: bool
     version_added: '21.11.0'
@@ -252,8 +253,6 @@ class SgOrgContainer(object):
         # Checking for the parameters passed and create new parameters list.
 
         self.data_versioning = {}
-        self.data_versioning["versioningSuspended"] = True
-
         self.consistency_setting = {}
         self.bucket_policy = {}
         self.quota_object_bytes = {}
@@ -272,9 +271,6 @@ class SgOrgContainer(object):
 
         if self.parameters.get("bucket_versioning_enabled") is not None:
             self.rest_api.fail_if_not_sg_minimum_version("Bucket versioning configuration", 11, 6)
-            self.data_versioning["versioningEnabled"] = self.parameters["bucket_versioning_enabled"]
-            if self.data_versioning["versioningEnabled"]:
-                self.data_versioning["versioningSuspended"] = False
 
         if self.parameters.get("consistency") is not None:
             self.rest_api.fail_if_not_sg_minimum_version("consistency setting", 11, 6)
@@ -448,12 +444,24 @@ class SgOrgContainer(object):
                 update_quota_object_bytes = True
                 self.na_helper.changed = True
 
-            if (
-                versioning_config
-                and versioning_config["versioningEnabled"] != self.data_versioning["versioningEnabled"]
-            ):
-                update_versioning = True
-                self.na_helper.changed = True
+            if versioning_config is not None and self.parameters.get("bucket_versioning_enabled") is not None:
+                desired_enabled = self.parameters["bucket_versioning_enabled"]
+                current_enabled = versioning_config.get("versioningEnabled", False)
+
+                if desired_enabled and not current_enabled:
+                    self.data_versioning = {
+                        "versioningEnabled": True,
+                        "versioningSuspended": False,
+                    }
+                    update_versioning = True
+                    self.na_helper.changed = True
+                elif not desired_enabled and current_enabled:
+                    self.data_versioning = {
+                        "versioningEnabled": False,
+                        "versioningSuspended": True,
+                    }
+                    update_versioning = True
+                    self.na_helper.changed = True
 
             if (
                 consistency_setting
@@ -493,8 +501,13 @@ class SgOrgContainer(object):
 
                     resp_data = self.create_org_container()
 
-                    if self.parameters.get("bucket_versioning_enabled") is not None:
+                    if self.parameters.get("bucket_versioning_enabled"):
+                        self.data_versioning = {
+                            "versioningEnabled": True,
+                            "versioningSuspended": False,
+                        }
                         self.update_org_container_versioning()
+
                     if self.parameters.get("consistency") is not None:
                         self.update_org_container_consistency()
 

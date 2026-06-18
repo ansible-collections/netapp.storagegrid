@@ -88,6 +88,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_grid_self_signed_certificate - generate self signed certificate on StorageGRID.
   - na_sg_pge_config - update configuration for StorageGRID Appliance.
   - na_sg_pge_setup - configure initial system setup for StorageGRID Appliance.
+  - na_sg_grid_sso - configure single sign-on (SSO) settings on StorageGRID.
 
 ### Bug Fixes
   - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
@@ -96,6 +97,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_org_container - fix issue where bucket policy was not being handled correctly.
   - na_sg_org_group - fix idempotency issue when managing S3 bucket policies.
   - na_sg_grid_recovery_package - fix issue with downloading to the destination directory for recovery package.
+  - na_sg_org_container - fix issue with setting object versioning state for buckets.
 
 ### Minor Changes
   - na_sg_grid_login - added `api_url` as an alias for the `hostname` parameter to improve usability.

@@ -1,0 +1,2 @@
+bugfixes:
+  - na_sg_org_container - fix issue with setting object versioning state for buckets.
