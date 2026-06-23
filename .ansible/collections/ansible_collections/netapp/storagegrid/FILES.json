@@ -53,7 +53,7 @@
    "name": "README.md",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "86a2b6f9be4a21f191f81cd2686be665179263931d904ad56f3836aebfe38a4f",
+   "chksum_sha256": "d0203eea9f989396579121b1f86bec0e05e5bf6afabe45c572194e5643197d3d",
    "format": 1
   },
   {
@@ -417,7 +417,7 @@
    "name": "meta/runtime.yml",
    "ftype": "file",
    "chksum_type": "sha256",
-   "chksum_sha256": "ff5386cf70ab07446068cfe7e0f476c0746d86359c638f55524d6dcba159b444",
+   "chksum_sha256": "b382b349ec5a16b639be3c6a7abcacad016f57fbe656562e3b3689a0d4249778",
    "format": 1
   },
   {
@@ -789,6 +789,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "d73258163ada366ce37a52a39d21adc6a1ca7151337a00dafa762e9c24e7e078",
+   "format": 1
+  },
+  {
+   "name": "plugins/modules/na_sg_pge_install.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "922a4a06aaf68816a65ed6244034c5d72b0a8820b36b656910c93ef90196371c",
    "format": 1
   },
   {
@@ -1181,6 +1188,13 @@
    "ftype": "file",
    "chksum_type": "sha256",
    "chksum_sha256": "f3dacf351ddc1c5e6f9d7296f84f34ff9847e6440f0ef4d252f8df44ef689330",
+   "format": 1
+  },
+  {
+   "name": "tests/unit/plugins/modules/test_na_sg_pge_install.py",
+   "ftype": "file",
+   "chksum_type": "sha256",
+   "chksum_sha256": "5bcad4d8c1317efb70100aa0c33edec021acf98166561ba7d4b694af700941c5",
    "format": 1
   },
   {
