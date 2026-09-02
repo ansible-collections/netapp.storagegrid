@@ -40,6 +40,7 @@ action_groups:
     - na_sg_org_bucket
     - na_sg_org_cloud_mirror_replication
     - na_sg_org_container
+    - na_sg_org_endpoints
     - na_sg_org_group
     - na_sg_org_identity_federation
     - na_sg_org_info
@@ -48,4 +49,5 @@ action_groups:
     - na_sg_pge_config
     - na_sg_pge_info
     - na_sg_pge_install
+    - na_sg_reset_node_to_pge
     - na_sg_pge_setup

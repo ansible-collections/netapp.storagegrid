@@ -90,6 +90,8 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_pge_setup - configure initial system setup for StorageGRID Appliance.
   - na_sg_grid_sso - configure single sign-on (SSO) settings on StorageGRID.
   - na_sg_pge_install - Load the installer for StorageGRID Appliance.
+  - na_sg_org_endpoints - Configure platform service endpoints on StorageGRID.
+  - na_sg_pge_reset - reset primary admin node for StorageGRID Appliance.
 
 ### Bug Fixes
   - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
