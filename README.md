@@ -92,6 +92,7 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
   - na_sg_pge_install - Load the installer for StorageGRID Appliance.
   - na_sg_org_endpoints - Configure platform service endpoints on StorageGRID.
   - na_sg_pge_reset - reset primary admin node for StorageGRID Appliance.
+  - na_sg_grid_cluster_config - configure cluster settings for a StorageGRID grid via the install API.
 
 ### Bug Fixes
   - na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
@@ -105,7 +106,8 @@ This collection follows the [Ansible project's Code of Conduct](https://docs.ans
 ### Minor Changes
   - na_sg_grid_login - added `api_url` as an alias for the `hostname` parameter to improve usability.
   - na_sg_grid_info - retrieve information for autosupport, proxy, node-health and syslog on StorageGRID.
-  - all modules - add support for `api_url` to be specified with or without `https://` prefix.
+  - all modules - add support for `api_url` to be specified with or without `https://` prefix.:Q1
+  
 
 ## 21.16.0
 

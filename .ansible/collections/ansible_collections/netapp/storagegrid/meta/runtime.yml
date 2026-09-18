@@ -51,3 +51,4 @@ action_groups:
     - na_sg_pge_install
     - na_sg_reset_node_to_pge
     - na_sg_pge_setup
+    - na_sg_grid_cluster_config
