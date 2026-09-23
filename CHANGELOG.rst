@@ -5,6 +5,37 @@ NetApp StorageGRID Collection Release Notes
 .. contents:: Topics
 
 
+v21.17.0
+========
+
+Minor Changes
+-------------
+
+- all modules - add support for `api_url` to be specified with or without "https://" prefix.
+- na_sg_grid_info - retrieve information for autosupport, proxy, node-health and syslog on StorageGRID.
+- na_sg_grid_login - added `api_url` as an alias for the `hostname` parameter to improve usability.
+
+Bugfixes
+--------
+
+- na_sg_grid_gateway - updated documentation examples for `display_name` option and added the missing `state` parameter.
+- na_sg_grid_login - set module state to ok after generating auth token.
+- na_sg_grid_recovery_package - fix issue with downloading to the destination directory for recovery package.
+- na_sg_org_container - fix issue where bucket policy was not being handled correctly.
+- na_sg_org_container - fix issue with setting object versioning state for buckets.
+- na_sg_org_group - fix idempotency issue when managing S3 bucket policies.
+
+New Modules
+-----------
+
+- netapp.storagegrid.na_sg_grid_cluster_config - NetApp StorageGRID cluster configuration via install API.
+- netapp.storagegrid.na_sg_grid_self_signed_certificate - Generate self signed certificate on StorageGRID.
+- netapp.storagegrid.na_sg_grid_sso - Manage single sign-on (SSO) configuration on StorageGRID.
+- netapp.storagegrid.na_sg_pge_config - NetApp StorageGRID node PGE configuration.
+- netapp.storagegrid.na_sg_pge_install - NetApp StorageGRID PGE load install.
+- netapp.storagegrid.na_sg_pge_setup - NetApp StorageGRID PGE initial system setup.
+- netapp.storagegrid.na_sg_reset_node_to_pge - NetApp StorageGRID PGE Primary admin node reset.
+
 v21.16.0
 ========
 
